@@ -1,4 +1,4 @@
-# MenuDock
+# Menu Bar Dock
 
 ### Download the .app here: https://www.etggames.com/menu-bar-dock
 
