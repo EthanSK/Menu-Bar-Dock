@@ -1,6 +1,8 @@
 # Menu Bar Dock
 
-### Download the .app here: https://www.etggames.com/menu-bar-dock
+### Download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.0/Menu.Bar.Dock.app.zip
+
+#####app website: https://www.etggames.com/menu-bar-dock
 
 Menu Bar Dock places the apps you currently have open onto the menu bar. With one click of the app icon, you can open the app straight from the menu bar.
 
