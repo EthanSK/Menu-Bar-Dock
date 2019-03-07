@@ -1,6 +1,6 @@
 # Menu Bar Dock
 
-### Download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.0.1/Menu.Bar.Dock.app.zip
+### Download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.0.2/Menu.Bar.Dock.app.zip
 
 ##### app website: https://www.etggames.com/menu-bar-dock
 
