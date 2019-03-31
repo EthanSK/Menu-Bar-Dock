@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import MenuDock
+@testable import MenuDock 
 
 class MenuDockTests: XCTestCase {
 

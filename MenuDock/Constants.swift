@@ -23,6 +23,7 @@ enum Constants {
 		static let sortingMethod = "sortingMethod"
 		static let iconSize = "iconSize"
 		static let launchAtLogin = "launchAtLogin"
+		static let launchInsteadOfActivate = "launchInsteadOfActivate"
 	}
 }
 

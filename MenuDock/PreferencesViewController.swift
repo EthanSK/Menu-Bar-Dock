@@ -24,6 +24,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	@IBOutlet weak var sizeOfIconSlider: NSSlider!
 	
 	@IBOutlet weak var sizeOfIconCounterLabel: NSTextField!
+	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
 	
 	
 	@IBOutlet weak var noReorderRadioButtons: NSButton!
@@ -50,6 +51,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		sizeOfIconCounterLabel.stringValue = "\(Int(MenuDock.shared.userPrefs.iconSize.rounded()))"
 		sizeOfIconSlider.doubleValue = Double(MenuDock.shared.userPrefs.iconSize)
 		launchAtLoginButton.state = MenuDock.shared.userPrefs.launchAtLogin ? .on : .off
+		launchInsteadOfActivateRadioButton.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
 		switch MenuDock.shared.userPrefs.sortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
@@ -182,6 +184,12 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuDock.shared.userPrefs.launchAtLogin) 
 		print("login item res: ", result)
 	
+		MenuDock.shared.userPrefs.save()
+	}
+	
+	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
+		MenuDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
+		
 		MenuDock.shared.userPrefs.save()
 	}
 	

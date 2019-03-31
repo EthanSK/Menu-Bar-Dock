@@ -14,6 +14,7 @@ enum UserPrefsDefaultValues{
 	static let sortingMethod: SortingMethod = .mostRecentOnRight
 	static let iconSize: CGFloat = 21
 	static let launchAtLogin = false //appaz mac app store doesn't allow default true
+	static let launchInsteadOfActivate = false //should activate app by default
 }
 
 class UserPrefs: NSObject { //TODO: have options to reset all these to default
@@ -22,6 +23,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 	var sortingMethod: SortingMethod = UserPrefsDefaultValues.sortingMethod
 	var iconSize: CGFloat = UserPrefsDefaultValues.iconSize
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
+	var launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 	
 	override init(){
 		super.init()
@@ -33,6 +35,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		widthOfStatusItem = UserPrefsDefaultValues.widthOfStatusItem
 		sortingMethod = UserPrefsDefaultValues.sortingMethod
 		iconSize = UserPrefsDefaultValues.iconSize
+		launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 		save()
 	}
 	
@@ -41,7 +44,9 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		UserDefaults.standard.set(widthOfStatusItem, forKey: Constants.UserPrefs.widthOfStatusItem) 
 		UserDefaults.standard.set(sortingMethod.rawValue, forKey: Constants.UserPrefs.sortingMethod) 
 		UserDefaults.standard.set(iconSize, forKey: Constants.UserPrefs.iconSize)  
-		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)  
+		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)
+		UserDefaults.standard.set(launchInsteadOfActivate, forKey: Constants.UserPrefs.launchInsteadOfActivate)
+
 	}
 	
 	func load(){
@@ -63,6 +68,9 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		
 		if let launchAtLogin = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchAtLogin) as? Bool{
 			self.launchAtLogin = launchAtLogin
+		}
+		if let launchInsteadOfActivate = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivate) as? Bool{
+			self.launchInsteadOfActivate = launchInsteadOfActivate
 		}
 	} 
 }

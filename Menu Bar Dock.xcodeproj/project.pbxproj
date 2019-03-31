@@ -784,6 +784,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
@@ -795,6 +796,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Menu Bar Dock.app/Contents/MacOS/Menu Bar Dock";
 			};
@@ -806,6 +808,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
@@ -817,6 +820,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Menu Bar Dock.app/Contents/MacOS/Menu Bar Dock";
 			};
@@ -827,6 +831,7 @@
 			baseConfigurationReference = CAB0347B15BF571A9C8E5CEA /* Pods-Menu Bar DockUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
@@ -838,6 +843,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = MenuDock;
 			};
@@ -848,6 +854,7 @@
 			baseConfigurationReference = F4C68185006A66C34A217A6D /* Pods-Menu Bar DockUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
@@ -859,6 +866,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = MenuDock;
 			};

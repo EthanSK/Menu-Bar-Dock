@@ -15,7 +15,7 @@ class AppManager: NSObject {
 		appActivationsTracked = []
 		super.init()
 	} 
-
+	
 	private var appActivationsTracked: [NSRunningApplication]{
 		didSet{
 			appActivationsTracked = appActivationsTracked.unique
@@ -57,10 +57,10 @@ class AppManager: NSObject {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			print("app quit")
 			terminated(notification) //handle the updating in the calling closure
-//			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-//				print("app quit: ", app.localizedName)
-//				terminated(notification)
-//			}
+			//			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
+			//				print("app quit: ", app.localizedName)
+			//				terminated(notification)
+			//			}
 		}
 	}
 	
@@ -71,7 +71,15 @@ class AppManager: NSObject {
 			MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 		}else{
 			//i don't think there is a way to differentiate two different app versions that have the same bundle id eg matlab
-			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) 
+			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc up
+			if MenuDock.shared.userPrefs.launchInsteadOfActivate{
+				NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
+				
+			}else{
+				MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
+				
+			}
+			
 		}
 		
 		if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == bundleId{
