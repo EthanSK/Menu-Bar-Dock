@@ -27,7 +27,7 @@
             condition = "app.localizedName != &quot;Xcode&quot; &amp;&amp; app.localizedName != &quot;MenuDock&quot;"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.332858"
+            timestampString = "575756297.064208"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
@@ -43,7 +43,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.332896"
+            timestampString = "575756297.0644439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "88"
@@ -91,7 +91,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.3329329"
+            timestampString = "575756297.064667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
@@ -139,7 +139,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.332968"
+            timestampString = "575756297.064868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "86"
@@ -187,7 +187,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.333003"
+            timestampString = "575756297.0650589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "64"
@@ -203,7 +203,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MenuDock/AppManager.swift"
-            timestampString = "575755601.333065"
+            timestampString = "575756297.065246"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "26"
@@ -256,8 +256,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "85"
             endingLineNumber = "85"
-            landmarkName = "updateStatusItems()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -272,8 +272,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "89"
             endingLineNumber = "89"
-            landmarkName = "updateStatusItems()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -304,8 +304,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "107"
             endingLineNumber = "107"
-            landmarkName = "statusBarPressed(button:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -320,8 +320,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
             endingLineNumber = "104"
-            landmarkName = "statusBarPressed(button:)"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -336,8 +336,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "142"
             endingLineNumber = "142"
-            landmarkName = "openPreferencesWindow()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

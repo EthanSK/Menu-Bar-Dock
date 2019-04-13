@@ -13,7 +13,7 @@ enum UserPrefsDefaultValues{
 	static let widthOfStatusItem = CGFloat(30)
 	static let sortingMethod: SortingMethod = .mostRecentOnRight
 	static let iconSize: CGFloat = 21
-	static let launchAtLogin = false //appaz mac app store doesn't allow default true
+	static let launchAtLogin = true //appaz mac app store doesn't allow default true
 	static let launchInsteadOfActivate = false //should activate app by default
 }
 
