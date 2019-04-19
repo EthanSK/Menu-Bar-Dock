@@ -4,6 +4,9 @@
 
 ##### app website: https://www.etggames.com/menu-bar-dock
 
+![alt text](https://static.wixstatic.com/media/24cc30_5f813cf2d15848988a113753677d2376~mv2.png/v1/fill/w_1624,h_56,al_c,lg_1,q_90/menubardock.webp)
+
+
 Menu Bar Dock places the apps you currently have open onto the menu bar. With one click of the app icon, you can open the app straight from the menu bar.
 
 It is highly recommended that you enable automatically hide and show the dock in system preferences. Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps with your mouse by clicking their icon in the menu bar at the top!
