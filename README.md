@@ -18,6 +18,4 @@ You can change the number of apps shown, icon size and spacing, and sorting orde
 
 ### You can download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip
 
-##### alternative website: https://www.etggames.com/menu-bar-dock
-
 
