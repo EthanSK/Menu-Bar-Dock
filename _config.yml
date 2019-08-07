@@ -1,8 +1,5 @@
 theme: jekyll-theme-cayman
 show_downloads: true
-favicon: assets/favicon.ico
+favicon: favicon.ico
 use_logo: true
-logo: assets/logo.png
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+logo: logo.png
