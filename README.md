@@ -1,9 +1,5 @@
 # Menu Bar Dock
 
-### Download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.2/Menu.Bar.Dock.app.zip
-
-##### app website: https://www.etggames.com/menu-bar-dock
-
 ![alt text](https://static.wixstatic.com/media/24cc30_5f813cf2d15848988a113753677d2376~mv2.png/v1/fill/w_1624,h_56,al_c,lg_1,q_90/menubardock.webp)
 
 
@@ -20,4 +16,9 @@ While the Command+Tab shortcut can switch between your open apps in order, it re
 Hold command while dragging the icons to place them where you would like on the menu bar. It will reorder automatically once you change apps again.
 
 You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...). You can even set the app to launch at login automatically (Highly recommended)
+
+### You can also download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.2/Menu.Bar.Dock.app.zip
+
+##### alternative website: https://www.etggames.com/menu-bar-dock
+
 
