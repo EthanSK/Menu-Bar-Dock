@@ -16,7 +16,7 @@ Hold command while dragging the icons to place them where you would like on the 
 
 You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...). You can even set the app to launch at login automatically (Highly recommended)
 
-### You can also download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/download/1.2/Menu.Bar.Dock.app.zip
+### You can download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip
 
 ##### alternative website: https://www.etggames.com/menu-bar-dock
 
