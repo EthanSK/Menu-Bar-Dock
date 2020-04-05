@@ -4,6 +4,9 @@
 
 ### Menu Bar Dock places the apps you currently have open onto the menu bar. With one click of the app icon, you can open the app straight from the menu bar.
 
+### You can download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip
+
+
 It is highly recommended that you enable automatically hide and show the dock in system preferences. Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps with your mouse by clicking their icon in the menu bar at the top!
 
 If your computer suffers from lag when your activity gets more heavy and starts causing problems with switching apps, this is the perfect app for you.
@@ -16,6 +19,5 @@ Hold command while dragging the icons to place them where you would like on the 
 
 You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...). You can even set the app to launch at login automatically (Highly recommended)
 
-### You can download the app here: https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip
 
 
