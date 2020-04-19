@@ -46,7 +46,7 @@ class AppManager: NSObject {
 	func trackAppsBeingActivated(updated: @escaping (_ notification: Notification) -> Void){//to allow us to form some sort of order in the menu bar
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, NSWorkspace.shared.frontmostApplication == app{ //make sure it wasn't triggered by some background process
-				print("app activated: ", app.localizedName)
+//				print("app activated: ", app.localizedName)
 				self.appActivationsTracked.insert(app, at: 0)
 				updated(notification)
 			}
@@ -67,8 +67,10 @@ class AppManager: NSObject {
 	
 	
 	func openApp(withBundleId bundleId: String){
-		if (MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.bundleIdentifier) == "com.apple.finder"{ //finder is weird and doesn't open normally
-			MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
+		let firstApp = MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first
+		if (firstApp?.bundleIdentifier) == "com.apple.finder"{ //finder is weird and doesn't open normally
+			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) //do this as well if it's hidden
+			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 		}else{
 			//i don't think there is a way to differentiate two different app versions that have the same bundle id eg matlab
 			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc up
@@ -76,14 +78,14 @@ class AppManager: NSObject {
 				NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
 				
 			}else{
-				MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
+				firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 				
 			}
 			
 		}
 		
 		if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == bundleId{
-			MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //if the have pressed the same icon twice, they must really wanna go to that app so force it. it doesn't work for finder tho rip
+			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //if the have pressed the same icon twice, they must really wanna go to that app so force it. it doesn't work for finder tho rip
 		}
 	}
 }

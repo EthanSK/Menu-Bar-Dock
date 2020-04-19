@@ -42,7 +42,7 @@ class StatusItemManager: NSObject {
 		let numberThereShouldBe = min(MenuDock.shared.userPrefs.numberOfStatusItems, MenuDock.shared.appManager.runningAppsInOrder.count)
 		
 		while statusItemsBeingDisplayedInOrder.count > numberThereShouldBe{ //not too hot
-			print("too many: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
+//			print("too many: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			//statusItems.filter{$0.length != 0}.last?.length = 0 //wait status items aren't in order here and we need them to be no? //only ever make smaller, never delete so we preserve the position
 
 			if statusItems.count > MenuDock.shared.userPrefs.numberOfStatusItems{ //fuck it idc if it doesnt' work perfectly if we keep changing the numebr of items

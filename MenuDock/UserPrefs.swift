@@ -14,7 +14,7 @@ enum UserPrefsDefaultValues{
 	static let sortingMethod: SortingMethod = .mostRecentOnRight
 	static let iconSize: CGFloat = 21
 	static let launchAtLogin = true //appaz mac app store doesn't allow default true
-	static let launchInsteadOfActivate = false //should activate app by default
+	static let launchInsteadOfActivate = true //should activate app by default
 }
 
 class UserPrefs: NSObject { //TODO: have options to reset all these to default
