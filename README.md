@@ -4,7 +4,7 @@
 
 ### We place the apps you currently have open onto the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
-### Check out the [website](https://www.etggames.com/menu-bar-dock)
+### Check out our [website](https://www.etggames.com/menu-bar-dock)
 
 ### Download it [here](https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip)
 
