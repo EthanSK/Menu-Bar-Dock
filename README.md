@@ -12,13 +12,13 @@
 
 #### Reasons to use Menu Bar Dock ...
 
-- If your computer suffers from lag when your activity gets more heavy and starts causing problems with switching apps, this is the perfect app for you.
+- **Save screen space** - You don't need the normal dock to show at the bottom of your screen any more. Lots of valuable space saved! While automatically unhiding the dock to go to your app solves the problem of screen space, you must wait until it shows (if it even does show - often it doesn't due to lag), then look for the icon you want, then drag your mouse across the screen to click and open it. Who actually wants that?
 
-- While automatically unhiding the dock to go to your app solves the problem of screen space, you must wait until it shows (if it even does show - often it doesn't due to lag), then look for the icon you want, then drag your mouse across the screen to click and open it. Who actually wants that?
+- **Laggy computers** - If your computer suffers from lag when your activity gets more heavy and starts causing problems with switching apps, this is the perfect app for you.
 
-- While the Command+Tab shortcut can switch between your open apps in order, it requires one hand always on the keyboard, and can be laggy and take a while to show - by then you could have unhid the dock and found the app you want to click on manually! Time-wasting!
+- **Save time and increase comfort** - While the Command+Tab shortcut can switch between your open apps in order, it requires one hand always on the keyboard, and can be laggy and take a while to show - by then you could have unhide the dock and found the app you want to click on manually! Time-wasting!
 
-#### Extras
+#### Extra info
 
 If you hold command while dragging the icons to place them where you would like on the menu bar. It will reorder automatically once you change apps again.
 
