@@ -30,5 +30,5 @@ enum Constants {
 enum SortingMethod: Int{
 	case mostRecentOnRight = 0//newest active app on right
 	case mostRecentOnLeft = 1
-	case none = 2
+	case consistent = 2
 }

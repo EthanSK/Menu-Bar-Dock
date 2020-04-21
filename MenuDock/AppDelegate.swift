@@ -16,7 +16,7 @@ import ServiceManagement
 class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	
-
+	
 	let popover = NSPopover()
 	var preferencesWindow = NSWindow()
 	
@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			DistributedNotificationCenter.default().post(name: .killLauncher,
 														 object: Bundle.main.bundleIdentifier!)
 		}
-
+		
 		MenuDock.shared.appManager.trackAppsBeingActivated { (notification) in
 			self.updateStatusItems() 
 		}
@@ -44,7 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sizeOfIconSliderChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .resetToDefaults, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sortingMethodChanged, object: nil)
-				
+		
 	}
 	
 	
@@ -86,10 +86,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			}
 			let image = MenuDock.shared.appManager.runningAppsInOrder[i].icon
 			let imageSize = MenuDock.shared.userPrefs.iconSize
-			image?.size = NSSize(width: imageSize, height: imageSize)	
+			image?.size = NSSize(width: imageSize, height: imageSize)
 			item.button?.appearance = NSAppearance(named: .aqua) //so the full colour of the icon is shown
-			item.button?.image = image
-			item.length = MenuDock.shared.userPrefs.widthOfStatusItem
+//			item.button?.image = image //this casuse it to show as completely blank on secondary monitors. have to set view manually
+			let itemSlotWidth = MenuDock.shared.userPrefs.widthOfStatusItem
+ 			let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
+			
+			let view = NSImageView(frame: NSRect(
+				x: (itemSlotWidth - imageSize) / 2,
+				y: -(imageSize - menuBarHeight) / 2,
+				width: imageSize, height: imageSize)) //constructing image view from image is only available on macos >= 10.12
+			view.image = image
+			view.wantsLayer = true
+//			view.layer?.backgroundColor = NSColor.yellow.cgColor
+			if let existingSubview = item.button?.subviews.first as? NSImageView
+			{
+//				existingSubview.image = image
+				item.button?.replaceSubview(existingSubview, with: view) //we have to replace it to get the correct sizing
+			}else{
+				item.button?.addSubview(view)
+			}
+			
+			
+			item.length = itemSlotWidth
 			let bundleId = MenuDock.shared.appManager.runningAppsInOrder[i].bundleIdentifier ?? MenuDock.shared.appManager.runningAppsInOrder[i].localizedName //?? just in case
 			item.button?.layer?.setValue(bundleId, forKey: Constants.NSUserDefaultsKeys.bundleId) //layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
 			i += 1
@@ -116,17 +135,76 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 	
+	var appBeingRightClicked: NSRunningApplication? //this is horrible but idk how else to pass the app through the nsmenuitem selector.
+	
 	func menu(onItemWithBundleId bundleId: String) -> NSMenu{
 		let menu = NSMenu()
-		//first options to do with the app. we cannot quit the app - there is nothing more i think we can do
-		//let app = MenuDock.shared.appManager.runningAppsInOrder.filter{$0.bundleIdentifier == bundleId}.first
-		//menu.addItem(NSMenuItem(title: "Quit \(app?.localizedName ?? "")", action: #selector(AppDelegate.quitApp), keyEquivalent: "q"))
-		//menu.addItem(NSMenuItem.separator())
+		//first options to do with the app.
+		let app = MenuDock.shared.appManager.runningAppsInOrder.filter{$0.bundleIdentifier == bundleId}.first
+		appBeingRightClicked = app;
+		let appNameToUse = app?.localizedName ?? "app"
+		menu.addItem(NSMenuItem(title: "Quit \(appNameToUse)", action: #selector(AppDelegate.quitAppBeingRightClicked), keyEquivalent: "q"))
+		menu.addItem(NSMenuItem(title: "Reveal \(appNameToUse) in Finder", action: #selector(AppDelegate.showInFinderAppBeingRightClicked), keyEquivalent: "r"))
+		
+		if let app = app{
+			if (app.isHidden){
+				menu.addItem(NSMenuItem(title: "Unhide \(appNameToUse)", action: #selector(AppDelegate.unhideAppBeingRightClicked), keyEquivalent: "h"))
+			}
+			else{
+				menu.addItem(NSMenuItem(title: "Hide \(appNameToUse)", action: #selector(AppDelegate.hideAppBeingRightClicked), keyEquivalent: "h"))
+			}
+		}
+		menu.addItem(NSMenuItem(title: "Activate \(appNameToUse)", action: #selector(AppDelegate.activateAppBeingRightClicked), keyEquivalent: "a"))
+		
+
+		menu.addItem(NSMenuItem.separator())
 		//then options to do with menu bar dock
 		menu.addItem(NSMenuItem(title: "\(Constants.App.name) Preferences...", action: #selector(AppDelegate.openPreferences), keyEquivalent: ","))
-		menu.addItem(NSMenuItem(title: "Quit \(Constants.App.name)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+		menu.addItem(NSMenuItem(title: "Quit \(Constants.App.name)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")) //make it hard for user to quit menu bar dock lolll
+//		menu.addItem(NSMenuItem(title: "Creator's website", action: #selector(AppDelegate.openCreatorsWebsite), keyEquivalent: "w")) //bit needy, its good enough to just show it in preferences
+
+		
 		
 		return menu
+	}
+	
+	@objc func openCreatorsWebsite(){
+		NSWorkspace.shared.open(URL(string: "https://www.etggames.com/menu-bar-dock")!)
+	}
+		
+	@objc func activateAppBeingRightClicked(){
+		appBeingRightClicked?.activate(options: .activateIgnoringOtherApps)
+	}
+	
+	@objc func hideAppBeingRightClicked()
+	{
+		if let appBeingRightClicked = appBeingRightClicked
+		{
+			appBeingRightClicked.hide()
+
+		}
+	}
+	@objc func unhideAppBeingRightClicked()
+	{
+		if let appBeingRightClicked = appBeingRightClicked
+		{
+			appBeingRightClicked.unhide()
+
+		}
+	}
+	
+	@objc func showInFinderAppBeingRightClicked()
+	{
+		if let bundleURL = appBeingRightClicked?.bundleURL
+		{
+			NSWorkspace.shared.activateFileViewerSelecting([bundleURL])
+		}
+	}
+	
+	
+	@objc func quitAppBeingRightClicked() {
+		let wasTerminated = appBeingRightClicked?.terminate() //needs app sandbox off or explicit com.apple.security.temporary-exception.apple-events entitlement for the specific app
+		print("was terminated: " , wasTerminated ?? "null")
 	}
 	
 	@objc func openPreferences(){

@@ -20,8 +20,8 @@ class StatusItemManager: NSObject {
 				return filtered.sorted{$0.button!.superview!.window!.frame.minX > $1.button!.superview!.window!.frame.minX} //item at index 0 is rightmost
 			case .mostRecentOnLeft:
 				return filtered.sorted{$0.button!.superview!.window!.frame.minX < $1.button!.superview!.window!.frame.minX} //item at index 0 is rightmost
-			case .none:
-				return filtered
+			case .consistent:
+				return filtered //we don't have this because it actually makes no sense at all. if the user limits it to 5 apps, then which 5 apps is it!!
 			}
 		}	
 	}
@@ -49,7 +49,7 @@ class StatusItemManager: NSObject {
 				statusItems.removeLast() 
 			}else{
 				//else just make the width 0 because we know it will reappear at some point, and if we remove it it will reset the position on the menu bar
-				statusItems.filter{$0.length != 0}.last?.length = 0 //wait status items aren't in order here and we need them to be no?
+				statusItems.filter{$0.length != 0}.last?.length = 0
 			}
 		}
 		while statusItemsBeingDisplayedInOrder.count < numberThereShouldBe { //not too cold

@@ -27,7 +27,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
 	
 	
-	@IBOutlet weak var noReorderRadioButtons: NSButton!
+	@IBOutlet weak var consistentSortOrderRadioButton: NSButton!
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
 	@IBOutlet weak var launchAtLoginButton: NSButton!
@@ -57,8 +57,8 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			mostRecentRightRadioButton.state = .on
 		case .mostRecentOnLeft:
 			mostRecentLeftRadioButton.state = .on
-		case .none:
-			noReorderRadioButtons.state = .on
+		case .consistent:
+			consistentSortOrderRadioButton.state = .on
 		}
 		
 	}
@@ -148,9 +148,9 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	}
 	
 	@IBAction func radioButtonPressed(_ sender: Any) {
-		print("sortingRadioButtons state ", noReorderRadioButtons.state, mostRecentLeftRadioButton.state, mostRecentRightRadioButton.state)
-		if noReorderRadioButtons.state == .on{
-			MenuDock.shared.userPrefs.sortingMethod = .none
+		print("sortingRadioButtons state ", consistentSortOrderRadioButton.state, mostRecentLeftRadioButton.state, mostRecentRightRadioButton.state)
+		if consistentSortOrderRadioButton.state == .on{
+			MenuDock.shared.userPrefs.sortingMethod = .consistent
 		}
 		if mostRecentLeftRadioButton.state == .on{
 			MenuDock.shared.userPrefs.sortingMethod = .mostRecentOnLeft
@@ -176,6 +176,12 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			NSWorkspace.shared.open(url) {
 			print("default browser was successfully opened")
 		}
+	}
+	
+	@IBAction func logoPressed(_ sender: Any) {
+		if let url = URL(string: "https://www.etggames.com"),
+			NSWorkspace.shared.open(url) {
+ 		}
 	}
 	
 	@IBAction func launchAtLoginPressed(_ sender: NSButton) {
