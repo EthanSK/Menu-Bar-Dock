@@ -2,7 +2,7 @@
 
 ![alt text](https://static.wixstatic.com/media/24cc30_5f813cf2d15848988a113753677d2376~mv2.png/v1/fill/w_1624,h_56,al_c,lg_1,q_90/menubardock.webp)
 
-<link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;">Buy me a coffee</span></a>
+<link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
 ### We place the apps you currently have open onto the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
