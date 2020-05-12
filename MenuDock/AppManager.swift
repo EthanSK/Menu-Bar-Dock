@@ -73,8 +73,10 @@ class AppManager: NSObject {
 			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 		}else{
 			//i don't think there is a way to differentiate two different app versions that have the same bundle id eg matlab
-			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc up
-			if MenuDock.shared.userPrefs.launchInsteadOfActivate{
+			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc u
+			let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[firstApp?.bundleIdentifier ?? ""] ?? MenuDock.shared.userPrefs.launchInsteadOfActivate
+			
+			if shouldLaunchInsteadOfActivate{
 				NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
 				
 			}else{
@@ -84,9 +86,10 @@ class AppManager: NSObject {
 			
 		}
 		
-		if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == bundleId{
-			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //if the have pressed the same icon twice, they must really wanna go to that app so force it. it doesn't work for finder tho rip
-		}
+		//this is weird ambiguous behaviour and it's probably not good to have
+//		if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == bundleId{
+//			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //if the have pressed the same icon twice, they must really wanna go to that app so force it. it doesn't work for finder tho rip
+//		}
 	}
 }
 

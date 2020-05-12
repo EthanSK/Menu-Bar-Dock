@@ -125,10 +125,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			print("Right click")
 			item?.button?.appearance = NSAppearance(named: NSAppearance.current.name)
 			bundleIdOfMenuJustOpened = bundleId
-			item?.popUpMenu(menu(onItemWithBundleId: bundleId)) //works but depr
-			//			NSMenu.popUpContextMenu(menu(onItemWithBundleId: bundleId), with: event!, for: button)
-			//			button.menu =  MenuDock.shared.statusItemManager.menu
-			//			button.menu?.popUp(positioning: nil, at: NSPoint(x: 0, y: button.frame.height + 5), in: button)
+			item?.popUpMenu(menu(onItemWithBundleId: bundleId))
+ 
 		} else {
 			print("Left click")
 			MenuDock.shared.appManager.openApp(withBundleId: bundleId)
@@ -136,6 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 	
 	var appBeingRightClicked: NSRunningApplication? //this is horrible but idk how else to pass the app through the nsmenuitem selector.
+	var launchInsteadActivateItem: NSMenuItem!
 	
 	func menu(onItemWithBundleId bundleId: String) -> NSMenu{
 		let menu = NSMenu()
@@ -156,6 +155,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 		menu.addItem(NSMenuItem(title: "Activate \(appNameToUse)", action: #selector(AppDelegate.activateAppBeingRightClicked), keyEquivalent: "a"))
 		
+		let launchInsteadActivateItem = NSMenuItem(title: "Launch \(appNameToUse) instead of activating on click", action: #selector(AppDelegate.launchInsteadOfActivateSpecificApp), keyEquivalent: "l")
+		if let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[app?.bundleIdentifier ?? ""]{
+			launchInsteadActivateItem.state = shouldLaunchInsteadOfActivate ? .on : .off
+		}else {
+			launchInsteadActivateItem.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off //fallback to the global setting
+		}
+		self.launchInsteadActivateItem = launchInsteadActivateItem
+		menu.addItem(launchInsteadActivateItem)
+
 
 		menu.addItem(NSMenuItem.separator())
 		//then options to do with menu bar dock
@@ -168,9 +176,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return menu
 	}
 	
+	
+	
 	@objc func openCreatorsWebsite(){
 		NSWorkspace.shared.open(URL(string: "https://www.etggames.com/menu-bar-dock")!)
 	}
+	
+	@objc func launchInsteadOfActivateSpecificApp(){
+		// the individual app settings should not be overriden by the global option. they should be the priority.
+		guard let key = appBeingRightClicked?.bundleIdentifier else {return}
+		let newValue: Bool
+		if launchInsteadActivateItem.state == .on {
+			newValue = false
+			launchInsteadActivateItem.state = .off
+		}else{
+			newValue = true
+			launchInsteadActivateItem.state = .on
+		}
+		MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[key] = newValue
+		MenuDock.shared.userPrefs.save()
+  	}
+	
 		
 	@objc func activateAppBeingRightClicked(){
 		appBeingRightClicked?.activate(options: .activateIgnoringOtherApps)

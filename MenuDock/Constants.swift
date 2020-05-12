@@ -24,6 +24,7 @@ enum Constants {
 		static let iconSize = "iconSize"
 		static let launchAtLogin = "launchAtLogin"
 		static let launchInsteadOfActivate = "launchInsteadOfActivate"
+		static let launchInsteadOfActivateIndivApps = "launchInsteadOfActivateIndivApps"
 	}
 }
 

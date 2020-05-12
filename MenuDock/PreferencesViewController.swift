@@ -52,6 +52,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		sizeOfIconSlider.doubleValue = Double(MenuDock.shared.userPrefs.iconSize)
 		launchAtLoginButton.state = MenuDock.shared.userPrefs.launchAtLogin ? .on : .off
 		launchInsteadOfActivateRadioButton.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
+		
 		switch MenuDock.shared.userPrefs.sortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
@@ -169,6 +170,11 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		updateUI()
 		NotificationCenter.default.post(name: .resetToDefaults, object: nil)
 
+	}
+	
+	
+	@IBAction func resetIndivAppSettings(_ sender: Any) {
+		MenuDock.shared.userPrefs.resetIndivAppSettingsToDefaults()
 	}
 	
 	@IBAction func aboutPressed(_ sender: Any) {

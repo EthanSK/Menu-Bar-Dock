@@ -15,6 +15,7 @@ enum UserPrefsDefaultValues{
 	static let iconSize: CGFloat = 21
 	static let launchAtLogin = true //appaz mac app store doesn't allow default true
 	static let launchInsteadOfActivate = true //should activate app by default
+	static let launchInsteadOfActivateIndivApps: [String: Bool] = ["com.apple.finder": true]
 }
 
 class UserPrefs: NSObject { //TODO: have options to reset all these to default
@@ -24,6 +25,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 	var iconSize: CGFloat = UserPrefsDefaultValues.iconSize
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
 	var launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
+	var launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
 	
 	override init(){
 		super.init()
@@ -38,14 +40,19 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 		save()
 	}
+	func resetIndivAppSettingsToDefaults(){
+		launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
+	}
 	
 	func save(){
+		
 		UserDefaults.standard.set(numberOfStatusItems, forKey: Constants.UserPrefs.numberOfStatusItems) 
 		UserDefaults.standard.set(widthOfStatusItem, forKey: Constants.UserPrefs.widthOfStatusItem) 
 		UserDefaults.standard.set(sortingMethod.rawValue, forKey: Constants.UserPrefs.sortingMethod) 
 		UserDefaults.standard.set(iconSize, forKey: Constants.UserPrefs.iconSize)  
 		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)
 		UserDefaults.standard.set(launchInsteadOfActivate, forKey: Constants.UserPrefs.launchInsteadOfActivate)
+		UserDefaults.standard.set(launchInsteadOfActivateIndivApps, forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps)
 
 	}
 	
@@ -71,6 +78,9 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		}
 		if let launchInsteadOfActivate = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivate) as? Bool{
 			self.launchInsteadOfActivate = launchInsteadOfActivate
+		}
+		if let launchInsteadOfActivateIndivApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps) as? [String: Bool]{
+			self.launchInsteadOfActivateIndivApps = launchInsteadOfActivateIndivApps
 		}
 	} 
 }
