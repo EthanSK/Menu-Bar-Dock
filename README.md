@@ -8,7 +8,7 @@
 
 ### Check out our website [here](https://www.etggames.com/menu-bar-dock)
 
-### Download it [here](http://bit.ly/2ZxNevx)
+### Download it [here](https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip)
 
 **It is highly recommended that you enable automatically hide and show the dock in system preferences**. Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps with your mouse by clicking their icon in the menu bar at the top!
 
@@ -25,3 +25,5 @@
 If you hold command while dragging the icons to place them where you would like on the menu bar. It will reorder automatically once you change apps again.
 
 You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by **right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...**). You can even set the app to launch at login automatically (Highly recommended)
+
+Number of downloads can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"download_count"'` in a terminal.
