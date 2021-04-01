@@ -24,6 +24,7 @@ class AppManager: NSObject {
 	
 	private var runningApps: [NSRunningApplication]{
 		func canShowRunningApp(app: NSRunningApplication) -> Bool{
+			if app.bundleIdentifier == "com.apple.finder" {return !MenuDock.shared.userPrefs.hideFinder}
 //			if MenuDock.shared.userPrefs.sortingMethod == .consistent {return true}
 			if MenuDock.shared.userPrefs.hideActiveApp == false {return true}
 			else {return app != NSWorkspace.shared.frontmostApplication}

@@ -857,6 +857,18 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pK5-Uv-oP1">
+                                <rect key="frame" x="84" y="100" width="469" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="465" id="1rQ-o1-BBl"/>
+                                </constraints>
+                                <textFieldCell key="cell" alignment="justified" id="jpm-Dh-vHN">
+                                    <font key="font" metaFont="systemThin" size="13"/>
+                                    <string key="title">Tip: Consistent sort order doesn't really make sense for this Menu Bar Dock, but it was a highly requested feature, so therefore it is a best-effort implementation. We recommend you set the 'Number of Apps' slider to maximum, as well as untick 'Hide active app', to avoid unexpected behaviour.</string>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="edk-tZ-Aif">
                                 <rect key="frame" x="237" y="10" width="200" height="55"/>
                                 <constraints>
@@ -891,18 +903,16 @@
                                     <action selector="hideActiveAppPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pK5-Uv-oP1">
-                                <rect key="frame" x="84" y="100" width="469" height="64"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="465" id="1rQ-o1-BBl"/>
-                                </constraints>
-                                <textFieldCell key="cell" alignment="justified" id="jpm-Dh-vHN">
-                                    <font key="font" metaFont="systemThin" size="13"/>
-                                    <string key="title">Tip: Consistent sort order doesn't really make sense for this Menu Bar Dock, but it was a highly requested feature, so therefore it is a best-effort implementation. We recommend you set the 'Number of Apps' slider to maximum, as well as untick 'Hide active app', to avoid unexpected behaviour.</string>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
+                                <rect key="frame" x="385" y="273" width="96" height="18"/>
+                                <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="hideFinderPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="msg-1s-pvm" firstAttribute="top" secondItem="8Gu-Jg-2zb" secondAttribute="bottom" constant="30" id="00u-WK-GAP"/>
@@ -935,6 +945,7 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="eF7-qW-RXQ" secondAttribute="trailing" constant="20" symbolic="YES" id="QR7-ZW-X5E"/>
                             <constraint firstItem="Ll0-iS-prU" firstAttribute="top" secondItem="32o-CO-DKn" secondAttribute="bottom" constant="30" id="SM2-Xt-E3h"/>
                             <constraint firstItem="FNp-zT-NYp" firstAttribute="leading" secondItem="8Gu-Jg-2zb" secondAttribute="leading" id="SQi-3u-FQL"/>
+                            <constraint firstItem="Jk5-LB-J8x" firstAttribute="top" secondItem="msg-1s-pvm" secondAttribute="bottom" constant="30" id="SwB-ba-kSJ"/>
                             <constraint firstAttribute="bottom" secondItem="pfs-x9-j8G" secondAttribute="bottom" constant="10" id="TAn-lY-onp"/>
                             <constraint firstItem="6S3-3j-iu9" firstAttribute="leading" secondItem="32o-CO-DKn" secondAttribute="leading" id="UZA-T5-PYV"/>
                             <constraint firstItem="32o-CO-DKn" firstAttribute="leading" secondItem="QPi-fn-FRn" secondAttribute="leading" id="XzT-8U-Xfj"/>
@@ -950,7 +961,7 @@
                             <constraint firstItem="Ll0-iS-prU" firstAttribute="leading" secondItem="32o-CO-DKn" secondAttribute="leading" id="gts-Af-ix6"/>
                             <constraint firstItem="Wqs-TY-FqY" firstAttribute="leading" secondItem="628-Xh-NPr" secondAttribute="leading" id="guv-3K-gKE"/>
                             <constraint firstItem="74E-kU-5tY" firstAttribute="centerY" secondItem="QPi-fn-FRn" secondAttribute="centerY" id="h6u-WY-nr2"/>
-                            <constraint firstItem="FNp-zT-NYp" firstAttribute="top" secondItem="msg-1s-pvm" secondAttribute="bottom" constant="30" id="hb2-Fx-GFX"/>
+                            <constraint firstItem="FNp-zT-NYp" firstAttribute="top" secondItem="Jk5-LB-J8x" secondAttribute="bottom" constant="-16" id="hb2-Fx-GFX"/>
                             <constraint firstItem="edk-tZ-Aif" firstAttribute="leading" secondItem="zjk-bH-HaW" secondAttribute="trailing" constant="25" id="hjM-hR-s8Y"/>
                             <constraint firstItem="kPV-SO-R3p" firstAttribute="centerY" secondItem="32o-CO-DKn" secondAttribute="centerY" constant="6" id="kDs-gF-gmu"/>
                             <constraint firstItem="8Gu-Jg-2zb" firstAttribute="top" secondItem="Ll0-iS-prU" secondAttribute="bottom" constant="30" id="krP-1u-xms"/>
@@ -959,6 +970,7 @@
                             <constraint firstItem="J7i-ZT-aFb" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="86" id="qVl-mY-uJ7"/>
                             <constraint firstItem="dQT-5c-wdq" firstAttribute="centerY" secondItem="Wqs-TY-FqY" secondAttribute="centerY" id="rDi-Tn-B5n"/>
                             <constraint firstItem="pfs-x9-j8G" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zjk-bH-HaW" secondAttribute="trailing" constant="8" symbolic="YES" id="tKC-w1-ltV"/>
+                            <constraint firstItem="Jk5-LB-J8x" firstAttribute="leading" secondItem="FNp-zT-NYp" secondAttribute="trailing" constant="84" id="wLd-ia-9TD"/>
                             <constraint firstItem="J7i-ZT-aFb" firstAttribute="leading" secondItem="NFT-ga-Otx" secondAttribute="leading" id="xLx-xa-NwH"/>
                             <constraint firstAttribute="bottom" secondItem="edk-tZ-Aif" secondAttribute="bottom" constant="10" id="z0M-1M-Zkr"/>
                             <constraint firstItem="eF7-qW-RXQ" firstAttribute="leading" secondItem="628-Xh-NPr" secondAttribute="trailing" constant="23" id="z1S-5g-Am4"/>
@@ -968,6 +980,7 @@
                     <connections>
                         <outlet property="consistentSortOrderRadioButton" destination="i5z-3c-gg7" id="Po6-Aa-tPp"/>
                         <outlet property="hideActiveAppButton" destination="msg-1s-pvm" id="5lc-Qw-JGL"/>
+                        <outlet property="hideFinderButton" destination="Jk5-LB-J8x" id="H9B-Kl-mhk"/>
                         <outlet property="launchAtLoginButton" destination="pfs-x9-j8G" id="xQM-Mz-wm5"/>
                         <outlet property="launchInsteadOfActivateRadioButton" destination="FNp-zT-NYp" id="m1l-oW-KNw"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>

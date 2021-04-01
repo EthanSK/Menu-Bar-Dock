@@ -17,6 +17,7 @@ enum UserPrefsDefaultValues{
 	static let launchInsteadOfActivate = true //should activate app by default
 	static let launchInsteadOfActivateIndivApps: [String: Bool] = ["com.apple.finder": true]
 	static let hideActiveApp = true
+	static let hideFinder = false
 }
 
 class UserPrefs: NSObject { //TODO: have options to reset all these to default
@@ -28,6 +29,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 	var launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 	var launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
 	var hideActiveApp = UserPrefsDefaultValues.hideActiveApp
+	var hideFinder = UserPrefsDefaultValues.hideFinder
 	
 	override init(){
 		super.init()
@@ -41,6 +43,8 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		iconSize = UserPrefsDefaultValues.iconSize
 		launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 		hideActiveApp = UserPrefsDefaultValues.hideActiveApp
+		hideFinder = UserPrefsDefaultValues.hideFinder
+		
 		save()
 	}
 	func resetIndivAppSettingsToDefaults(){
@@ -57,6 +61,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		UserDefaults.standard.set(launchInsteadOfActivate, forKey: Constants.UserPrefs.launchInsteadOfActivate)
 		UserDefaults.standard.set(launchInsteadOfActivateIndivApps, forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps)
 		UserDefaults.standard.set(hideActiveApp, forKey: Constants.UserPrefs.hideActiveApp)
+		UserDefaults.standard.set(hideFinder, forKey: Constants.UserPrefs.hideFinder)
 
 	}
 	
@@ -88,6 +93,9 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		}
 		if let hideActiveApp = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideActiveApp) as? Bool{
 			self.hideActiveApp = hideActiveApp
+		}
+		if let hideFinder = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideFinder) as? Bool{
+			self.hideFinder = hideFinder
 		}
 	} 
 }
