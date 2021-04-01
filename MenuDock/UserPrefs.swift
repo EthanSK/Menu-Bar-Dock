@@ -16,6 +16,7 @@ enum UserPrefsDefaultValues{
 	static let launchAtLogin = true //appaz mac app store doesn't allow default true
 	static let launchInsteadOfActivate = true //should activate app by default
 	static let launchInsteadOfActivateIndivApps: [String: Bool] = ["com.apple.finder": true]
+	static let hideActiveApp = true
 }
 
 class UserPrefs: NSObject { //TODO: have options to reset all these to default
@@ -26,6 +27,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
 	var launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
 	var launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
+	var hideActiveApp = UserPrefsDefaultValues.hideActiveApp
 	
 	override init(){
 		super.init()
@@ -38,6 +40,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		sortingMethod = UserPrefsDefaultValues.sortingMethod
 		iconSize = UserPrefsDefaultValues.iconSize
 		launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
+		hideActiveApp = UserPrefsDefaultValues.hideActiveApp
 		save()
 	}
 	func resetIndivAppSettingsToDefaults(){
@@ -53,6 +56,7 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)
 		UserDefaults.standard.set(launchInsteadOfActivate, forKey: Constants.UserPrefs.launchInsteadOfActivate)
 		UserDefaults.standard.set(launchInsteadOfActivateIndivApps, forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps)
+		UserDefaults.standard.set(hideActiveApp, forKey: Constants.UserPrefs.hideActiveApp)
 
 	}
 	
@@ -81,6 +85,9 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 		}
 		if let launchInsteadOfActivateIndivApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps) as? [String: Bool]{
 			self.launchInsteadOfActivateIndivApps = launchInsteadOfActivateIndivApps
+		}
+		if let hideActiveApp = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideActiveApp) as? Bool{
+			self.hideActiveApp = hideActiveApp
 		}
 	} 
 }

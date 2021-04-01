@@ -111,6 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			item.length = itemSlotWidth
 			let bundleId = MenuDock.shared.appManager.runningAppsInOrder[i].bundleIdentifier ?? MenuDock.shared.appManager.runningAppsInOrder[i].localizedName //?? just in case
 			item.button?.layer?.setValue(bundleId, forKey: Constants.NSUserDefaultsKeys.bundleId) //layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
+			item.button?.title = bundleId!
 			i += 1
 		}
 	} 

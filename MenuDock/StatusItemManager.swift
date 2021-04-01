@@ -12,7 +12,8 @@ class StatusItemManager: NSObject {
 	
 	var statusItems: [NSStatusItem] //this will contain even the ones that are 0 width coz they shouldn't be there
 	
-	var statusItemsBeingDisplayedInOrder: [NSStatusItem]{ //mutating order of most to least active
+	var statusItemsBeingDisplayedInOrder: [NSStatusItem]{ //mutating order of most to least active. gets the order based on the existing sorted position.
+		
 		get{
 			let filtered = statusItems.filter{$0.length != 0}
 			switch MenuDock.shared.userPrefs.sortingMethod {
@@ -21,7 +22,7 @@ class StatusItemManager: NSObject {
 			case .mostRecentOnLeft:
 				return filtered.sorted{$0.button!.superview!.window!.frame.minX < $1.button!.superview!.window!.frame.minX} //item at index 0 is rightmost
 			case .consistent:
-				return filtered //we don't have this because it actually makes no sense at all. if the user limits it to 5 apps, then which 5 apps is it!!
+				return filtered //don't be fooled, the actual ordering takes place in runningAppsInOrder in appmanager.swift
 			}
 		}	
 	}
@@ -53,7 +54,7 @@ class StatusItemManager: NSObject {
 			}
 		}
 		while statusItemsBeingDisplayedInOrder.count < numberThereShouldBe { //not too cold
-			print("too few: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
+//			print("too few: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			
 			if statusItems.count < MenuDock.shared.userPrefs.numberOfStatusItems{
 				addStatusItem()

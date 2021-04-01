@@ -16,7 +16,6 @@
 		38412F13222B3E3000D3FA0C /* MenuDockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F12222B3E3000D3FA0C /* MenuDockTests.swift */; };
 		38412F1E222B3E3000D3FA0C /* MenuDockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F1D222B3E3000D3FA0C /* MenuDockUITests.swift */; };
 		38412F2C222B47A900D3FA0C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2B222B47A900D3FA0C /* AppManager.swift */; };
-		38412F2E222B5DDA00D3FA0C /* todo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 38412F2D222B5DDA00D3FA0C /* todo.rtf */; };
 		38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2F222B715400D3FA0C /* UserPrefs.swift */; };
 		38412F32222B722100D3FA0C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F31222B722100D3FA0C /* Constants.swift */; };
 		38412F34222B729100D3FA0C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F33222B729100D3FA0C /* Model.swift */; };
@@ -93,7 +92,6 @@
 		38412F1D222B3E3000D3FA0C /* MenuDockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDockUITests.swift; sourceTree = "<group>"; };
 		38412F1F222B3E3000D3FA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38412F2B222B47A900D3FA0C /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
-		38412F2D222B5DDA00D3FA0C /* todo.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = todo.rtf; sourceTree = "<group>"; };
 		38412F2F222B715400D3FA0C /* UserPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
 		38412F31222B722100D3FA0C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		38412F33222B729100D3FA0C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -202,7 +200,6 @@
 				38412F05222B3E3000D3FA0C /* Main.storyboard */,
 				38412F08222B3E3000D3FA0C /* Info.plist */,
 				38412F09222B3E3000D3FA0C /* MenuDock.entitlements */,
-				38412F2D222B5DDA00D3FA0C /* todo.rtf */,
 				38412EFF222B3E2F00D3FA0C /* AppDelegate.swift */,
 				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
 				38412F33222B729100D3FA0C /* Model.swift */,
@@ -410,7 +407,6 @@
 				38412F04222B3E3000D3FA0C /* Assets.xcassets in Resources */,
 				38D723EB222D8D8600D6F079 /* Launcher.app in Resources */,
 				38E394F4222D7B57006F926E /* Launcher.app in Resources */,
-				38412F2E222B5DDA00D3FA0C /* todo.rtf in Resources */,
 				38E394FA222D7B6F006F926E /* Launcher.app in Resources */,
 				38412F07222B3E3000D3FA0C /* Main.storyboard in Resources */,
 			);
@@ -738,7 +734,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = T34G959ZG8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MenuDock/Info.plist;
@@ -747,7 +743,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -765,7 +761,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = T34G959ZG8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = MenuDock/Info.plist;
@@ -774,7 +770,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 2.2;
+				MARKETING_VERSION = 2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.etggames.MenuDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

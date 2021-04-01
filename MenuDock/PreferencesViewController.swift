@@ -31,6 +31,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
 	@IBOutlet weak var launchAtLoginButton: NSButton!
+	@IBOutlet weak var hideActiveAppButton: NSButton!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -52,6 +53,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		sizeOfIconSlider.doubleValue = Double(MenuDock.shared.userPrefs.iconSize)
 		launchAtLoginButton.state = MenuDock.shared.userPrefs.launchAtLogin ? .on : .off
 		launchInsteadOfActivateRadioButton.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
+		hideActiveAppButton.state = MenuDock.shared.userPrefs.hideActiveApp ? .on : .off
 		
 		switch MenuDock.shared.userPrefs.sortingMethod {
 		case .mostRecentOnRight:
@@ -202,6 +204,11 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
 		MenuDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
 		
+		MenuDock.shared.userPrefs.save()
+	}
+	
+	@IBAction func hideActiveAppPressed(_ sender: NSButton) {
+		MenuDock.shared.userPrefs.hideActiveApp = sender.state == .on		
 		MenuDock.shared.userPrefs.save()
 	}
 	

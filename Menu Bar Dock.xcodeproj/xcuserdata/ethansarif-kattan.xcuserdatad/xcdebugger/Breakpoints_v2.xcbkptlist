@@ -15,27 +15,9 @@
             timestampString = "573405737.623695"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "init()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "84F7E4CE-E862-4235-99B3-0AF177738598"
-            shouldBeEnabled = "No"
-            condition = "app.localizedName != &quot;Xcode&quot; &amp;&amp; app.localizedName != &quot;MenuDock&quot;"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MenuDock/AppManager.swift"
-            timestampString = "575756297.064208"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "trackAppsBeingActivated(updated:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -50,13 +32,13 @@
             timestampString = "575756297.0644439"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "AppManager"
             landmarkType = "3">
             <Locations>
                <Location
-                  uuid = "BAAB5749-3A72-44C5-9B11-BD8DB1B7F99B - c7a7a1ffe18d18b4"
+                  uuid = "BAAB5749-3A72-44C5-9B11-BD8DB1B7F99B - 3721c52d9230dc0f"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -72,7 +54,7 @@
                   offsetFromSymbolStart = "39">
                </Location>
                <Location
-                  uuid = "BAAB5749-3A72-44C5-9B11-BD8DB1B7F99B - 26256e97cdba4a0e"
+                  uuid = "BAAB5749-3A72-44C5-9B11-BD8DB1B7F99B - d6a30a45be078eb5"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -101,13 +83,13 @@
             timestampString = "575756297.064667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
             landmarkName = "openApp(withBundleId:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "CCAC9A85-B415-4007-8CFE-9A6E4CB19613 - c7a7a1ffe18d18b4"
+                  uuid = "CCAC9A85-B415-4007-8CFE-9A6E4CB19613 - 3721c52d9230dc0f"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -123,7 +105,7 @@
                   offsetFromSymbolStart = "39">
                </Location>
                <Location
-                  uuid = "CCAC9A85-B415-4007-8CFE-9A6E4CB19613 - 26256e97cdba4a0e"
+                  uuid = "CCAC9A85-B415-4007-8CFE-9A6E4CB19613 - d6a30a45be078eb5"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -144,57 +126,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7FCED324-B43D-4B63-933A-2402F9770D4B"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MenuDock/AppManager.swift"
-            timestampString = "575756297.064868"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
-            landmarkName = "openApp(withBundleId:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "7FCED324-B43D-4B63-933A-2402F9770D4B - c7a7a1ffe18d18b4"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MenuDock.AppManager.openApp(withBundleId: Swift.String) -&gt; ()"
-                  moduleName = "MenuDock"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethansarif-kattan/codeProjects/MenuDock/MenuDock/AppManager.swift"
-                  timestampString = "573283156.345403"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "2851">
-               </Location>
-               <Location
-                  uuid = "7FCED324-B43D-4B63-933A-2402F9770D4B - 326c1c629f02a40f"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 (__C.NSRunningApplication) -&gt; Swift.Bool in MenuDock.AppManager.openApp(withBundleId: Swift.String) -&gt; ()"
-                  moduleName = "MenuDock"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/ethansarif-kattan/codeProjects/MenuDock/MenuDock/AppManager.swift"
-                  timestampString = "573283156.3470531"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "31">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "01DEB1B2-B19F-45D6-AA7D-A24ACFAD196E"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -203,8 +134,8 @@
             timestampString = "575756297.0650589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
             landmarkName = "trackAppsBeingQuit(terminated:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -220,13 +151,13 @@
             timestampString = "575756297.065246"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
             landmarkName = "runningApps"
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "A362BB80-3A72-46DD-B4E7-FEF76BF9117C - 3de6804a471604f2"
+                  uuid = "A362BB80-3A72-46DD-B4E7-FEF76BF9117C - cd60e49834abdc08"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -242,7 +173,7 @@
                   offsetFromSymbolStart = "31">
                </Location>
                <Location
-                  uuid = "A362BB80-3A72-46DD-B4E7-FEF76BF9117C - d5d6694a262f7129"
+                  uuid = "A362BB80-3A72-46DD-B4E7-FEF76BF9117C - 25500d985592a9d3"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -305,8 +236,8 @@
             timestampString = "575755308.216576"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
             landmarkName = "PreferencesViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -322,8 +253,8 @@
             timestampString = "575755590.0325969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "124"
+            endingLineNumber = "124"
             landmarkName = "statusBarPressed(button:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -339,8 +270,8 @@
             timestampString = "575755590.03263"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "openPreferencesWindow()"
             landmarkType = "7">
          </BreakpointContent>
@@ -356,8 +287,8 @@
             timestampString = "575755308.216701"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
             landmarkName = "resetToDefaultPressed(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -373,8 +304,8 @@
             timestampString = "575755308.216743"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
             landmarkName = "radioButtonPressed(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -390,8 +321,8 @@
             timestampString = "573405737.629793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "correctVisibleNumberOfStatusItems()"
             landmarkType = "7">
          </BreakpointContent>
@@ -407,13 +338,13 @@
             timestampString = "573405737.629843"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
             landmarkName = "correctVisibleNumberOfStatusItems()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "D54136EA-4961-498D-A929-47FB4D1ACED5 - 3a1f15dc04525552"
+                  uuid = "D54136EA-4961-498D-A929-47FB4D1ACED5 - 2ee0fda86ebe8845"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -429,7 +360,7 @@
                   offsetFromSymbolStart = "835">
                </Location>
                <Location
-                  uuid = "D54136EA-4961-498D-A929-47FB4D1ACED5 - 8d43aef2a860910"
+                  uuid = "D54136EA-4961-498D-A929-47FB4D1ACED5 - 1c2bd29b406ad407"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -458,8 +389,8 @@
             timestampString = "573405737.6298929"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "58"
-            endingLineNumber = "58"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "correctVisibleNumberOfStatusItems()"
             landmarkType = "7">
          </BreakpointContent>
@@ -475,8 +406,8 @@
             timestampString = "573405737.629939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
             landmarkName = "correctVisibleNumberOfStatusItems()"
             landmarkType = "7">
          </BreakpointContent>

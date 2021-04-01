@@ -23,12 +23,28 @@ class AppManager: NSObject {
 	}
 	
 	private var runningApps: [NSRunningApplication]{
-		return NSWorkspace.shared.runningApplications.filter{$0.activationPolicy == .regular && $0 != NSWorkspace.shared.frontmostApplication}// not sorted yet. tried many ways and couldn't get it ordered. it's fine, we can order them manually once we've kept track of which apps the user opened after this app has started. ideally it should be started on login
+		func canShowRunningApp(app: NSRunningApplication) -> Bool{
+//			if MenuDock.shared.userPrefs.sortingMethod == .consistent {return true}
+			if MenuDock.shared.userPrefs.hideActiveApp == false {return true}
+			else {return app != NSWorkspace.shared.frontmostApplication}
+			
+			
+		}
+		return NSWorkspace.shared.runningApplications.filter{$0.activationPolicy == .regular && canShowRunningApp(app: $0)}// not sorted yet. tried many ways and couldn't get it ordered. it's fine, we can order them manually once we've kept track of which apps the user opened after this app has started. ideally it should be started on login
+	}
+	
+	
+	func effectiveAppName(_ app: NSRunningApplication) -> String{
+		return app.localizedName ?? app.bundleIdentifier!
 	}
 	
 	var runningAppsInOrder: [NSRunningApplication]{//will use appActivationsTracked to try and form the best order it can
 		var result: [NSRunningApplication] = []
 		let runningApps = self.runningApps //so we don't recalc every time func is invoked
+		
+		if MenuDock.shared.userPrefs.sortingMethod == .consistent {
+			return runningApps.sorted{effectiveAppName($0) > effectiveAppName($1)}
+		}
 		for appActivated in appActivationsTracked{ //first add the apps we have ordering info of AND that we know are running
 			if runningApps.contains(appActivated){
 				result.append(appActivated)
@@ -39,6 +55,7 @@ class AppManager: NSObject {
 				result.append(runningApp)
 			}
 		}
+		
 		return result
 	}
 	
@@ -46,7 +63,6 @@ class AppManager: NSObject {
 	func trackAppsBeingActivated(updated: @escaping (_ notification: Notification) -> Void){//to allow us to form some sort of order in the menu bar
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, NSWorkspace.shared.frontmostApplication == app{ //make sure it wasn't triggered by some background process
-//				print("app activated: ", app.localizedName)
 				self.appActivationsTracked.insert(app, at: 0)
 				updated(notification)
 			}
@@ -57,39 +73,31 @@ class AppManager: NSObject {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			print("app quit")
 			terminated(notification) //handle the updating in the calling closure
-			//			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-			//				print("app quit: ", app.localizedName)
-			//				terminated(notification)
-			//			}
+
 		}
 	}
 	
 	
 	
 	func openApp(withBundleId bundleId: String){
-		let firstApp = MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first
-		if (firstApp?.bundleIdentifier) == "com.apple.finder"{ //finder is weird and doesn't open normally
+		let appToOpen = MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first
+		if (appToOpen?.bundleIdentifier) == "com.apple.finder"{ //finder is weird and doesn't open normally
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) //do this as well if it's hidden
-			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
+			appToOpen?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 		}else{
 			//i don't think there is a way to differentiate two different app versions that have the same bundle id eg matlab
 			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc u
-			let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[firstApp?.bundleIdentifier ?? ""] ?? MenuDock.shared.userPrefs.launchInsteadOfActivate
+			let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[appToOpen?.bundleIdentifier ?? ""] ?? MenuDock.shared.userPrefs.launchInsteadOfActivate
 			
 			if shouldLaunchInsteadOfActivate{
 				NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
 				
 			}else{
-				firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
+				appToOpen?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 				
 			}
 			
 		}
-		
-		//this is weird ambiguous behaviour and it's probably not good to have
-//		if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == bundleId{
-//			firstApp?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //if the have pressed the same icon twice, they must really wanna go to that app so force it. it doesn't work for finder tho rip
-//		}
 	}
 }
 

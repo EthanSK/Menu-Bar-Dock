@@ -25,6 +25,7 @@ enum Constants {
 		static let launchAtLogin = "launchAtLogin"
 		static let launchInsteadOfActivate = "launchInsteadOfActivate"
 		static let launchInsteadOfActivateIndivApps = "launchInsteadOfActivateIndivApps"
+		static let hideActiveApp = "hideActiveApp"
 	}
 }
 
