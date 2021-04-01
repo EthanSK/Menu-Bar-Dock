@@ -8,7 +8,7 @@
 
 ### Check out our website [here](https://www.etggames.com/menu-bar-dock)
 
-### Download it [here](https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip)
+### Download it [here](http://bit.ly/2ZxNevx)
 
 **It is highly recommended that you enable automatically hide and show the dock in system preferences**. Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps with your mouse by clicking their icon in the menu bar at the top!
 
