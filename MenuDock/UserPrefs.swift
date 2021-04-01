@@ -9,7 +9,7 @@
 import Cocoa
 
 enum UserPrefsDefaultValues{
-	static let numberOfStatusItems = 7 //make it go up really high so user has freedom if the have a very large long screen
+	static let numberOfStatusItems = 15 //make it go up really high so user has freedom if the have a very large long screen
 	static let widthOfStatusItem = CGFloat(30)
 	static let sortingMethod: SortingMethod = .mostRecentOnRight
 	static let iconSize: CGFloat = 21

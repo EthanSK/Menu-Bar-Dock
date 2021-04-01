@@ -6,4 +6,6 @@
 
   `curl https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases/latest`
 
-- When exporting, first validate the app, then distribute it and make sure to upload to Apple's notary sevices or it will give a warning when tryna open it normally (and chrome will say that the download is potentially dodgy)
+- When exporting, distribute it and make sure to upload to Apple's notary sevices or it will give a warning when tryna open it normally (and chrome will say that the download is potentially dodgy)
+
+- We disabled app sandbox because otherwise it can't quit apps using the dropdown menu on right click
