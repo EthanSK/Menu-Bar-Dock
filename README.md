@@ -26,6 +26,6 @@ If you hold command while dragging the icons to place them where you would like 
 
 You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by **right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...**). You can even set the app to launch at login automatically (Highly recommended)
 
-Number of downloads can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"download_count"'` in a terminal.
+Number of downloads can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
 
 ![Preferences example](./menu-bar-dock-prefs.png)
