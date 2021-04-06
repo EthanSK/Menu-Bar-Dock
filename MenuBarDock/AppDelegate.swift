@@ -24,12 +24,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		
 		let launcherAppId = Constants.App.launcherBundleId
 		let runningApps = NSWorkspace.shared.runningApplications
-		let isRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
-		print("Launch at login on app did finish launching: ", MenuBarDock.shared.userPrefs.launchAtLogin)
-		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
-		print("SMLoginItemSetEnabled res: ", result)
+		let isLauncherRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
 		
-		if isRunning {
+		print("Launch at login on app did finish launching: ", MenuBarDock.shared.userPrefs.launchAtLogin)
+		SMLoginItemSetEnabled(launcherAppId as CFString, false) //needs to be set to false to actually create the loginitems.501.plist file, then we can set it to the legit value...weird
+		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
+
+ 
+		if isLauncherRunning {
 			DistributedNotificationCenter.default().post(name: .killLauncher,
 														 object: Bundle.main.bundleIdentifier!)
 		}
