@@ -28,7 +28,7 @@ extension AppDelegateLauncher: NSApplicationDelegate {
 
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
-		let mainAppIdentifier = "com.etggames.MenuDock"
+		let mainAppIdentifier = "com.ethansk.MenuBarDock"
 		let runningApps = NSWorkspace.shared.runningApplications
 		let isRunning = !runningApps.filter { $0.bundleIdentifier == mainAppIdentifier }.isEmpty
 		

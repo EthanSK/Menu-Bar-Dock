@@ -24,9 +24,9 @@ class AppManager: NSObject {
 	
 	private var runningApps: [NSRunningApplication]{
 		func canShowRunningApp(app: NSRunningApplication) -> Bool{
-			if app.bundleIdentifier == "com.apple.finder" {return !MenuDock.shared.userPrefs.hideFinder}
+			if app.bundleIdentifier == "com.apple.finder" {return !MenuBarDock.shared.userPrefs.hideFinder}
 //			if MenuDock.shared.userPrefs.sortingMethod == .consistent {return true}
-			if MenuDock.shared.userPrefs.hideActiveApp == false {return true}
+			if MenuBarDock.shared.userPrefs.hideActiveApp == false {return true}
 			else {return app != NSWorkspace.shared.frontmostApplication}
 			
 			
@@ -43,7 +43,7 @@ class AppManager: NSObject {
 		var result: [NSRunningApplication] = []
 		let runningApps = self.runningApps //so we don't recalc every time func is invoked
 		
-		if MenuDock.shared.userPrefs.sortingMethod == .consistent {
+		if MenuBarDock.shared.userPrefs.sortingMethod == .consistent {
 			return runningApps.sorted{effectiveAppName($0) > effectiveAppName($1)}
 		}
 		for appActivated in appActivationsTracked{ //first add the apps we have ordering info of AND that we know are running
@@ -81,14 +81,14 @@ class AppManager: NSObject {
 	
 	
 	func openApp(withBundleId bundleId: String){
-		let appToOpen = MenuDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first
+		let appToOpen = MenuBarDock.shared.appManager.runningApps.filter{$0.bundleIdentifier == bundleId}.first
 		if (appToOpen?.bundleIdentifier) == "com.apple.finder"{ //finder is weird and doesn't open normally
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) //do this as well if it's hidden
 			appToOpen?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) //this is the only way i can get working to show the finder app
 		}else{
 			//i don't think there is a way to differentiate two different app versions that have the same bundle id eg matlab
 			//its better to activate instead of launch because if there are multiple versions of the same app it will fucc u
-			let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[appToOpen?.bundleIdentifier ?? ""] ?? MenuDock.shared.userPrefs.launchInsteadOfActivate
+			let shouldLaunchInsteadOfActivate = MenuBarDock.shared.userPrefs.launchInsteadOfActivateIndivApps[appToOpen?.bundleIdentifier ?? ""] ?? MenuBarDock.shared.userPrefs.launchInsteadOfActivate
 			
 			if shouldLaunchInsteadOfActivate{
 				NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)

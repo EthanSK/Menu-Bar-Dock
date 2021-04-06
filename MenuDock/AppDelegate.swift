@@ -22,20 +22,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
-		let launcherAppId = "com.etggames.Launcher"
+		let launcherAppId = Constants.App.launcherBundleId
 		let runningApps = NSWorkspace.shared.runningApplications
 		let isRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
+		print("Launch at login on app did finish launching: ", MenuBarDock.shared.userPrefs.launchAtLogin)
+		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
 		
-		SMLoginItemSetEnabled(launcherAppId as CFString, MenuDock.shared.userPrefs.launchAtLogin)  //well this didn't fucking work
 		if isRunning {
 			DistributedNotificationCenter.default().post(name: .killLauncher,
 														 object: Bundle.main.bundleIdentifier!)
 		}
 		
-		MenuDock.shared.appManager.trackAppsBeingActivated { (notification) in
+		MenuBarDock.shared.appManager.trackAppsBeingActivated { (notification) in
 			self.updateStatusItems() 
 		}
-		MenuDock.shared.appManager.trackAppsBeingQuit { (notification) in
+		MenuBarDock.shared.appManager.trackAppsBeingQuit { (notification) in
 			self.updateStatusItems()  //because the app actually quits aftre the activated app is switched meaninng otherwise we would keep the old app in the list showing
 		}
 		addStatusItems()
@@ -50,14 +51,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	func applicationWillTerminate(_ aNotification: Notification) {
 		// Insert code here to tear down your application
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 	
 	func addStatusItems(){
-		MenuDock.shared.statusItemManager.statusItems = []
-		for _ in 1...MenuDock.shared.userPrefs.numberOfStatusItems{
-			MenuDock.shared.statusItemManager.addStatusItem()
+		MenuBarDock.shared.statusItemManager.statusItems = []
+		for _ in 1...MenuBarDock.shared.userPrefs.numberOfStatusItems{
+			MenuBarDock.shared.statusItemManager.addStatusItem()
 		}
 		//		for _ in 1...69{//for now just do the maximum number to guarantee that the order is saved //fuck it its laggy and illegit
 		//			MenuDock.shared.statusItemManager.addStatusItem()
@@ -73,23 +74,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@objc func updateStatusItems(){
 		//display running apps in order
 		//will be by default ordered newest on the right because that's the most likely place the status item will be if there are too many status items.
-		MenuDock.shared.statusItemManager.correctVisibleNumberOfStatusItems() //in case there are fewer running apps that status items in place.
-		for item in MenuDock.shared.statusItemManager.statusItems{
+		MenuBarDock.shared.statusItemManager.correctVisibleNumberOfStatusItems() //in case there are fewer running apps that status items in place.
+		for item in MenuBarDock.shared.statusItemManager.statusItems{
 			item.button?.wantsLayer = true
 			item.button?.action = #selector(statusBarPressed) //doing this coz if the item was re-added, it needs this assosiated with it.
 			item.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 		}
 		var i = 0
-		for item in MenuDock.shared.statusItemManager.statusItemsBeingDisplayedInOrder{
-			if i >= MenuDock.shared.appManager.runningAppsInOrder.count{//then we need to hide it
+		for item in MenuBarDock.shared.statusItemManager.statusItemsBeingDisplayedInOrder{
+			if i >= MenuBarDock.shared.appManager.runningAppsInOrder.count{//then we need to hide it
 				return //all other i's will be higher and will fail too
 			}
-			let image = MenuDock.shared.appManager.runningAppsInOrder[i].icon
-			let imageSize = MenuDock.shared.userPrefs.iconSize
+			let image = MenuBarDock.shared.appManager.runningAppsInOrder[i].icon
+			let imageSize = MenuBarDock.shared.userPrefs.iconSize
 			image?.size = NSSize(width: imageSize, height: imageSize)
 			item.button?.appearance = NSAppearance(named: .aqua) //so the full colour of the icon is shown
 //			item.button?.image = image //this casuse it to show as completely blank on secondary monitors. have to set view manually
-			let itemSlotWidth = MenuDock.shared.userPrefs.widthOfStatusItem
+			let itemSlotWidth = MenuBarDock.shared.userPrefs.widthOfStatusItem
  			let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
 			
 			let view = NSImageView(frame: NSRect(
@@ -109,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			
 			
 			item.length = itemSlotWidth
-			let bundleId = MenuDock.shared.appManager.runningAppsInOrder[i].bundleIdentifier ?? MenuDock.shared.appManager.runningAppsInOrder[i].localizedName //?? just in case
+			let bundleId = MenuBarDock.shared.appManager.runningAppsInOrder[i].bundleIdentifier ?? MenuBarDock.shared.appManager.runningAppsInOrder[i].localizedName //?? just in case
 			item.button?.layer?.setValue(bundleId, forKey: Constants.NSUserDefaultsKeys.bundleId) //layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
  			i += 1
 		}
@@ -120,7 +121,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@objc func statusBarPressed(button: NSButton){
 		let event = NSApp.currentEvent
 		let bundleId =  button.layer?.value(forKey: Constants.NSUserDefaultsKeys.bundleId) as! String
-		let item = MenuDock.shared.statusItemManager.statusItems.filter{$0.button == button}.first
+		let item = MenuBarDock.shared.statusItemManager.statusItems.filter{$0.button == button}.first
 		if event?.type == NSEvent.EventType.rightMouseUp {
 			print("Right click")
 			item?.button?.appearance = NSAppearance(named: NSAppearance.current.name)
@@ -129,7 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
  
 		} else {
 			print("Left click")
-			MenuDock.shared.appManager.openApp(withBundleId: bundleId)
+			MenuBarDock.shared.appManager.openApp(withBundleId: bundleId)
 		}
 	}
 	
@@ -139,7 +140,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func menu(onItemWithBundleId bundleId: String) -> NSMenu{
 		let menu = NSMenu()
 		//first options to do with the app.
-		let app = MenuDock.shared.appManager.runningAppsInOrder.filter{$0.bundleIdentifier == bundleId}.first
+		let app = MenuBarDock.shared.appManager.runningAppsInOrder.filter{$0.bundleIdentifier == bundleId}.first
 		appBeingRightClicked = app;
 		let appNameToUse = app?.localizedName ?? "app"
 		menu.addItem(NSMenuItem(title: "Quit \(appNameToUse)", action: #selector(AppDelegate.quitAppBeingRightClicked), keyEquivalent: "q"))
@@ -156,10 +157,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		menu.addItem(NSMenuItem(title: "Activate \(appNameToUse)", action: #selector(AppDelegate.activateAppBeingRightClicked), keyEquivalent: "a"))
 		
 		let launchInsteadActivateItem = NSMenuItem(title: "Launch \(appNameToUse) instead of activating on click", action: #selector(AppDelegate.launchInsteadOfActivateSpecificApp), keyEquivalent: "l")
-		if let shouldLaunchInsteadOfActivate = MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[app?.bundleIdentifier ?? ""]{
+		if let shouldLaunchInsteadOfActivate = MenuBarDock.shared.userPrefs.launchInsteadOfActivateIndivApps[app?.bundleIdentifier ?? ""]{
 			launchInsteadActivateItem.state = shouldLaunchInsteadOfActivate ? .on : .off
 		}else {
-			launchInsteadActivateItem.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off //fallback to the global setting
+			launchInsteadActivateItem.state = MenuBarDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off //fallback to the global setting
 		}
 		self.launchInsteadActivateItem = launchInsteadActivateItem
 		menu.addItem(launchInsteadActivateItem)
@@ -193,8 +194,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			newValue = true
 			launchInsteadActivateItem.state = .on
 		}
-		MenuDock.shared.userPrefs.launchInsteadOfActivateIndivApps[key] = newValue
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.launchInsteadOfActivateIndivApps[key] = newValue
+		MenuBarDock.shared.userPrefs.save()
   	}
 	
 		

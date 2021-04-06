@@ -11,6 +11,7 @@ import Cocoa
 enum Constants {
 	enum App{
 		static let name = "Menu Bar Dock"
+		static let launcherBundleId = "com.ethansk.MenuBarDockLauncher"
 	}
 	
 	enum NSUserDefaultsKeys{

@@ -8,3 +8,7 @@
 - When exporting, distribute it and make sure to upload to Apple's notary sevices or it will give a warning when tryna open it normally (and chrome will say that the download is potentially dodgy)
 
 - We disabled app sandbox because otherwise it can't quit apps using the dropdown menu on right click
+
+- The login item for the launcher is found in the file at `/private/var/db/com.apple.xpc.launchd/loginitems.501.plist`
+
+- The plist with the user prefs is _usually_ found in the file at `/Users/ethansarif-kattan/Library/Preferences/com.ethansk.MenuBarDock.plist`. Use `defaults delete com.ethansk.MenuBarDock` in terminal to delete it properly.

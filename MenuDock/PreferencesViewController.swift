@@ -47,18 +47,18 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	func updateUI(){
 		self.title = Constants.App.name
 			+ " Preferences"
-		numberOfAppsCounterLabel.stringValue = "\(MenuDock.shared.userPrefs.numberOfStatusItems)"
-		numberOfAppsSlider.integerValue = MenuDock.shared.userPrefs.numberOfStatusItems
-		widthOfItemCouterLabel.stringValue = "\(Int(MenuDock.shared.userPrefs.widthOfStatusItem.rounded()))"
-		widthOfItemSlider.doubleValue = Double(MenuDock.shared.userPrefs.widthOfStatusItem)
-		sizeOfIconCounterLabel.stringValue = "\(Int(MenuDock.shared.userPrefs.iconSize.rounded()))"
-		sizeOfIconSlider.doubleValue = Double(MenuDock.shared.userPrefs.iconSize)
-		launchAtLoginButton.state = MenuDock.shared.userPrefs.launchAtLogin ? .on : .off
-		launchInsteadOfActivateRadioButton.state = MenuDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
-		hideActiveAppButton.state = MenuDock.shared.userPrefs.hideActiveApp ? .on : .off
-		hideFinderButton.state = MenuDock.shared.userPrefs.hideFinder ? .on : .off
+		numberOfAppsCounterLabel.stringValue = "\(MenuBarDock.shared.userPrefs.numberOfStatusItems)"
+		numberOfAppsSlider.integerValue = MenuBarDock.shared.userPrefs.numberOfStatusItems
+		widthOfItemCouterLabel.stringValue = "\(Int(MenuBarDock.shared.userPrefs.widthOfStatusItem.rounded()))"
+		widthOfItemSlider.doubleValue = Double(MenuBarDock.shared.userPrefs.widthOfStatusItem)
+		sizeOfIconCounterLabel.stringValue = "\(Int(MenuBarDock.shared.userPrefs.iconSize.rounded()))"
+		sizeOfIconSlider.doubleValue = Double(MenuBarDock.shared.userPrefs.iconSize)
+		launchAtLoginButton.state = MenuBarDock.shared.userPrefs.launchAtLogin ? .on : .off
+		launchInsteadOfActivateRadioButton.state = MenuBarDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
+		hideActiveAppButton.state = MenuBarDock.shared.userPrefs.hideActiveApp ? .on : .off
+		hideFinderButton.state = MenuBarDock.shared.userPrefs.hideFinder ? .on : .off
 		
-		switch MenuDock.shared.userPrefs.sortingMethod {
+		switch MenuBarDock.shared.userPrefs.sortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
 		case .mostRecentOnLeft:
@@ -85,7 +85,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			// do whatever needs to be done when the slider starts changing
 		}
 		
-		MenuDock.shared.userPrefs.widthOfStatusItem = CGFloat(sender.doubleValue)
+		MenuBarDock.shared.userPrefs.widthOfStatusItem = CGFloat(sender.doubleValue)
 		NotificationCenter.default.post(name: .widthOfitemSliderChanged, object: nil)
 		widthOfItemCouterLabel.stringValue = "\(sender.integerValue)"
 		
@@ -93,7 +93,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .widthOfitemSliderEndedSliding, object: nil)
 			
-			MenuDock.shared.userPrefs.save()
+			MenuBarDock.shared.userPrefs.save()
 		}
 	}
 	
@@ -113,14 +113,14 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			// do whatever needs to be done when the slider starts changing
 		}
 		
-		MenuDock.shared.userPrefs.iconSize = CGFloat(sender.doubleValue)
+		MenuBarDock.shared.userPrefs.iconSize = CGFloat(sender.doubleValue)
 		NotificationCenter.default.post(name: .sizeOfIconSliderChanged, object: nil)
 		sizeOfIconCounterLabel.stringValue = "\(sender.integerValue)"
 		
 		if endingDrag {
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .sizeOfIconSliderEndedSliding, object: nil)
-			MenuDock.shared.userPrefs.save()
+			MenuBarDock.shared.userPrefs.save()
 		}
 	}
 	
@@ -141,7 +141,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			// do whatever needs to be done when the slider starts changing
 		}
 		
-		MenuDock.shared.userPrefs.numberOfStatusItems = sender.integerValue
+		MenuBarDock.shared.userPrefs.numberOfStatusItems = sender.integerValue
 		NotificationCenter.default.post(name: .numberOfAppsSliderChanged, object: nil)
 		numberOfAppsCounterLabel.stringValue = "\(sender.integerValue)"
 		
@@ -149,29 +149,29 @@ class PreferencesViewController: NSViewController { //this should do onthing
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .numberOfAppsSliderEndedSliding, object: nil)
 			
-			MenuDock.shared.userPrefs.save()
+			MenuBarDock.shared.userPrefs.save()
 		}
 	}
 	
 	@IBAction func radioButtonPressed(_ sender: Any) {
 		print("sortingRadioButtons state ", consistentSortOrderRadioButton.state, mostRecentLeftRadioButton.state, mostRecentRightRadioButton.state)
 		if consistentSortOrderRadioButton.state == .on{
-			MenuDock.shared.userPrefs.sortingMethod = .consistent
+			MenuBarDock.shared.userPrefs.sortingMethod = .consistent
 		}
 		if mostRecentLeftRadioButton.state == .on{
-			MenuDock.shared.userPrefs.sortingMethod = .mostRecentOnLeft
+			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnLeft
 		}
 		if mostRecentRightRadioButton.state == .on{
-			MenuDock.shared.userPrefs.sortingMethod = .mostRecentOnRight
+			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnRight
 		}
 		NotificationCenter.default.post(name: .sortingMethodChanged, object: nil)
 
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 	
 	@IBAction func resetToDefaultPressed(_ sender: Any) {
-		MenuDock.shared.userPrefs.resetToDefaults()
+		MenuBarDock.shared.userPrefs.resetToDefaults()
 		updateUI()
 		NotificationCenter.default.post(name: .resetToDefaults, object: nil)
 
@@ -179,7 +179,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	
 	
 	@IBAction func resetIndivAppSettings(_ sender: Any) {
-		MenuDock.shared.userPrefs.resetIndivAppSettingsToDefaults()
+		MenuBarDock.shared.userPrefs.resetIndivAppSettingsToDefaults()
 	}
 	
 	@IBAction func aboutPressed(_ sender: Any) {
@@ -196,28 +196,28 @@ class PreferencesViewController: NSViewController { //this should do onthing
 	}
 	
 	@IBAction func launchAtLoginPressed(_ sender: NSButton) {
-		MenuDock.shared.userPrefs.launchAtLogin = sender.state == .on
-		let launcherAppId = "com.etggames.Launcher"
-		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuDock.shared.userPrefs.launchAtLogin) 
+		MenuBarDock.shared.userPrefs.launchAtLogin = sender.state == .on
+		let launcherAppId = Constants.App.launcherBundleId
+		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin) 
 		print("login item res: ", result)
 	
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
-		MenuDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
+		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
 		
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 	@IBAction func hideActiveAppPressed(_ sender: NSButton) {
-		MenuDock.shared.userPrefs.hideActiveApp = sender.state == .on
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.hideActiveApp = sender.state == .on
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 	@IBAction func hideFinderPressed(_ sender: NSButton) {
-		MenuDock.shared.userPrefs.hideFinder = sender.state == .on
-		MenuDock.shared.userPrefs.save()
+		MenuBarDock.shared.userPrefs.hideFinder = sender.state == .on
+		MenuBarDock.shared.userPrefs.save()
 	}
 	
 }//class

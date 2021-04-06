@@ -8,9 +8,9 @@
 
 import Cocoa
 
-class MenuDock: NSObject {
+class MenuBarDock: NSObject {
 	
-	static let shared = MenuDock()
+	static let shared = MenuBarDock()
 	
 	var appManager: AppManager
 	var statusItemManager: StatusItemManager

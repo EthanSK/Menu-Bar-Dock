@@ -16,7 +16,7 @@ class StatusItemManager: NSObject {
 		
 		get{
 			let filtered = statusItems.filter{$0.length != 0}
-			switch MenuDock.shared.userPrefs.sortingMethod {
+			switch MenuBarDock.shared.userPrefs.sortingMethod {
 			case .mostRecentOnRight:
 				return filtered.sorted{$0.button!.superview!.window!.frame.minX > $1.button!.superview!.window!.frame.minX} //item at index 0 is rightmost
 			case .mostRecentOnLeft:
@@ -33,20 +33,20 @@ class StatusItemManager: NSObject {
 	} 
 	
 	func addStatusItem(){
-		let statusItem = NSStatusBar.system.statusItem(withLength: MenuDock.shared.userPrefs.widthOfStatusItem)
+		let statusItem = NSStatusBar.system.statusItem(withLength: MenuBarDock.shared.userPrefs.widthOfStatusItem)
 		//statusItem.menu = menu
 		statusItems.append(statusItem)
 	}
 	
 
 	func correctVisibleNumberOfStatusItems(){ //this will add or remove status items according to the number of running apps open
-		let numberThereShouldBe = min(MenuDock.shared.userPrefs.numberOfStatusItems, MenuDock.shared.appManager.runningAppsInOrder.count)
+		let numberThereShouldBe = min(MenuBarDock.shared.userPrefs.numberOfStatusItems, MenuBarDock.shared.appManager.runningAppsInOrder.count)
 		
 		while statusItemsBeingDisplayedInOrder.count > numberThereShouldBe{ //not too hot
 //			print("too many: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			//statusItems.filter{$0.length != 0}.last?.length = 0 //wait status items aren't in order here and we need them to be no? //only ever make smaller, never delete so we preserve the position
 
-			if statusItems.count > MenuDock.shared.userPrefs.numberOfStatusItems{ //fuck it idc if it doesnt' work perfectly if we keep changing the numebr of items
+			if statusItems.count > MenuBarDock.shared.userPrefs.numberOfStatusItems{ //fuck it idc if it doesnt' work perfectly if we keep changing the numebr of items
 				statusItems.removeLast() 
 			}else{
 				//else just make the width 0 because we know it will reappear at some point, and if we remove it it will reset the position on the menu bar
@@ -56,10 +56,10 @@ class StatusItemManager: NSObject {
 		while statusItemsBeingDisplayedInOrder.count < numberThereShouldBe { //not too cold
 //			print("too few: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			
-			if statusItems.count < MenuDock.shared.userPrefs.numberOfStatusItems{
+			if statusItems.count < MenuBarDock.shared.userPrefs.numberOfStatusItems{
 				addStatusItem()
 			}else{
-				statusItems.filter{$0.length == 0}.first?.length = MenuDock.shared.userPrefs.widthOfStatusItem //re-add the first one that isn't zero. it's like a stack
+				statusItems.filter{$0.length == 0}.first?.length = MenuBarDock.shared.userPrefs.widthOfStatusItem //re-add the first one that isn't zero. it's like a stack
 			}
 		}
 		//juuuuuuuust right i want to die pls help.

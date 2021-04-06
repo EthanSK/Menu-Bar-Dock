@@ -52,7 +52,6 @@ class UserPrefs: NSObject { //TODO: have options to reset all these to default
 	}
 	
 	func save(){
-		
 		UserDefaults.standard.set(numberOfStatusItems, forKey: Constants.UserPrefs.numberOfStatusItems) 
 		UserDefaults.standard.set(widthOfStatusItem, forKey: Constants.UserPrefs.widthOfStatusItem) 
 		UserDefaults.standard.set(sortingMethod.rawValue, forKey: Constants.UserPrefs.sortingMethod) 
