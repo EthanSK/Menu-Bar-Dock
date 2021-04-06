@@ -13,8 +13,8 @@
 		38412F02222B3E2F00D3FA0C /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */; };
 		38412F04222B3E3000D3FA0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38412F03222B3E3000D3FA0C /* Assets.xcassets */; };
 		38412F07222B3E3000D3FA0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38412F05222B3E3000D3FA0C /* Main.storyboard */; };
-		38412F13222B3E3000D3FA0C /* MenuDockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F12222B3E3000D3FA0C /* MenuDockTests.swift */; };
-		38412F1E222B3E3000D3FA0C /* MenuDockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F1D222B3E3000D3FA0C /* MenuDockUITests.swift */; };
+		38412F13222B3E3000D3FA0C /* MenuBarDockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F12222B3E3000D3FA0C /* MenuBarDockTests.swift */; };
+		38412F1E222B3E3000D3FA0C /* MenuBarDockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F1D222B3E3000D3FA0C /* MenuBarDockUITests.swift */; };
 		38412F2C222B47A900D3FA0C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2B222B47A900D3FA0C /* AppManager.swift */; };
 		38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2F222B715400D3FA0C /* UserPrefs.swift */; };
 		38412F32222B722100D3FA0C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F31222B722100D3FA0C /* Constants.swift */; };
@@ -84,12 +84,12 @@
 		38412F03222B3E3000D3FA0C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38412F06222B3E3000D3FA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		38412F08222B3E3000D3FA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		38412F09222B3E3000D3FA0C /* MenuDock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuDock.entitlements; sourceTree = "<group>"; };
+		38412F09222B3E3000D3FA0C /* MenuBarDock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MenuBarDock.entitlements; sourceTree = "<group>"; };
 		38412F0E222B3E3000D3FA0C /* Menu Bar DockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Menu Bar DockTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		38412F12222B3E3000D3FA0C /* MenuDockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDockTests.swift; sourceTree = "<group>"; };
+		38412F12222B3E3000D3FA0C /* MenuBarDockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarDockTests.swift; sourceTree = "<group>"; };
 		38412F14222B3E3000D3FA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38412F19222B3E3000D3FA0C /* Menu Bar DockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Menu Bar DockUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		38412F1D222B3E3000D3FA0C /* MenuDockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuDockUITests.swift; sourceTree = "<group>"; };
+		38412F1D222B3E3000D3FA0C /* MenuBarDockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarDockUITests.swift; sourceTree = "<group>"; };
 		38412F1F222B3E3000D3FA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38412F2B222B47A900D3FA0C /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		38412F2F222B715400D3FA0C /* UserPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
@@ -171,9 +171,9 @@
 		38412EF3222B3E2F00D3FA0C = {
 			isa = PBXGroup;
 			children = (
-				38412EFE222B3E2F00D3FA0C /* MenuDock */,
-				38412F11222B3E3000D3FA0C /* MenuDockTests */,
-				38412F1C222B3E3000D3FA0C /* MenuDockUITests */,
+				38412EFE222B3E2F00D3FA0C /* MenuBarDock */,
+				38412F11222B3E3000D3FA0C /* MenuBarDockTests */,
+				38412F1C222B3E3000D3FA0C /* MenuBarDockUITests */,
 				38E394E4222D778F006F926E /* Launcher */,
 				38412EFD222B3E2F00D3FA0C /* Products */,
 				38E394F7222D7B61006F926E /* Frameworks */,
@@ -192,14 +192,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		38412EFE222B3E2F00D3FA0C /* MenuDock */ = {
+		38412EFE222B3E2F00D3FA0C /* MenuBarDock */ = {
 			isa = PBXGroup;
 			children = (
 				38412F37222B873800D3FA0C /* Extensions */,
 				38412F03222B3E3000D3FA0C /* Assets.xcassets */,
 				38412F05222B3E3000D3FA0C /* Main.storyboard */,
 				38412F08222B3E3000D3FA0C /* Info.plist */,
-				38412F09222B3E3000D3FA0C /* MenuDock.entitlements */,
+				38412F09222B3E3000D3FA0C /* MenuBarDock.entitlements */,
 				38412EFF222B3E2F00D3FA0C /* AppDelegate.swift */,
 				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
 				38412F33222B729100D3FA0C /* Model.swift */,
@@ -208,25 +208,25 @@
 				38412F2F222B715400D3FA0C /* UserPrefs.swift */,
 				38412F31222B722100D3FA0C /* Constants.swift */,
 			);
-			path = MenuDock;
+			path = MenuBarDock;
 			sourceTree = "<group>";
 		};
-		38412F11222B3E3000D3FA0C /* MenuDockTests */ = {
+		38412F11222B3E3000D3FA0C /* MenuBarDockTests */ = {
 			isa = PBXGroup;
 			children = (
-				38412F12222B3E3000D3FA0C /* MenuDockTests.swift */,
+				38412F12222B3E3000D3FA0C /* MenuBarDockTests.swift */,
 				38412F14222B3E3000D3FA0C /* Info.plist */,
 			);
-			path = MenuDockTests;
+			path = MenuBarDockTests;
 			sourceTree = "<group>";
 		};
-		38412F1C222B3E3000D3FA0C /* MenuDockUITests */ = {
+		38412F1C222B3E3000D3FA0C /* MenuBarDockUITests */ = {
 			isa = PBXGroup;
 			children = (
-				38412F1D222B3E3000D3FA0C /* MenuDockUITests.swift */,
+				38412F1D222B3E3000D3FA0C /* MenuBarDockUITests.swift */,
 				38412F1F222B3E3000D3FA0C /* Info.plist */,
 			);
-			path = MenuDockUITests;
+			path = MenuBarDockUITests;
 			sourceTree = "<group>";
 		};
 		38412F37222B873800D3FA0C /* Extensions */ = {
@@ -549,7 +549,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38412F13222B3E3000D3FA0C /* MenuDockTests.swift in Sources */,
+				38412F13222B3E3000D3FA0C /* MenuBarDockTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,7 +557,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38412F1E222B3E3000D3FA0C /* MenuDockUITests.swift in Sources */,
+				38412F1E222B3E3000D3FA0C /* MenuBarDockUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,7 +730,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MenuDock/MenuDock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MenuBarDock/MenuBarDock.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -738,7 +738,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = T34G959ZG8;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = MenuDock/Info.plist;
+				INFOPLIST_FILE = MenuBarDock/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -758,7 +758,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MenuDock/MenuDock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MenuBarDock/MenuBarDock.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -766,7 +766,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = T34G959ZG8;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = MenuDock/Info.plist;
+				INFOPLIST_FILE = MenuBarDock/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -790,7 +790,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
-				INFOPLIST_FILE = MenuDockTests/Info.plist;
+				INFOPLIST_FILE = MenuBarDockTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -814,7 +814,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
-				INFOPLIST_FILE = MenuDockTests/Info.plist;
+				INFOPLIST_FILE = MenuBarDockTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -837,7 +837,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
-				INFOPLIST_FILE = MenuDockUITests/Info.plist;
+				INFOPLIST_FILE = MenuBarDockUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -847,7 +847,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
-				TEST_TARGET_NAME = MenuDock;
+				TEST_TARGET_NAME = MenuBarDock;
 			};
 			name = Debug;
 		};
@@ -860,7 +860,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = T34G959ZG8;
-				INFOPLIST_FILE = MenuDockUITests/Info.plist;
+				INFOPLIST_FILE = MenuBarDockUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -870,7 +870,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
-				TEST_TARGET_NAME = MenuDock;
+				TEST_TARGET_NAME = MenuBarDock;
 			};
 			name = Release;
 		};

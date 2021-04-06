@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Menu Bar Dock.xcodeproj">
+      location = "group:/Users/ethansarif-kattan/CodeProjects/MenuBarDock/Menu Bar Dock.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
