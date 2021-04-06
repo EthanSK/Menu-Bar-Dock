@@ -1,6 +1,6 @@
 //
 //  Model.swift
-//  MenuDock
+//  MenuBarDock
 //
 //  Created by Ethan Sarif-Kattan on 02/03/2019.
 //  Copyright © 2019 Ethan Sarif-Kattan. All rights reserved.
@@ -25,7 +25,7 @@ class AppManager: NSObject {
 	private var runningApps: [NSRunningApplication]{
 		func canShowRunningApp(app: NSRunningApplication) -> Bool{
 			if app.bundleIdentifier == "com.apple.finder" {return !MenuBarDock.shared.userPrefs.hideFinder}
-//			if MenuDock.shared.userPrefs.sortingMethod == .consistent {return true}
+//			if MenuBarDock.shared.userPrefs.sortingMethod == .consistent {return true}
 			if MenuBarDock.shared.userPrefs.hideActiveApp == false {return true}
 			else {return app != NSWorkspace.shared.frontmostApplication}
 			

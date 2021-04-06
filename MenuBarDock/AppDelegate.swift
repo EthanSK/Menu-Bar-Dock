@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  MenuDock
+//  MenuBarDock
 //
 //  Created by Ethan Sarif-Kattan on 02/03/2019.
 //  Copyright © 2019 Ethan Sarif-Kattan. All rights reserved.
@@ -26,7 +26,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let runningApps = NSWorkspace.shared.runningApplications
 		let isRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
 		print("Launch at login on app did finish launching: ", MenuBarDock.shared.userPrefs.launchAtLogin)
-		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
+		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
+		print("SMLoginItemSetEnabled res: ", result)
 		
 		if isRunning {
 			DistributedNotificationCenter.default().post(name: .killLauncher,
@@ -61,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			MenuBarDock.shared.statusItemManager.addStatusItem()
 		}
 		//		for _ in 1...69{//for now just do the maximum number to guarantee that the order is saved //fuck it its laggy and illegit
-		//			MenuDock.shared.statusItemManager.addStatusItem()
+		//			MenuBarDock.shared.statusItemManager.addStatusItem()
 		//		}
 		updateStatusItems()
 	}

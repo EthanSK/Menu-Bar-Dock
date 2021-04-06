@@ -1,6 +1,6 @@
 //
 //  UserPrefs.swift
-//  MenuDock
+//  MenuBarDock
 //
 //  Created by Ethan Sarif-Kattan on 03/03/2019.
 //  Copyright © 2019 Ethan Sarif-Kattan. All rights reserved.

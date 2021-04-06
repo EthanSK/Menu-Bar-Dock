@@ -1,6 +1,6 @@
 //
-//  MenuDockTests.swift
-//  MenuDockTests
+//  MenuBarDockTests.swift
+//  MenuBarDockTests
 //
 //  Created by Ethan Sarif-Kattan on 02/03/2019.
 //  Copyright © 2019 Ethan Sarif-Kattan. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  MenuDock
+//  MenuBarDock
 //
 //  Created by Ethan Sarif-Kattan on 02/03/2019.
 //  Copyright © 2019 Ethan Sarif-Kattan. All rights reserved.
@@ -199,7 +199,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		MenuBarDock.shared.userPrefs.launchAtLogin = sender.state == .on
 		let launcherAppId = Constants.App.launcherBundleId
 		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin) 
-		print("login item res: ", result)
+		print("SMLoginItemSetEnabled res: ", result)
 	
 		MenuBarDock.shared.userPrefs.save()
 	}
