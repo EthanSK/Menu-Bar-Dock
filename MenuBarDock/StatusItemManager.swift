@@ -10,7 +10,7 @@ import Cocoa
 
 class StatusItemManager: NSObject {
 	
-	var statusItems: [NSStatusItem] //this will contain even the ones that are 0 width coz they shouldn't be there
+	var statusItems: Set<NSStatusItem> //this will contain even the ones that are 0 width coz they shouldn't be there
 	
 	var statusItemsBeingDisplayedInOrder: [NSStatusItem]{ //mutating order of most to least active. gets the order based on the existing sorted position.
 		
@@ -32,17 +32,16 @@ class StatusItemManager: NSObject {
 		super.init() 
 	} 
 	
-	func addStatusItem(){
+	private func addStatusItem(){
 		let statusItem = NSStatusBar.system.statusItem(withLength: MenuBarDock.shared.userPrefs.widthOfStatusItem)
-		//statusItem.menu = menu
-		statusItems.append(statusItem)
+		statusItems.insert(statusItem)
 	}
 	
 
 	func correctVisibleNumberOfStatusItems(){ //this will add or remove status items according to the number of running apps open
 		let numberThereShouldBe = min(MenuBarDock.shared.userPrefs.numberOfStatusItems, MenuBarDock.shared.appManager.runningAppsInOrder.count)
 		
-		while statusItemsBeingDisplayedInOrder.count > numberThereShouldBe{ //not too hot
+		while statusItemsBeingDisplayedInOrder.count > numberThereShouldBe{ //not too hot (not too many)
 //			print("too many: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			//statusItems.filter{$0.length != 0}.last?.length = 0 //wait status items aren't in order here and we need them to be no? //only ever make smaller, never delete so we preserve the position
 
@@ -53,7 +52,7 @@ class StatusItemManager: NSObject {
 				statusItems.filter{$0.length != 0}.last?.length = 0
 			}
 		}
-		while statusItemsBeingDisplayedInOrder.count < numberThereShouldBe { //not too cold
+		while statusItemsBeingDisplayedInOrder.count < numberThereShouldBe { //not too cold (not too few)
 //			print("too few: ", statusItemsBeingDisplayedInOrder.count, numberThereShouldBe)
 			
 			if statusItems.count < MenuBarDock.shared.userPrefs.numberOfStatusItems{

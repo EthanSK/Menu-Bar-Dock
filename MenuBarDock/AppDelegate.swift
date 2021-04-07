@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		MenuBarDock.shared.appManager.trackAppsBeingQuit { (notification) in
 			self.updateStatusItems()  //because the app actually quits aftre the activated app is switched meaninng otherwise we would keep the old app in the list showing
 		}
-		addStatusItems()
+		updateStatusItems()		
 		NotificationCenter.default.addObserver(self, selector: #selector(numberOfAppsSliderDidChange), name: .numberOfAppsSliderEndedSliding, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .widthOfitemSliderChanged, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sizeOfIconSliderChanged, object: nil)
@@ -58,16 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 	
 	
-	func addStatusItems(){
-		MenuBarDock.shared.statusItemManager.statusItems = []
-		for _ in 1...MenuBarDock.shared.userPrefs.numberOfStatusItems{
-			MenuBarDock.shared.statusItemManager.addStatusItem()
-		}
-		//		for _ in 1...69{//for now just do the maximum number to guarantee that the order is saved //fuck it its laggy and illegit
-		//			MenuBarDock.shared.statusItemManager.addStatusItem()
-		//		}
-		updateStatusItems()
-	}
+ 
 	
 	
 	@objc func numberOfAppsSliderDidChange(){
