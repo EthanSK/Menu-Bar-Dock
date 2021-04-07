@@ -41,7 +41,9 @@ class AppManager: NSObject {
 	
 	var runningAppsInOrder: [NSRunningApplication]{//will use appActivationsTracked to try and form the best order it can
 		var result: [NSRunningApplication] = []
-		let runningApps = self.runningApps //so we don't recalc every time func is invoked
+        
+        var resultSet: Set<NSRunningApplication> = [] //for efficiency contains check
+		let runningApps = Set(self.runningApps) //so we don't recalc every time func is invoked. it's a set for efficiency
 		
 		if MenuBarDock.shared.userPrefs.sortingMethod == .consistent {
 			return runningApps.sorted{effectiveAppName($0) > effectiveAppName($1)}
@@ -49,10 +51,11 @@ class AppManager: NSObject {
 		for appActivated in appActivationsTracked{ //first add the apps we have ordering info of AND that we know are running
 			if runningApps.contains(appActivated){
 				result.append(appActivated)
+                resultSet.insert(appActivated)
 			}
 		}
-		for runningApp in runningApps{ //then add the remaining apps we had no ordering info for
-			if !result.contains(runningApp){
+		for runningApp in runningApps{ //then add the remaining apps we had no ordering info for (because we just started up menu bar dock and it hasn't tracked the activations)
+			if !resultSet.contains(runningApp){
 				result.append(runningApp)
 			}
 		}
