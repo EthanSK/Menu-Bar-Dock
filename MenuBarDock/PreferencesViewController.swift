@@ -76,10 +76,8 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		let dragging: Bool = event?.type == .leftMouseDragged
 		
 		
-		if let event = event {
-			assert(startingDrag || endingDrag || dragging, "unexpected event type caused slider change: \(event)")
-		}
-		
+        if !(startingDrag || endingDrag || dragging) {return}
+        
 		if startingDrag {
 			print("widthOfItemSliderChanged value started changing")
 			// do whatever needs to be done when the slider starts changing
@@ -102,12 +100,9 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		let startingDrag: Bool = event?.type == .leftMouseDown
 		let endingDrag: Bool = event?.type == .leftMouseUp
 		let dragging: Bool = event?.type == .leftMouseDragged
-		
-		
-		if let event = event {
-			assert(startingDrag || endingDrag || dragging, "unexpected event type caused slider change: \(event)")
-		}
-		
+        
+        if !(startingDrag || endingDrag || dragging) {return}
+
 		if startingDrag {
 			print("sizeOfIconSliderChange value started changing")
 			// do whatever needs to be done when the slider starts changing
@@ -132,9 +127,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		let endingDrag: Bool = event?.type == .leftMouseUp
 		let dragging: Bool = event?.type == .leftMouseDragged
 		
-		if let event = event {
-			assert(startingDrag || endingDrag || dragging, "unexpected event type caused slider change: \(event)")
-		}
+        if !(startingDrag || endingDrag || dragging) {return}
 		
 		if startingDrag {
 			print("numberOfAppsSliderChanged value started changing")
