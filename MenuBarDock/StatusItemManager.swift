@@ -49,8 +49,8 @@ class StatusItemManager: NSObject {
 			//statusItems.filter{$0.length != 0}.last?.length = 0 //wait status items aren't in order here and we need them to be no? //only ever make smaller, never delete so we preserve the position
 
 			if statusItems.count > MenuBarDock.shared.userPrefs.numberOfStatusItems{ //fuck it idc if it doesnt' work perfectly if we keep changing the numebr of items
-				let removed = statusItems.removeLast()
-//                NSStatusBar.system.removeStatusItem(removed)
+				statusItems.removeLast()
+//                NSStatusBar.system.removeStatusItem(removed) //doing this will not save the positioning if increasing the number of apps agian
 			}else{
 				//else just make the width 0 because we know it will reappear at some point, and if we remove it it will reset the position on the menu bar
 				statusItems.filter{$0.length != 0}.last?.length = 0
