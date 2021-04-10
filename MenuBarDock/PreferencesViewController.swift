@@ -10,41 +10,40 @@ import Cocoa
 import CoreGraphics
 import ServiceManagement
 
-class PreferencesViewController: NSViewController { //this should do onthing
+class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var popoverTitle: NSTextFieldCell!
-	
+
 	@IBOutlet weak var numberOfAppsSlider: NSSlider!
-	
+
 	@IBOutlet weak var widthOfItemSlider: NSSlider!
-	
+
 	@IBOutlet weak var numberOfAppsCounterLabel: NSTextField!
-	
+
 	@IBOutlet weak var widthOfItemCouterLabel: NSTextField!
-	
+
 	@IBOutlet weak var sizeOfIconSlider: NSSlider!
-	
+
 	@IBOutlet weak var sizeOfIconCounterLabel: NSTextField!
 	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
-	
-	
+
 	@IBOutlet weak var consistentSortOrderRadioButton: NSButton!
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
 	@IBOutlet weak var launchAtLoginButton: NSButton!
 	@IBOutlet weak var hideActiveAppButton: NSButton!
-	
+
 	@IBOutlet weak var hideFinderButton: NSButton!
-	
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 	}
 	override func viewWillAppear() {
 		super.viewDidAppear()
 		updateUI()
 	}
-	
-	func updateUI(){
+
+	func updateUI() {
 		self.title = Constants.App.name
 			+ " Preferences"
 		numberOfAppsCounterLabel.stringValue = "\(MenuBarDock.shared.userPrefs.numberOfStatusItems)"
@@ -57,7 +56,7 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		launchInsteadOfActivateRadioButton.state = MenuBarDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
 		hideActiveAppButton.state = MenuBarDock.shared.userPrefs.hideActiveApp ? .on : .off
 		hideFinderButton.state = MenuBarDock.shared.userPrefs.hideFinder ? .on : .off
-		
+
 		switch MenuBarDock.shared.userPrefs.sortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
@@ -66,163 +65,159 @@ class PreferencesViewController: NSViewController { //this should do onthing
 		case .consistent:
 			consistentSortOrderRadioButton.state = .on
 		}
-		
+
 	}
-	
+
 	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
 		let event: NSEvent? = NSApplication.shared.currentEvent
 		let startingDrag: Bool = event?.type == .leftMouseDown
 		let endingDrag: Bool = event?.type == .leftMouseUp
 		let dragging: Bool = event?.type == .leftMouseDragged
-		
-		
+
         if !(startingDrag || endingDrag || dragging) {return}
-        
+
 		if startingDrag {
 			print("widthOfItemSliderChanged value started changing")
 			// do whatever needs to be done when the slider starts changing
 		}
-		
+
 		MenuBarDock.shared.userPrefs.widthOfStatusItem = CGFloat(sender.doubleValue)
 		NotificationCenter.default.post(name: .widthOfitemSliderChanged, object: nil)
 		widthOfItemCouterLabel.stringValue = "\(sender.integerValue)"
-		
+
 		if endingDrag {
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .widthOfitemSliderEndedSliding, object: nil)
-			
+
 			MenuBarDock.shared.userPrefs.save()
 		}
 	}
-	
+
 	@IBAction func sizeOfIconSliderChange(_ sender: NSSlider) {
 		let event: NSEvent? = NSApplication.shared.currentEvent
 		let startingDrag: Bool = event?.type == .leftMouseDown
 		let endingDrag: Bool = event?.type == .leftMouseUp
 		let dragging: Bool = event?.type == .leftMouseDragged
-        
+
         if !(startingDrag || endingDrag || dragging) {return}
 
 		if startingDrag {
 			print("sizeOfIconSliderChange value started changing")
 			// do whatever needs to be done when the slider starts changing
 		}
-		
+
 		MenuBarDock.shared.userPrefs.iconSize = CGFloat(sender.doubleValue)
 		NotificationCenter.default.post(name: .sizeOfIconSliderChanged, object: nil)
 		sizeOfIconCounterLabel.stringValue = "\(sender.integerValue)"
-		
+
 		if endingDrag {
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .sizeOfIconSliderEndedSliding, object: nil)
 			MenuBarDock.shared.userPrefs.save()
 		}
 	}
-	
-	
+
 	@IBAction func numberOfAppsSliderChanged(_ sender: NSSlider) {
-		
+
 		let event: NSEvent? = NSApplication.shared.currentEvent
 		let startingDrag: Bool = event?.type == .leftMouseDown
 		let endingDrag: Bool = event?.type == .leftMouseUp
 		let dragging: Bool = event?.type == .leftMouseDragged
-		
+
         if !(startingDrag || endingDrag || dragging) {return}
-		
+
 		if startingDrag {
 			print("numberOfAppsSliderChanged value started changing")
 			// do whatever needs to be done when the slider starts changing
 		}
-		
+
 		MenuBarDock.shared.userPrefs.numberOfStatusItems = sender.integerValue
 		NotificationCenter.default.post(name: .numberOfAppsSliderChanged, object: nil)
 		numberOfAppsCounterLabel.stringValue = "\(sender.integerValue)"
-		
+
 		if endingDrag {
 			print("slider value stopped changing")
 			NotificationCenter.default.post(name: .numberOfAppsSliderEndedSliding, object: nil)
-			
+
 			MenuBarDock.shared.userPrefs.save()
 		}
 	}
-	
+
 	@IBAction func radioButtonPressed(_ sender: Any) {
 		print("sortingRadioButtons state ", consistentSortOrderRadioButton.state, mostRecentLeftRadioButton.state, mostRecentRightRadioButton.state)
-		if consistentSortOrderRadioButton.state == .on{
+		if consistentSortOrderRadioButton.state == .on {
 			MenuBarDock.shared.userPrefs.sortingMethod = .consistent
 		}
-		if mostRecentLeftRadioButton.state == .on{
+		if mostRecentLeftRadioButton.state == .on {
 			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnLeft
 		}
-		if mostRecentRightRadioButton.state == .on{
+		if mostRecentRightRadioButton.state == .on {
 			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnRight
 		}
 		NotificationCenter.default.post(name: .sortingMethodChanged, object: nil)
 
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
-	
+
 	@IBAction func resetToDefaultPressed(_ sender: Any) {
 		MenuBarDock.shared.userPrefs.resetToDefaults()
 		updateUI()
 		NotificationCenter.default.post(name: .resetToDefaults, object: nil)
 
 	}
-	
-	
+
 	@IBAction func resetIndivAppSettings(_ sender: Any) {
 		MenuBarDock.shared.userPrefs.resetIndivAppSettingsToDefaults()
 	}
-	
+
 	@IBAction func aboutPressed(_ sender: Any) {
-		if let url = URL(string: "https://www.etggames.com/menu-bar-dock"), 
+		if let url = URL(string: "https://www.etggames.com/menu-bar-dock"),
 			NSWorkspace.shared.open(url) {
 			print("default browser was successfully opened")
 		}
 	}
-	
+
 	@IBAction func logoPressed(_ sender: Any) {
 		if let url = URL(string: "https://www.etggames.com"),
 			NSWorkspace.shared.open(url) {
  		}
 	}
-	
+
 	@IBAction func launchAtLoginPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.launchAtLogin = sender.state == .on
 		let launcherAppId = Constants.App.launcherBundleId
-		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin) 
+		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
 		print("SMLoginItemSetEnabled res: ", result)
-	
+
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
+
 	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
-		
+
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
+
 	@IBAction func hideActiveAppPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.hideActiveApp = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
+
 	@IBAction func hideFinderPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.hideFinder = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
-}//class
+
+}// class
 
 extension PreferencesViewController {
 	// MARK: Storyboard instantiation
 	static func freshController() -> PreferencesViewController {
-		//1.
-		let storyboard = NSStoryboard(name: "Main",bundle: nil)
-		//2.
+		// 1.
+		let storyboard = NSStoryboard(name: "Main", bundle: nil)
+		// 2.
 		let identifier = "preferences"
-		//3.
+		// 3.
 		guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
 			fatalError("cant find vc")
 		}

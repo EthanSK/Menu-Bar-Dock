@@ -9,16 +9,16 @@
 import Cocoa
 
 enum Constants {
-	enum App{
+	enum App {
 		static let name = "Menu Bar Dock"
 		static let launcherBundleId = "com.ethansk.MenuBarDockLauncher"
 	}
-	
-	enum NSUserDefaultsKeys{
+
+	enum NSUserDefaultsKeys {
 		static let bundleId = "bundleId"
 	}
-	
-	enum UserPrefs{
+
+	enum UserPrefs {
 		static let numberOfStatusItems = "numberOfStatusItems"
 		static let widthOfStatusItem = "widthOfStatusItem"
 		static let sortingMethod = "sortingMethod"
@@ -31,8 +31,8 @@ enum Constants {
 	}
 }
 
-enum SortingMethod: Int{
-	case mostRecentOnRight = 0//newest active app on right
+enum SortingMethod: Int {
+	case mostRecentOnRight = 0// newest active app on right
 	case mostRecentOnLeft = 1
 	case consistent = 2
 }

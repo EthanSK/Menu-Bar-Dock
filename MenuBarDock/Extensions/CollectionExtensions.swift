@@ -9,7 +9,7 @@
 import Foundation
 
 extension Collection where Element: Hashable {
-	var unique: [Element] { //is ordered
+	var unique: [Element] { // is ordered
 		var set: Set<Element> = []
 		return reduce(into: []) { set.insert($1).inserted ? $0.append($1) : () }
 	}

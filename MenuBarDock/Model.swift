@@ -9,15 +9,15 @@
 import Cocoa
 
 class MenuBarDock: NSObject {
-	
+
 	static let shared = MenuBarDock()
-	
+
 	var appManager: AppManager
 	var statusItemManager: StatusItemManager
 	var userPrefs: UserPrefs
-	
+
 	private override init() {
-		userPrefs = UserPrefs() //do this first so it loads in the values 
+		userPrefs = UserPrefs() // do this first so it loads in the values 
 		appManager = AppManager()
 		statusItemManager = StatusItemManager()
 		super.init()

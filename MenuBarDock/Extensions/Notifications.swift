@@ -19,5 +19,4 @@ extension Notification.Name {
 	static let sortingMethodChanged = Notification.Name("sortingMethodChanged")
 	static let killLauncher = Notification.Name("killLauncher")
 
-
 }

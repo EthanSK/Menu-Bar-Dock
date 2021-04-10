@@ -27,9 +27,7 @@
 		38E394E6222D778F006F926E /* AppDelegateLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E394E5222D778F006F926E /* AppDelegateLauncher.swift */; };
 		38E394EA222D7790006F926E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E9222D7790006F926E /* Assets.xcassets */; };
 		38E394ED222D7790006F926E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38E394EB222D7790006F926E /* Main.storyboard */; };
-		38E394F4222D7B57006F926E /* Launcher.app in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E3222D778F006F926E /* Launcher.app */; };
 		38E394F9222D7B61006F926E /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38E394F8222D7B61006F926E /* ServiceManagement.framework */; };
-		38E394FA222D7B6F006F926E /* Launcher.app in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E3222D778F006F926E /* Launcher.app */; };
 		8025B2CADE468941B1A841B9 /* Pods_Launcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98BF29A3FBD4222A2994CC63 /* Pods_Launcher.framework */; };
 		88AD155137A7D16EF21440CF /* Pods_Menu_Bar_DockUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9AC2CA0427E3D1161227B /* Pods_Menu_Bar_DockUITests.framework */; };
 		B7AFA862BC6214A4D95098CC /* Pods_Menu_Bar_DockTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D61877253F489B8F948C27 /* Pods_Menu_Bar_DockTests.framework */; };
@@ -350,7 +348,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Ethan Sarif-Kattan";
 				TargetAttributes = {
 					38412EFB222B3E2F00D3FA0C = {
@@ -411,8 +409,6 @@
 			files = (
 				38412F04222B3E3000D3FA0C /* Assets.xcassets in Resources */,
 				38D723EB222D8D8600D6F079 /* Launcher.app in Resources */,
-				38E394F4222D7B57006F926E /* Launcher.app in Resources */,
-				38E394FA222D7B6F006F926E /* Launcher.app in Resources */,
 				38412F07222B3E3000D3FA0C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,7 +455,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint autocorrect && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if which \"${PODS_ROOT}/SwiftLint/swiftlint\"\n >/dev/null; then\n # \"${PODS_ROOT}/SwiftLint/swiftlint --fix\" #off for now\n # \"${PODS_ROOT}/SwiftLint/swiftlint\"\n\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		4436723CBA676C3A82A067A6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -658,6 +654,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -719,6 +716,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
