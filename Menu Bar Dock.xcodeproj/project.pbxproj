@@ -355,6 +355,7 @@
 				TargetAttributes = {
 					38412EFB222B3E2F00D3FA0C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1240;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
 								enabled = 1;
@@ -363,14 +364,17 @@
 					};
 					38412F0D222B3E3000D3FA0C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1240;
 						TestTargetID = 38412EFB222B3E2F00D3FA0C;
 					};
 					38412F18222B3E3000D3FA0C = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1240;
 						TestTargetID = 38412EFB222B3E2F00D3FA0C;
 					};
 					38E394E2222D778F006F926E = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1240;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
 								enabled = 1;
@@ -767,7 +771,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -795,7 +799,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -818,7 +822,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Menu Bar Dock.app/Contents/MacOS/Menu Bar Dock";
 			};
 			name = Debug;
@@ -842,7 +846,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Menu Bar Dock.app/Contents/MacOS/Menu Bar Dock";
 			};
 			name = Release;
@@ -865,7 +869,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = MenuBarDock;
 			};
 			name = Debug;
@@ -888,7 +892,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = MenuBarDock;
 			};
 			name = Release;
@@ -913,7 +917,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -937,7 +941,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
