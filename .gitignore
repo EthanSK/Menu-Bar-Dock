@@ -90,10 +90,7 @@ fastlane/test_output
 iOSInjectionProject/
 
 
-### SwiftPackageManager ###
-Packages
-xcuserdata
-*.xcodeproj
+
 
 ## Gcc Patch
 /*.gcno
