@@ -11,53 +11,44 @@ import CoreGraphics
 import ServiceManagement
 
 class PreferencesViewController: NSViewController { // this should do onthing
-	@IBOutlet weak var popoverTitle: NSTextFieldCell!
 
 	@IBOutlet weak var numberOfAppsSlider: NSSlider!
-
 	@IBOutlet weak var widthOfItemSlider: NSSlider!
-
-	@IBOutlet weak var numberOfAppsCounterLabel: NSTextField!
-
-	@IBOutlet weak var widthOfItemCouterLabel: NSTextField!
-
 	@IBOutlet weak var sizeOfIconSlider: NSSlider!
 
+	@IBOutlet weak var numberOfAppsCounterLabel: NSTextField!
+	@IBOutlet weak var widthOfItemCouterLabel: NSTextField!
 	@IBOutlet weak var sizeOfIconCounterLabel: NSTextField!
-	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
 
 	@IBOutlet weak var consistentSortOrderRadioButton: NSButton!
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
+
 	@IBOutlet weak var launchAtLoginButton: NSButton!
 	@IBOutlet weak var hideActiveAppButton: NSButton!
-
 	@IBOutlet weak var hideFinderButton: NSButton!
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-
-	}
+	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
+	
 	override func viewWillAppear() {
-		super.viewDidAppear()
-		updateUI()
+		super.viewWillAppear()
+		updateUI(for: MenuBarDock.shared.userPrefs)
 	}
 
-	func updateUI() {
-		self.title = Constants.App.name
-			+ " Preferences"
-		numberOfAppsCounterLabel.stringValue = "\(MenuBarDock.shared.userPrefs.numberOfStatusItems)"
-		numberOfAppsSlider.integerValue = MenuBarDock.shared.userPrefs.numberOfStatusItems
-		widthOfItemCouterLabel.stringValue = "\(Int(MenuBarDock.shared.userPrefs.widthOfStatusItem.rounded()))"
-		widthOfItemSlider.doubleValue = Double(MenuBarDock.shared.userPrefs.widthOfStatusItem)
-		sizeOfIconCounterLabel.stringValue = "\(Int(MenuBarDock.shared.userPrefs.iconSize.rounded()))"
-		sizeOfIconSlider.doubleValue = Double(MenuBarDock.shared.userPrefs.iconSize)
-		launchAtLoginButton.state = MenuBarDock.shared.userPrefs.launchAtLogin ? .on : .off
-		launchInsteadOfActivateRadioButton.state = MenuBarDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off
-		hideActiveAppButton.state = MenuBarDock.shared.userPrefs.hideActiveApp ? .on : .off
-		hideFinderButton.state = MenuBarDock.shared.userPrefs.hideFinder ? .on : .off
+	func updateUI(for userPrefs: UserPrefs) {
+		self.title = Constants.App.name + " Preferences"
+		numberOfAppsCounterLabel.stringValue = "\(userPrefs.numberOfStatusItems)"
+		numberOfAppsSlider.integerValue = userPrefs.numberOfStatusItems
+		widthOfItemCouterLabel.stringValue = "\(Int(userPrefs.widthOfStatusItem.rounded()))"
+		widthOfItemSlider.doubleValue = Double(userPrefs.widthOfStatusItem)
+		sizeOfIconCounterLabel.stringValue = "\(Int(userPrefs.iconSize.rounded()))"
+		sizeOfIconSlider.doubleValue = Double(userPrefs.iconSize)
+		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
+		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off
+		hideActiveAppButton.state = userPrefs.hideActiveApp ? .on : .off
+		hideFinderButton.state = userPrefs.hideFinder ? .on : .off
 
-		switch MenuBarDock.shared.userPrefs.sortingMethod {
+		switch userPrefs.sortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
 		case .mostRecentOnLeft:
@@ -65,86 +56,45 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		case .consistent:
 			consistentSortOrderRadioButton.state = .on
 		}
-
 	}
-
+	
 	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
-		let event: NSEvent? = NSApplication.shared.currentEvent
-		let startingDrag: Bool = event?.type == .leftMouseDown
-		let endingDrag: Bool = event?.type == .leftMouseUp
-		let dragging: Bool = event?.type == .leftMouseDragged
-
-        if !(startingDrag || endingDrag || dragging) {return}
-
-		if startingDrag {
-			print("widthOfItemSliderChanged value started changing")
-			// do whatever needs to be done when the slider starts changing
-		}
-
-		MenuBarDock.shared.userPrefs.widthOfStatusItem = CGFloat(sender.doubleValue)
-		NotificationCenter.default.post(name: .widthOfitemSliderChanged, object: nil)
-		widthOfItemCouterLabel.stringValue = "\(sender.integerValue)"
-
-		if endingDrag {
-			print("slider value stopped changing")
-			NotificationCenter.default.post(name: .widthOfitemSliderEndedSliding, object: nil)
-
-			MenuBarDock.shared.userPrefs.save()
-		}
+ 		handleSliderChanged(
+			slider: sender,
+			sliderLabel: widthOfItemCouterLabel,
+			newValueNotifName: .widthOfitemSliderChanged,
+			endedDragNotifName: .widthOfitemSliderEndedSliding,
+			sliderNewValue: { value in
+				MenuBarDock.shared.userPrefs.widthOfStatusItem = CGFloat(value)
+			}
+		)
 	}
 
 	@IBAction func sizeOfIconSliderChange(_ sender: NSSlider) {
-		let event: NSEvent? = NSApplication.shared.currentEvent
-		let startingDrag: Bool = event?.type == .leftMouseDown
-		let endingDrag: Bool = event?.type == .leftMouseUp
-		let dragging: Bool = event?.type == .leftMouseDragged
-
-        if !(startingDrag || endingDrag || dragging) {return}
-
-		if startingDrag {
-			print("sizeOfIconSliderChange value started changing")
-			// do whatever needs to be done when the slider starts changing
-		}
-
-		MenuBarDock.shared.userPrefs.iconSize = CGFloat(sender.doubleValue)
-		NotificationCenter.default.post(name: .sizeOfIconSliderChanged, object: nil)
-		sizeOfIconCounterLabel.stringValue = "\(sender.integerValue)"
-
-		if endingDrag {
-			print("slider value stopped changing")
-			NotificationCenter.default.post(name: .sizeOfIconSliderEndedSliding, object: nil)
-			MenuBarDock.shared.userPrefs.save()
-		}
+		handleSliderChanged(
+			slider: sender,
+			sliderLabel: sizeOfIconCounterLabel,
+			newValueNotifName: .sizeOfIconSliderChanged,
+			endedDragNotifName: .sizeOfIconSliderEndedSliding,
+			sliderNewValue: { value in
+				MenuBarDock.shared.userPrefs.iconSize = CGFloat(value)
+			}
+		)
 	}
 
 	@IBAction func numberOfAppsSliderChanged(_ sender: NSSlider) {
-
-		let event: NSEvent? = NSApplication.shared.currentEvent
-		let startingDrag: Bool = event?.type == .leftMouseDown
-		let endingDrag: Bool = event?.type == .leftMouseUp
-		let dragging: Bool = event?.type == .leftMouseDragged
-
-        if !(startingDrag || endingDrag || dragging) {return}
-
-		if startingDrag {
-			print("numberOfAppsSliderChanged value started changing")
-			// do whatever needs to be done when the slider starts changing
-		}
-
-		MenuBarDock.shared.userPrefs.numberOfStatusItems = sender.integerValue
-		NotificationCenter.default.post(name: .numberOfAppsSliderChanged, object: nil)
-		numberOfAppsCounterLabel.stringValue = "\(sender.integerValue)"
-
-		if endingDrag {
-			print("slider value stopped changing")
-			NotificationCenter.default.post(name: .numberOfAppsSliderEndedSliding, object: nil)
-
-			MenuBarDock.shared.userPrefs.save()
-		}
+		handleSliderChanged(
+			slider: sender,
+			sliderLabel: numberOfAppsCounterLabel,
+			newValueNotifName: .numberOfAppsSliderChanged,
+			endedDragNotifName: .numberOfAppsSliderEndedSliding,
+			sliderNewValue: { value in
+				MenuBarDock.shared.userPrefs.numberOfStatusItems = Int(value)
+			}
+		)
 	}
 
 	@IBAction func radioButtonPressed(_ sender: Any) {
-		print("sortingRadioButtons state ", consistentSortOrderRadioButton.state, mostRecentLeftRadioButton.state, mostRecentRightRadioButton.state)
 		if consistentSortOrderRadioButton.state == .on {
 			MenuBarDock.shared.userPrefs.sortingMethod = .consistent
 		}
@@ -155,15 +105,13 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnRight
 		}
 		NotificationCenter.default.post(name: .sortingMethodChanged, object: nil)
-
 		MenuBarDock.shared.userPrefs.save()
 	}
 
 	@IBAction func resetToDefaultPressed(_ sender: Any) {
 		MenuBarDock.shared.userPrefs.resetToDefaults()
-		updateUI()
+		updateUI(for: MenuBarDock.shared.userPrefs)
 		NotificationCenter.default.post(name: .resetToDefaults, object: nil)
-
 	}
 
 	@IBAction func resetIndivAppSettings(_ sender: Any) {
@@ -173,7 +121,6 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func aboutPressed(_ sender: Any) {
 		if let url = URL(string: "https://www.etggames.com/menu-bar-dock"),
 			NSWorkspace.shared.open(url) {
-			print("default browser was successfully opened")
 		}
 	}
 
@@ -186,15 +133,13 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func launchAtLoginPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.launchAtLogin = sender.state == .on
 		let launcherAppId = Constants.App.launcherBundleId
-		let result = SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
-		print("SMLoginItemSetEnabled res: ", result)
+		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
 
 		MenuBarDock.shared.userPrefs.save()
 	}
 
 	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
 		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
-
 		MenuBarDock.shared.userPrefs.save()
 	}
 
@@ -207,19 +152,39 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		MenuBarDock.shared.userPrefs.hideFinder = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
+	
+	private func handleSliderChanged(
+		slider: NSSlider,
+		sliderLabel: NSTextField,
+		newValueNotifName: NSNotification.Name,
+		endedDragNotifName: NSNotification.Name,
+		sliderNewValue: @escaping (_ value: Double) -> Void
+	) {
+		let event = NSApplication.shared.currentEvent
+		let startingDrag = event?.type == .leftMouseDown
+		let endingDrag = event?.type == .leftMouseUp
+		let dragging = event?.type == .leftMouseDragged
 
-}// class
+		if !(startingDrag || endingDrag || dragging) { return }
+
+		sliderNewValue(slider.doubleValue)
+		NotificationCenter.default.post(name: newValueNotifName, object: nil)
+		sliderLabel.stringValue = "\(slider.integerValue)"
+
+		if endingDrag {
+			NotificationCenter.default.post(name: endedDragNotifName, object: nil)
+			MenuBarDock.shared.userPrefs.save()
+		}
+	}
+
+}
 
 extension PreferencesViewController {
-	// MARK: Storyboard instantiation
 	static func freshController() -> PreferencesViewController {
-		// 1.
-		let storyboard = NSStoryboard(name: "Main", bundle: nil)
-		// 2.
-		let identifier = "preferences"
-		// 3.
-		guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
-			fatalError("cant find vc")
+ 		let storyboard = NSStoryboard(name: "Main", bundle: nil)
+ 		let identifier = "preferences"
+ 		guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
+			fatalError("Can't find view controller with identifier " + identifier)
 		}
 		return viewcontroller
 	}

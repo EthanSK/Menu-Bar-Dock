@@ -15,7 +15,7 @@ enum UserPrefsDefaultValues {
 	static let iconSize: CGFloat = 21
 	static let launchAtLogin = true // appaz mac app store doesn't allow default true
 	static let launchInsteadOfActivate = true // should activate app by default
-	static let launchInsteadOfActivateIndivApps: [String: Bool] = ["com.apple.finder": true]
+	static let launchInsteadOfActivateIndivApps: [String: Bool] = [Constants.App.finderBundleId: true]
 	static let hideActiveApp = true
 	static let hideFinder = false
 }

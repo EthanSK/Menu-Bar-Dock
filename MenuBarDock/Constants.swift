@@ -12,9 +12,10 @@ enum Constants {
 	enum App {
 		static let name = "Menu Bar Dock"
 		static let launcherBundleId = "com.ethansk.MenuBarDockLauncher"
+		static let finderBundleId = "com.apple.finder"
 	}
 
-	enum NSUserDefaultsKeys {
+	enum UserDefaultsKeys {
 		static let bundleId = "bundleId"
 	}
 

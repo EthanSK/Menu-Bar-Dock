@@ -21,6 +21,5 @@ class MenuBarDock: NSObject {
 		appManager = AppManager()
 		statusItemManager = StatusItemManager()
 		super.init()
-
 	}
 }

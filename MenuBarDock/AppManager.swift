@@ -23,12 +23,11 @@ class AppManager: NSObject {
 
 	private var runningApps: [NSRunningApplication] {
 		func canShowRunningApp(app: NSRunningApplication) -> Bool {
-			if app.bundleIdentifier == "com.apple.finder" {return !MenuBarDock.shared.userPrefs.hideFinder}
-//			if MenuBarDock.shared.userPrefs.sortingMethod == .consistent {return true}
+			if app.activationPolicy != .regular {return false}
+			if app.bundleIdentifier == Constants.App.finderBundleId {return !MenuBarDock.shared.userPrefs.hideFinder}
 			if MenuBarDock.shared.userPrefs.hideActiveApp == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
-
 		}
-		return NSWorkspace.shared.runningApplications.filter {$0.activationPolicy == .regular && canShowRunningApp(app: $0)}// not sorted yet. tried many ways and couldn't get it ordered. it's fine, we can order them manually once we've kept track of which apps the user opened after this app has started. ideally it should be started on login
+		return NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
 	}
 
 	func effectiveAppName(_ app: NSRunningApplication) -> String {
@@ -68,15 +67,13 @@ class AppManager: NSObject {
 
 	func trackAppsBeingQuit(terminated: @escaping (_ notification: Notification) -> Void) {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
-			print("app quit")
-			terminated(notification) // handle the updating in the calling closure
-
+ 			terminated(notification) // handle the updating in the calling closure
 		}
 	}
 
 	func openApp(withBundleId bundleId: String) {
 		let appToOpen = MenuBarDock.shared.appManager.runningApps.filter {$0.bundleIdentifier == bundleId}.first
-		if (appToOpen?.bundleIdentifier) == "com.apple.finder"{ // finder is weird and doesn't open normally
+		if (appToOpen?.bundleIdentifier) == Constants.App.finderBundleId { // finder is weird and doesn't open normally
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // do this as well if it's hidden
 			appToOpen?.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) // this is the only way i can get working to show the finder app
 		} else {

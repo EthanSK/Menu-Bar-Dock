@@ -18,18 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-		let launcherAppId = Constants.App.launcherBundleId
-		let runningApps = NSWorkspace.shared.runningApplications
-		let isLauncherRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
-
-		print("Launch at login on app did finish launching: ", MenuBarDock.shared.userPrefs.launchAtLogin)
-		SMLoginItemSetEnabled(launcherAppId as CFString, false) // needs to be set to false to actually create the loginitems.501.plist file, then we can set it to the legit value...weird
-		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
-
-		if isLauncherRunning {
-			DistributedNotificationCenter.default().post(name: .killLauncher,
-														 object: Bundle.main.bundleIdentifier!)
-		}
+		setupLaunchAtLogin()
 
 		MenuBarDock.shared.appManager.trackAppsBeingActivated { (_) in
 			self.updateStatusItems()
@@ -47,8 +36,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
-		// Insert code here to tear down your application
 		MenuBarDock.shared.userPrefs.save()
+	}
+
+	func setupLaunchAtLogin() {
+		let launcherAppId = Constants.App.launcherBundleId
+		let runningApps = NSWorkspace.shared.runningApplications
+
+		SMLoginItemSetEnabled(launcherAppId as CFString, false) // needs to be set to false to actually create the loginitems.501.plist file, then we can set it to the legit value...weird
+		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
+
+		let isLauncherRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
+		if isLauncherRunning {
+			DistributedNotificationCenter.default().post(name: .killLauncher, object: Bundle.main.bundleIdentifier!)
+		}
 	}
 
 	@objc func numberOfAppsSliderDidChange() {
@@ -93,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 			item.length = itemSlotWidth
 			let bundleId = MenuBarDock.shared.appManager.runningAppsInOrder[count].bundleIdentifier ?? MenuBarDock.shared.appManager.runningAppsInOrder[count].localizedName // ?? just in case
-			item.button?.layer?.setValue(bundleId, forKey: Constants.NSUserDefaultsKeys.bundleId) // layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
+			item.button?.layer?.setValue(bundleId, forKey: Constants.UserDefaultsKeys.bundleId) // layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
  			count += 1
 		}
 	}
@@ -101,7 +102,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var bundleIdOfMenuJustOpened: String?
 	@objc func statusBarPressed(button: NSButton) {
 		let event = NSApp.currentEvent
-		guard let bundleId =  button.layer?.value(forKey: Constants.NSUserDefaultsKeys.bundleId) as? String else {return}
+		guard let bundleId =  button.layer?.value(forKey: Constants.UserDefaultsKeys.bundleId) as? String else {return}
 		let item = MenuBarDock.shared.statusItemManager.statusItems.filter {$0.button == button}.first
 		if event?.type == NSEvent.EventType.rightMouseUp {
 			print("Right click")
