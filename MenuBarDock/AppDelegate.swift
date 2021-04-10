@@ -64,12 +64,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			item.button?.action = #selector(statusBarPressed) // doing this coz if the item was re-added, it needs this assosiated with it.
 			item.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 		}
-		var i = 0
+		var count = 0
 		for item in MenuBarDock.shared.statusItemManager.statusItemsBeingDisplayedInOrder {
-			if i >= MenuBarDock.shared.appManager.runningAppsInOrder.count {// then we need to hide it
+			if count >= MenuBarDock.shared.appManager.runningAppsInOrder.count {// then we need to hide it
 				return // all other i's will be higher and will fail too
 			}
-			let image = MenuBarDock.shared.appManager.runningAppsInOrder[i].icon
+			let image = MenuBarDock.shared.appManager.runningAppsInOrder[count].icon
 			let imageSize = MenuBarDock.shared.userPrefs.iconSize
 			image?.size = NSSize(width: imageSize, height: imageSize)
 			item.button?.appearance = NSAppearance(named: .aqua) // so the full colour of the icon is shown
@@ -92,16 +92,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			}
 
 			item.length = itemSlotWidth
-			let bundleId = MenuBarDock.shared.appManager.runningAppsInOrder[i].bundleIdentifier ?? MenuBarDock.shared.appManager.runningAppsInOrder[i].localizedName // ?? just in case
+			let bundleId = MenuBarDock.shared.appManager.runningAppsInOrder[count].bundleIdentifier ?? MenuBarDock.shared.appManager.runningAppsInOrder[count].localizedName // ?? just in case
 			item.button?.layer?.setValue(bundleId, forKey: Constants.NSUserDefaultsKeys.bundleId) // layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
- 			i += 1
+ 			count += 1
 		}
 	}
 
 	var bundleIdOfMenuJustOpened: String?
 	@objc func statusBarPressed(button: NSButton) {
 		let event = NSApp.currentEvent
-		let bundleId =  button.layer?.value(forKey: Constants.NSUserDefaultsKeys.bundleId) as! String
+		guard let bundleId =  button.layer?.value(forKey: Constants.NSUserDefaultsKeys.bundleId) as? String else {return}
 		let item = MenuBarDock.shared.statusItemManager.statusItems.filter {$0.button == button}.first
 		if event?.type == NSEvent.EventType.rightMouseUp {
 			print("Right click")
@@ -207,9 +207,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func openPreferencesWindow() {
-		if let vc =  NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "PreferencesViewController") as? PreferencesViewController {
+		if let viewController =  NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "PreferencesViewController") as? PreferencesViewController {
 			if !preferencesWindow.isVisible {
-				preferencesWindow = NSWindow(contentViewController: vc)
+				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
 			}
 			let controller = NSWindowController(window: preferencesWindow)

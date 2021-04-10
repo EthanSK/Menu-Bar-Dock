@@ -14,17 +14,16 @@ class StatusItemManager: NSObject {
 
 	var statusItemsBeingDisplayedInOrder: [NSStatusItem] { // mutating order of most to least active. gets the order based on the existing sorted position.
 
-		get {
             let filtered = statusItems.filter {$0.length != 0}
  			switch MenuBarDock.shared.userPrefs.sortingMethod {
-			case .mostRecentOnRight:
-				return filtered.sorted {$0.button!.superview!.window!.frame.minX > $1.button!.superview!.window!.frame.minX} // item at index 0 is rightmost
-			case .mostRecentOnLeft:
-				return filtered.sorted {$0.button!.superview!.window!.frame.minX < $1.button!.superview!.window!.frame.minX} // item at index 0 is rightmost
-			case .consistent:
+				case .mostRecentOnRight:
+					return filtered.sorted {$0.button!.superview!.window!.frame.minX > $1.button!.superview!.window!.frame.minX} // item at index 0 is rightmost
+				case .mostRecentOnLeft:
+					return filtered.sorted {$0.button!.superview!.window!.frame.minX < $1.button!.superview!.window!.frame.minX} // item at index 0 is rightmost
+				case .consistent:
                 return filtered // don't be fooled, the actual ordering takes place in runningAppsInOrder in appmanager.swift
 			}
-		}
+
 	}
 
 	override init() {
