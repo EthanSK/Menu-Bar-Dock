@@ -73,38 +73,37 @@ class MenuBarItem {
 		let appName = app.name
 		
 		addMenuItem(
+			menu: menu
 			title: "Quit \(appName)",
 			action: #selector(quitApp),
 			keyEquivalent: "q"
 		)
 		
 		addMenuItem(
+			menu: menu
 			title: "Reveal \(appName) in Finder",
 			action: #selector(revealAppInFinder),
 			keyEquivalent: "r"
 		)
 		
 		if let runningApplication? = app.runningApplication?{
-			//only makes sense to hide and show a running app, not just any app
+			//only makes sense to hide and show, and activate a running app, not just any app
 			addMenuItem(
+				menu: menu
 				title: "\(runningApplication?.isHidden ? "Unhide" : "Hide") \(appName)",
 				action: #selector(toggleAppHidden),
 				keyEquivalent: "h"
 			)
-			
-			
 			addMenuItem(
+				menu: menu
 				title: "Activate \(appName)",
 				action: #selector(activateApp),
 				keyEquivalent: "a"
 			)
 		}
-	
-		addMenuItem(
-			title: "Launch \(appName) instead of activating on click",
-			action: #selector(activateApp),
-			keyEquivalent: "l"
-		)
+		
+		menu.addItem(appOpeningMethodMenuItem(menu))
+		
 		
 		let launchInsteadActivateItem = NSMenuItem(title: "Launch \(appName) instead of activating on click", action: #selector(AppDelegate.launchInsteadOfActivateSpecificApp), keyEquivalent: "l")
 		if let shouldLaunchInsteadOfActivate = MenuBarDock.shared.userPrefs.launchInsteadOfActivateIndivApps[app?.bundleIdentifier ?? ""] {
@@ -124,14 +123,39 @@ class MenuBarItem {
 		statusItem.popUpMenu(menu)
 	}
 	
-	private func addMenuItem(title: String, action: Selector, keyEquivalent: String){
-		menu.addItem(
-			NSMenuItem(
-				title: title,
-				action: action,
-				keyEquivalent: keyEquivalent
-			)
+	private func appOpeningMethodMenuItem(menu: NSMenu) -> NSMenuItem{
+		let appOpeningMethodMenuItem = addMenuItem(
+			menu: menu
+			title: "Change opening method for \(appName)",
+			action: nil,
+			keyEquivalent: ""
 		)
+		appOpeningMethodMenuItem.submenu = NSMenu()
+		addMenuItem(
+			menu: appOpeningMethodMenuItem.submenu
+			title: AppOpeningMethod.launch.rawValue,
+			action: #selector(setAppOpeningMethodLaunch),
+			keyEquivalent: ""
+		)
+		addMenuItem(
+			menu: appOpeningMethodMenuItem.submenu
+			title: AppOpeningMethod.activate.rawValue,
+			action: #selector(setAppOpeningMethodActivate),
+			keyEquivalent: ""
+		)
+		
+		//TODO: - show the tick next to the item that is selected
+		return appOpeningMethodMenuItem
+	}
+	
+	private func addMenuItem(menu: NSMenu, title: String, action: Selector, keyEquivalent: String) -> NSMenuItem{
+		let item = NSMenuItem(
+			title: title,
+			   action: action,
+			   keyEquivalent: keyEquivalent
+		   )
+		menu.addItem(item)
+		return item
 	}
 	
 	@objc private func quitApp(){
@@ -152,4 +176,9 @@ class MenuBarItem {
 		app.activate()
 	}
 	
+	@objc private func setAppOpeningMethodLaunch(){
+	}
+	
+	@objc private func setAppOpeningMethodActivate(){
+	}
 }

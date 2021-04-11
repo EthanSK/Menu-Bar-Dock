@@ -46,7 +46,7 @@ class OpenableApp {
 	}
 	
 	func open(){
-		showWarningIfNeeded()
+		showOpeningAppWarningIfNeeded()
 		if bundleId == Constants.App.finderBundleId {
 			openFinder()
 			return
@@ -77,6 +77,7 @@ class OpenableApp {
 		runningApplication.activate(options: .activateIgnoringOtherApps)
 	}
 	
+ 
 	
 	private func openFinder(){
 		NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // do this as well if it's hidden
@@ -93,7 +94,7 @@ class OpenableApp {
 		}
 	}
 	
-	private func showWarningIfNeeded(){
+	private func showOpeningAppWarningIfNeeded(){
 		//allows us to fail gracefully and alert the developer
 		if appOpeningMethod == .activate && runningApplication == nil {
 			let warningMsg = "The app opening method is 'activate' for app \(bundleId) but there is no running app, so launched it instead! This shouldn't happen"
@@ -102,9 +103,9 @@ class OpenableApp {
 	}
 }
 
-enum AppOpeningMethod {
-	case launch
-	case activate
+enum AppOpeningMethod: String {
+	case launch = "launch"
+	case activate = "activate"
 }
 
 

@@ -14,8 +14,8 @@ enum UserPrefsDefaultValues {
 	static let sortingMethod: SortingMethod = .mostRecentOnRight
 	static let iconSize: CGFloat = 21
 	static let launchAtLogin = true // appaz mac app store doesn't allow default true
-	static let launchInsteadOfActivate = true // should activate app by default
-	static let launchInsteadOfActivateIndivApps: [String: Bool] = [Constants.App.finderBundleId: true]
+	static let defaultAppOpeningMethod = AppOpeningMethod.launch
+	static let appOpeningMethods: [String: AppOpeningMethod] = [:] //bundleId is key
 	static let hideActiveApp = true
 	static let hideFinder = false
 }
@@ -26,8 +26,8 @@ class UserPrefs: NSObject {
 	var sortingMethod: SortingMethod = UserPrefsDefaultValues.sortingMethod
 	var iconSize: CGFloat = UserPrefsDefaultValues.iconSize
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
-	var launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
-	var launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
+	var defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
+	var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	var hideActiveApp = UserPrefsDefaultValues.hideActiveApp
 	var hideFinder = UserPrefsDefaultValues.hideFinder
 
@@ -41,14 +41,14 @@ class UserPrefs: NSObject {
 		widthOfStatusItem = UserPrefsDefaultValues.widthOfStatusItem
 		sortingMethod = UserPrefsDefaultValues.sortingMethod
 		iconSize = UserPrefsDefaultValues.iconSize
-		launchInsteadOfActivate = UserPrefsDefaultValues.launchInsteadOfActivate
+		defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
 		hideActiveApp = UserPrefsDefaultValues.hideActiveApp
 		hideFinder = UserPrefsDefaultValues.hideFinder
 
 		save()
 	}
 	func resetIndivAppSettingsToDefaults() {
-		launchInsteadOfActivateIndivApps = UserPrefsDefaultValues.launchInsteadOfActivateIndivApps
+		appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	}
 
 	func save() {
@@ -57,8 +57,11 @@ class UserPrefs: NSObject {
 		UserDefaults.standard.set(sortingMethod.rawValue, forKey: Constants.UserPrefs.sortingMethod)
 		UserDefaults.standard.set(iconSize, forKey: Constants.UserPrefs.iconSize)
 		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)
-		UserDefaults.standard.set(launchInsteadOfActivate, forKey: Constants.UserPrefs.launchInsteadOfActivate)
-		UserDefaults.standard.set(launchInsteadOfActivateIndivApps, forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps)
+		UserDefaults.standard.set(defaultAppOpeningMethod.rawValue, forKey: Constants.UserPrefs.defaultAppOpeningMethod)
+		UserDefaults.standard.set(
+			Dictionary(uniqueKeysWithValues:
+					appOpeningMethods.map({ key, value in (key, value.rawValue)
+		})), forKey: Constants.UserPrefs.appOpeningMethods)
 		UserDefaults.standard.set(hideActiveApp, forKey: Constants.UserPrefs.hideActiveApp)
 		UserDefaults.standard.set(hideFinder, forKey: Constants.UserPrefs.hideFinder)
 
@@ -84,11 +87,14 @@ class UserPrefs: NSObject {
 		if let launchAtLogin = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchAtLogin) as? Bool {
 			self.launchAtLogin = launchAtLogin
 		}
-		if let launchInsteadOfActivate = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivate) as? Bool {
-			self.launchInsteadOfActivate = launchInsteadOfActivate
+		if let defaultAppOpeningMethod = UserDefaults.standard.object(forKey: Constants.UserPrefs.defaultAppOpeningMethod) as? String {
+			self.defaultAppOpeningMethod = AppOpeningMethod(rawValue: defaultAppOpeningMethod) ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 		}
-		if let launchInsteadOfActivateIndivApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchInsteadOfActivateIndivApps) as? [String: Bool] {
-			self.launchInsteadOfActivateIndivApps = launchInsteadOfActivateIndivApps
+		if let appOpeningMethods = UserDefaults.standard.object(forKey: Constants.UserPrefs.appOpeningMethods) as? [String: String] {
+			self.appOpeningMethods = Dictionary(uniqueKeysWithValues:
+				appOpeningMethods.map({ key, value in
+				(key, AppOpeningMethod(rawValue: value) ?? UserPrefsDefaultValues.defaultAppOpeningMethod)
+			}))
 		}
 		if let hideActiveApp = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideActiveApp) as? Bool {
 			self.hideActiveApp = hideActiveApp

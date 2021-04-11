@@ -29,8 +29,8 @@ enum Constants {
 		static let sortingMethod = "sortingMethod"
 		static let iconSize = "iconSize"
 		static let launchAtLogin = "launchAtLogin"
-		static let launchInsteadOfActivate = "launchInsteadOfActivate"
-		static let launchInsteadOfActivateIndivApps = "launchInsteadOfActivateIndivApps"
+		static let defaultAppOpeningMethod = "defaultAppOpeningMethod"
+		static let appOpeningMethods = "appOpeningMethods"
 		static let hideActiveApp = "hideActiveApp"
 		static let hideFinder = "hideFinder"
 	}
