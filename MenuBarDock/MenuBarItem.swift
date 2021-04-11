@@ -42,10 +42,10 @@ class MenuBarItem {
 		initButton()
 	}
 	
-	func update(for app: OpenableApp, iconSize: CGFloat, slotWidth: CGFloat) {
+	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
 		self.app = app
 		
-		let imageSize = iconSize
+		let imageSize = appIconSize
 		let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
 		let newView = NSImageView(
 			frame: NSRect(
@@ -164,14 +164,7 @@ class MenuBarItem {
 			keyEquivalent: ""
 		)
 		
-		switch delegate.appOpeningMethod {
-		case .launch:
-			launchItem.state = .on
-			activateItem.state = .off
-		case .activate:
-			launchItem.state = .off
-			activateItem.state = .on
-		}
+		setAppOpeningMethodUi(userPrefsDelegate.getAppOpeningMethod(app))
 		return appOpeningMethodMenuItem
 	}
 	
@@ -183,6 +176,17 @@ class MenuBarItem {
 		)
 		menu.addItem(item)
 		return item
+	}
+	
+	private func setAppOpeningMethodUi(for appOpeningMethod: AppOpeningMethod){
+		switch setAppOpeningMethodUi {
+		case .launch:
+			launchItem.state = .on
+			activateItem.state = .off
+		case .activate:
+			launchItem.state = .off
+			activateItem.state = .on
+		}
 	}
 	
 	@objc private func quitApp(){
@@ -205,10 +209,12 @@ class MenuBarItem {
 	
 	@objc private func setAppOpeningMethodLaunch(){
 		delegate.didSetAppOpeningMethod(.launch)
+		setAppOpeningMethodUi(.launch)
 	}
 	
 	@objc private func setAppOpeningMethodActivate(){
 		delegate.didSetAppOpeningMethod(.activate)
+		setAppOpeningMethodUi(.activate)
 	}
 	
 	@objc private func openPreferencesWindow(){

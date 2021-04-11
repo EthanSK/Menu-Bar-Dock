@@ -10,9 +10,8 @@ import Cocoa
 
 protocol MenuBarItemsUserPrefsDelegate: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
-	var maxNumItems: Int { get }
-	var itemWith: CGFloat { get }
-	var iconSize: CGFloat { get }
+	var statusItemWidth: CGFloat { get }
+	var appIconSize: CGFloat { get }
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
 
 }
@@ -20,7 +19,6 @@ protocol MenuBarItemsUserPrefsDelegate: AnyObject {
 protocol MenuBarItemsPreferencesDelegate: AnyObject {
 	func didOpenPreferencesWindow()
 }
-
 
 class MenuBarItems {
 	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
@@ -30,7 +28,7 @@ class MenuBarItems {
 		didSet {
 			items = items.sorted {$0.position < $1.position}
 		}
-	}	
+	}
 	
 	init(
 		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
@@ -42,26 +40,22 @@ class MenuBarItems {
 	}
 	
 	func update(
-		apps: [OpenableApp],
-		maxNumItems: Int,
-		itemWidth: CGFloat,
-		iconSize: CGFloat
+		openableApps: OpenableApps
 	){
 		let itemCount = items.count
-		for i in 0...apps.count {
-			if i > maxNumItems { return }
-			let app = apps[i]
+		for i in 0...openableApps.apps.count {
+			let app = openableApps.apps[i]
 			
 			if i >= itemCount{
 				items.append(
 					MenuBarItem(
-						statusItem: NSStatusBar.system.statusItem(withLength: itemWidth),
+						statusItem: NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth),
 						userPrefsDelegate: self,
 						preferencesDelegate: self
 					)
 				)
 			}
-			items[i].update(for: app, iconSize: iconSize, slotWidth: itemWidth)
+			items[i].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
 		}
 	}
 }
@@ -74,8 +68,6 @@ extension MenuBarItems: MenuBarItemUserPrefsDelegate {
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
 		userPrefsDelegate.didSetAppOpeningMethod(method, app)
 	}
-	
-	
 }
 
 extension MenuBarItems: MenuBarItemPreferencesDelegate {

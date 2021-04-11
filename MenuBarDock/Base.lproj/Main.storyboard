@@ -900,7 +900,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="hideActiveAppPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
+                                    <action selector="hideActiveAppFromRunningAppsPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
@@ -910,7 +910,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="hideFinderPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
+                                    <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -979,8 +979,8 @@
                     </view>
                     <connections>
                         <outlet property="consistentSortOrderRadioButton" destination="i5z-3c-gg7" id="Po6-Aa-tPp"/>
-                        <outlet property="hideActiveAppButton" destination="msg-1s-pvm" id="5lc-Qw-JGL"/>
-                        <outlet property="hideFinderButton" destination="Jk5-LB-J8x" id="H9B-Kl-mhk"/>
+                        <outlet property="hideActiveAppFromRunningAppsButton" destination="msg-1s-pvm" id="5lc-Qw-JGL"/>
+                        <outlet property="hideFinderFromRunningAppsButton" destination="Jk5-LB-J8x" id="H9B-Kl-mhk"/>
                         <outlet property="launchAtLoginButton" destination="pfs-x9-j8G" id="xQM-Mz-wm5"/>
                         <outlet property="launchInsteadOfActivateRadioButton" destination="FNp-zT-NYp" id="m1l-oW-KNw"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>

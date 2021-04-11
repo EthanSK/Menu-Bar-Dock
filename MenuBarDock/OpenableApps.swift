@@ -8,19 +8,33 @@
 
 import Cocoa
 
+protocol OpenableAppsUserPrefsDelegate: AnyObject {
+	
+}
+
 class OpenableApps {
-	var apps: [OpenableApps]
+	var apps: [OpenableApp]
 	
 	init() {
 		apps = []
 	}
 	
 	func add(app: OpenableApp) {
-		
+		apps.append(app)
 	}
 	
 	func remove(app: OpenableApp) {
-		
+//		apps.removeAll(app)
 	}
 	
+	private func runningApps() -> [NSRunningApplication]{
+		return NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
+	}
+	
+	func canShowRunningApp(app: NSRunningApplication) -> Bool {
+		if app.activationPolicy != .regular {return false}
+		if app.bundleIdentifier == Constants.App.finderBundleId {return !MenuBarDock.shared.userPrefs.hideFinderFromRunningApps}
+		if MenuBarDock.shared.userPrefs.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
+	}
 }
+

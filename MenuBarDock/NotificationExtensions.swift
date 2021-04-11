@@ -16,6 +16,6 @@ extension Notification.Name {
 	static let resetToDefaults = Notification.Name("resetToDefaults")
 	static let sizeOfIconSliderChanged = Notification.Name("sizeOfIconSliderChanged")
 	static let sizeOfIconSliderEndedSliding = Notification.Name("sizeOfIconSliderEndedSliding")
-	static let sortingMethodChanged = Notification.Name("sortingMethodChanged")
+	static let runningAppsSortingMethodChanged = Notification.Name("runningAppsSortingMethodChanged")
 	static let killLauncher = Notification.Name("killLauncher")
 }

@@ -24,19 +24,19 @@ enum Constants {
 	}
 
 	enum UserPrefs {
-		static let numberOfStatusItems = "numberOfStatusItems"
-		static let widthOfStatusItem = "widthOfStatusItem"
-		static let sortingMethod = "sortingMethod"
-		static let iconSize = "iconSize"
+		static let maxNumRunningApps = "maxNumRunningApps"
+		static let statusItemWidth = "statusItemWidth"
+		static let runningAppsSortingMethod = "runningAppsSortingMethod"
+		static let appIconSize = "appIconSize"
 		static let launchAtLogin = "launchAtLogin"
 		static let defaultAppOpeningMethod = "defaultAppOpeningMethod"
 		static let appOpeningMethods = "appOpeningMethods"
-		static let hideActiveApp = "hideActiveApp"
-		static let hideFinder = "hideFinder"
+		static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
+		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
 	}
 }
 
-enum SortingMethod: Int {
+enum runningAppsSortingMethod: Int {
 	case mostRecentOnRight = 0// newest active app on right
 	case mostRecentOnLeft = 1
 	case consistent = 2

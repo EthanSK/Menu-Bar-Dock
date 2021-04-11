@@ -25,8 +25,8 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
 
 	@IBOutlet weak var launchAtLoginButton: NSButton!
-	@IBOutlet weak var hideActiveAppButton: NSButton!
-	@IBOutlet weak var hideFinderButton: NSButton!
+	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
+	@IBOutlet weak var hideFinderFromRunningAppsButton: NSButton!
 
 	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
 
@@ -37,18 +37,18 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	func updateUI(for userPrefs: UserPrefs) {
 		self.title = Constants.App.name + " Preferences"
-		numberOfAppsCounterLabel.stringValue = "\(userPrefs.numberOfStatusItems)"
-		numberOfAppsSlider.integerValue = userPrefs.numberOfStatusItems
-		widthOfItemCouterLabel.stringValue = "\(Int(userPrefs.widthOfStatusItem.rounded()))"
-		widthOfItemSlider.doubleValue = Double(userPrefs.widthOfStatusItem)
-		sizeOfIconCounterLabel.stringValue = "\(Int(userPrefs.iconSize.rounded()))"
-		sizeOfIconSlider.doubleValue = Double(userPrefs.iconSize)
+		numberOfAppsCounterLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
+		numberOfAppsSlider.integerValue = userPrefs.maxNumRunningApps
+		widthOfItemCouterLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
+		widthOfItemSlider.doubleValue = Double(userPrefs.statusItemWidth)
+		sizeOfIconCounterLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
+		sizeOfIconSlider.doubleValue = Double(userPrefs.appIconSize)
 		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
-		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off
-		hideActiveAppButton.state = userPrefs.hideActiveApp ? .on : .off
-		hideFinderButton.state = userPrefs.hideFinder ? .on : .off
+//		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off  //TODO: - do this
+		hideActiveAppFromRunningAppsButton.state = userPrefs.hideActiveAppFromRunningApps ? .on : .off
+		hideFinderFromRunningAppsButton.state = userPrefs.hideFinderFromRunningApps ? .on : .off
 
-		switch userPrefs.sortingMethod {
+		switch userPrefs.runningAppsSortingMethod {
 		case .mostRecentOnRight:
 			mostRecentRightRadioButton.state = .on
 		case .mostRecentOnLeft:
@@ -65,7 +65,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			newValueNotifName: .widthOfitemSliderChanged,
 			endedDragNotifName: .widthOfitemSliderEndedSliding,
 			sliderNewValue: { value in
-				MenuBarDock.shared.userPrefs.widthOfStatusItem = CGFloat(value)
+				MenuBarDock.shared.userPrefs.statusItemWidth = CGFloat(value)
 			}
 		)
 	}
@@ -77,7 +77,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			newValueNotifName: .sizeOfIconSliderChanged,
 			endedDragNotifName: .sizeOfIconSliderEndedSliding,
 			sliderNewValue: { value in
-				MenuBarDock.shared.userPrefs.iconSize = CGFloat(value)
+				MenuBarDock.shared.userPrefs.appIconSize = CGFloat(value)
 			}
 		)
 	}
@@ -89,22 +89,22 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			newValueNotifName: .numberOfAppsSliderChanged,
 			endedDragNotifName: .numberOfAppsSliderEndedSliding,
 			sliderNewValue: { value in
-				MenuBarDock.shared.userPrefs.numberOfStatusItems = Int(value)
+				MenuBarDock.shared.userPrefs.maxNumRunningApps = Int(value)
 			}
 		)
 	}
 
 	@IBAction func radioButtonPressed(_ sender: Any) {
 		if consistentSortOrderRadioButton.state == .on {
-			MenuBarDock.shared.userPrefs.sortingMethod = .consistent
+			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .consistent
 		}
 		if mostRecentLeftRadioButton.state == .on {
-			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnLeft
+			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .mostRecentOnLeft
 		}
 		if mostRecentRightRadioButton.state == .on {
-			MenuBarDock.shared.userPrefs.sortingMethod = .mostRecentOnRight
+			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .mostRecentOnRight
 		}
-		NotificationCenter.default.post(name: .sortingMethodChanged, object: nil)
+		NotificationCenter.default.post(name: .runningAppsSortingMethodChanged, object: nil)
 		MenuBarDock.shared.userPrefs.save()
 	}
 
@@ -139,17 +139,17 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
-		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on
+//		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on //TODO: - do this
 		MenuBarDock.shared.userPrefs.save()
 	}
 
-	@IBAction func hideActiveAppPressed(_ sender: NSButton) {
-		MenuBarDock.shared.userPrefs.hideActiveApp = sender.state == .on
+	@IBAction func hideActiveAppFromRunningAppsPressed(_ sender: NSButton) {
+		MenuBarDock.shared.userPrefs.hideActiveAppFromRunningApps = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
 
-	@IBAction func hideFinderPressed(_ sender: NSButton) {
-		MenuBarDock.shared.userPrefs.hideFinder = sender.state == .on
+	@IBAction func hideFinderFromRunningAppsPressed(_ sender: NSButton) {
+		MenuBarDock.shared.userPrefs.hideFinderFromRunningApps = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
 
@@ -177,15 +177,4 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		}
 	}
 
-}
-
-extension PreferencesViewController {
-	static func freshController() -> PreferencesViewController {
- 		let storyboard = NSStoryboard(name: "Main", bundle: nil)
- 		let identifier = "preferences"
- 		guard let viewController = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
-			fatalError("Can't find view controller with identifier " + identifier)
-		}
-		return viewController
-	}
 }

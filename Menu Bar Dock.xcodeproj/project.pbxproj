@@ -19,7 +19,6 @@
 		38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2F222B715400D3FA0C /* UserPrefs.swift */; };
 		38412F32222B722100D3FA0C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F31222B722100D3FA0C /* Constants.swift */; };
 		38412F34222B729100D3FA0C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F33222B729100D3FA0C /* Model.swift */; };
-		38412F36222B78D800D3FA0C /* StatusItemsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F35222B78D800D3FA0C /* StatusItemsManager.swift */; };
 		384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEA426226333000B08FC /* MenuBarItems.swift */; };
 		384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEAA26226677000B08FC /* MenuBarItem.swift */; };
 		384CBEB926227329000B08FC /* OpenableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEB826227329000B08FC /* OpenableApp.swift */; };
@@ -96,7 +95,6 @@
 		38412F2F222B715400D3FA0C /* UserPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
 		38412F31222B722100D3FA0C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		38412F33222B729100D3FA0C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		38412F35222B78D800D3FA0C /* StatusItemsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemsManager.swift; sourceTree = "<group>"; };
 		384CBEA426226333000B08FC /* MenuBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItems.swift; sourceTree = "<group>"; };
 		384CBEAA26226677000B08FC /* MenuBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		384CBEB826227329000B08FC /* OpenableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApp.swift; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 				38412F2B222B47A900D3FA0C /* AppManager.swift */,
 				38412F2F222B715400D3FA0C /* UserPrefs.swift */,
 				38412F31222B722100D3FA0C /* Constants.swift */,
-				38412F35222B78D800D3FA0C /* StatusItemsManager.swift */,
 				384CBEA426226333000B08FC /* MenuBarItems.swift */,
 				384CBEAA26226677000B08FC /* MenuBarItem.swift */,
 				384CBEB826227329000B08FC /* OpenableApp.swift */,
@@ -554,7 +551,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */,
-				38412F36222B78D800D3FA0C /* StatusItemsManager.swift in Sources */,
 				38412F34222B729100D3FA0C /* Model.swift in Sources */,
 				384CBEB926227329000B08FC /* OpenableApp.swift in Sources */,
 				38412F32222B722100D3FA0C /* Constants.swift in Sources */,

@@ -9,29 +9,29 @@
 import Cocoa
 
 enum UserPrefsDefaultValues {
-	static let numberOfStatusItems = 15 // make it go up really high so user has freedom if the have a very large long screen
-	static let widthOfStatusItem = CGFloat(30)
-	static let sortingMethod: SortingMethod = .mostRecentOnRight
-	static let iconSize: CGFloat = 21
-	static let launchAtLogin = true // appaz mac app store doesn't allow default true
+	static let maxNumRunningApps = 15
+	static let statusItemWidth = CGFloat(30)
+	static let runningAppsSortingMethod: runningAppsSortingMethod = .mostRecentOnRight
+	static let appIconSize: CGFloat = 21
+	static let launchAtLogin = true
 	static let defaultAppOpeningMethod = AppOpeningMethod.launch
 	static let appOpeningMethods: [String: AppOpeningMethod] = [:] //bundleId is key
-	static let hideActiveApp = true
-	static let hideFinder = false
+	static let hideActiveAppFromRunningApps = true
+	static let hideFinderFromRunningApps = false
 }
 
 
 
 class UserPrefs: NSObject {
-	var numberOfStatusItems = UserPrefsDefaultValues.numberOfStatusItems // make it go up really high so user has freedom if the have a very large long screen
-	var widthOfStatusItem = UserPrefsDefaultValues.widthOfStatusItem
-	var sortingMethod: SortingMethod = UserPrefsDefaultValues.sortingMethod
-	var iconSize: CGFloat = UserPrefsDefaultValues.iconSize
+	var maxNumRunningApps = UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
+	var statusItemWidth = UserPrefsDefaultValues.statusItemWidth
+	var runningAppsSortingMethod: runningAppsSortingMethod = UserPrefsDefaultValues.runningAppsSortingMethod
+	var appIconSize: CGFloat = UserPrefsDefaultValues.appIconSize
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
 	var defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
 	var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
-	var hideActiveApp = UserPrefsDefaultValues.hideActiveApp
-	var hideFinder = UserPrefsDefaultValues.hideFinder
+	var hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
+	var hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
 
 	override init() {
 		super.init()
@@ -39,13 +39,13 @@ class UserPrefs: NSObject {
 	}
 
 	func resetToDefaults() { // cba about this shitty code tbh not worth my time
-		numberOfStatusItems =  UserPrefsDefaultValues.numberOfStatusItems // make it go up really high so user has freedom if the have a very large long screen
-		widthOfStatusItem = UserPrefsDefaultValues.widthOfStatusItem
-		sortingMethod = UserPrefsDefaultValues.sortingMethod
-		iconSize = UserPrefsDefaultValues.iconSize
+		maxNumRunningApps =  UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
+		statusItemWidth = UserPrefsDefaultValues.statusItemWidth
+		runningAppsSortingMethod = UserPrefsDefaultValues.runningAppsSortingMethod
+		appIconSize = UserPrefsDefaultValues.appIconSize
 		defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
-		hideActiveApp = UserPrefsDefaultValues.hideActiveApp
-		hideFinder = UserPrefsDefaultValues.hideFinder
+		hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
+		hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
 
 		save()
 	}
@@ -54,36 +54,36 @@ class UserPrefs: NSObject {
 	}
 
 	func save() {
-		UserDefaults.standard.set(numberOfStatusItems, forKey: Constants.UserPrefs.numberOfStatusItems)
-		UserDefaults.standard.set(widthOfStatusItem, forKey: Constants.UserPrefs.widthOfStatusItem)
-		UserDefaults.standard.set(sortingMethod.rawValue, forKey: Constants.UserPrefs.sortingMethod)
-		UserDefaults.standard.set(iconSize, forKey: Constants.UserPrefs.iconSize)
+		UserDefaults.standard.set(maxNumRunningApps, forKey: Constants.UserPrefs.maxNumRunningApps)
+		UserDefaults.standard.set(statusItemWidth, forKey: Constants.UserPrefs.statusItemWidth)
+		UserDefaults.standard.set(runningAppsSortingMethod.rawValue, forKey: Constants.UserPrefs.runningAppsSortingMethod)
+		UserDefaults.standard.set(appIconSize, forKey: Constants.UserPrefs.appIconSize)
 		UserDefaults.standard.set(launchAtLogin, forKey: Constants.UserPrefs.launchAtLogin)
 		UserDefaults.standard.set(defaultAppOpeningMethod.rawValue, forKey: Constants.UserPrefs.defaultAppOpeningMethod)
 		UserDefaults.standard.set(
 			Dictionary(uniqueKeysWithValues:
 					appOpeningMethods.map({ key, value in (key, value.rawValue)
 		})), forKey: Constants.UserPrefs.appOpeningMethods)
-		UserDefaults.standard.set(hideActiveApp, forKey: Constants.UserPrefs.hideActiveApp)
-		UserDefaults.standard.set(hideFinder, forKey: Constants.UserPrefs.hideFinder)
+		UserDefaults.standard.set(hideActiveAppFromRunningApps, forKey: Constants.UserPrefs.hideActiveAppFromRunningApps)
+		UserDefaults.standard.set(hideFinderFromRunningApps, forKey: Constants.UserPrefs.hideFinderFromRunningApps)
 
 	}
 
 	func load() {
-		if let numberOfStatusItems = UserDefaults.standard.object(forKey: Constants.UserPrefs.numberOfStatusItems) as? Int {
-			self.numberOfStatusItems = numberOfStatusItems
+		if let maxNumRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.maxNumRunningApps) as? Int {
+			self.maxNumRunningApps = maxNumRunningApps
 		}
 
-		if let widthOfStatusItem = UserDefaults.standard.object(forKey: Constants.UserPrefs.widthOfStatusItem) as? CGFloat {
-			self.widthOfStatusItem = widthOfStatusItem
+		if let statusItemWidth = UserDefaults.standard.object(forKey: Constants.UserPrefs.statusItemWidth) as? CGFloat {
+			self.statusItemWidth = statusItemWidth
 		}
 
-		if let sortingMethodInt = UserDefaults.standard.object(forKey: Constants.UserPrefs.sortingMethod) as? Int, let sortingMethod = SortingMethod(rawValue: sortingMethodInt) {
-			self.sortingMethod = sortingMethod
+		if let runningAppsSortingMethodInt = UserDefaults.standard.object(forKey: Constants.UserPrefs.runningAppsSortingMethod) as? Int, let runningAppsSortingMethod = runningAppsSortingMethod(rawValue: runningAppsSortingMethodInt) {
+			self.runningAppsSortingMethod = runningAppsSortingMethod
 		}
 
-		if let iconSize = UserDefaults.standard.object(forKey: Constants.UserPrefs.iconSize) as? CGFloat {
-			self.iconSize = iconSize
+		if let appIconSize = UserDefaults.standard.object(forKey: Constants.UserPrefs.appIconSize) as? CGFloat {
+			self.appIconSize = appIconSize
 		}
 
 		if let launchAtLogin = UserDefaults.standard.object(forKey: Constants.UserPrefs.launchAtLogin) as? Bool {
@@ -98,11 +98,19 @@ class UserPrefs: NSObject {
 				(key, AppOpeningMethod(rawValue: value) ?? UserPrefsDefaultValues.defaultAppOpeningMethod)
 			}))
 		}
-		if let hideActiveApp = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideActiveApp) as? Bool {
-			self.hideActiveApp = hideActiveApp
+		if let hideActiveAppFromRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideActiveAppFromRunningApps) as? Bool {
+			self.hideActiveAppFromRunningApps = hideActiveAppFromRunningApps
 		}
-		if let hideFinder = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideFinder) as? Bool {
-			self.hideFinder = hideFinder
+		if let hideFinderFromRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideFinderFromRunningApps) as? Bool {
+			self.hideFinderFromRunningApps = hideFinderFromRunningApps
 		}
+	}
+}
+
+
+extension UserPrefs: MenuBarItemsUserPrefsDelegate {
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
+		appOpeningMethods[app.bundleId] = method
+		save()
 	}
 }
