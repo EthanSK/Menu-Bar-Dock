@@ -15,6 +15,7 @@ class OpenableApp {
 	var bundleUrl: URL
 	var runningApplication: NSRunningApplication?
 	var appOpeningMethod: AppOpeningMethod
+	var representsRunningApp: Bool
 
 	init(
 		 bundleId: String,
@@ -28,6 +29,7 @@ class OpenableApp {
 		self.appOpeningMethod = appOpeningMethod
 		self.bundleUrl = bundleUrl
 		self.name = name
+		self.representsRunningApp = false
 	}
 
 	init(
@@ -52,6 +54,7 @@ class OpenableApp {
 		self.appOpeningMethod = appOpeningMethod
 		self.bundleUrl = bundleUrl
 		self.name = name
+		self.representsRunningApp = true
 	}
 
 	func open() {
@@ -120,4 +123,13 @@ enum OpenableAppError: Error {
 	case noIcon // we need an icon to show something in the menu bar, so throwing an error is fine if there isn't one.
 	case noName // we need some kind of name
 	case noBundleUrl // do we NEED this? don't think so but for now we can throw
+}
+
+extension OpenableApp: Reorderable {
+	var orderElement: OrderElement { // so we can order using another array of bundleIds
+		bundleId
+	}
+
+	typealias OrderElement = String
+
 }

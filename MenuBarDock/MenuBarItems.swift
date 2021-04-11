@@ -24,11 +24,7 @@ class MenuBarItems {
 	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
 	weak var preferencesDelegate: MenuBarItemsPreferencesDelegate!
 
-	private(set) var items: [MenuBarItem] { // ordered left to right
-		didSet {
-			items = items.sorted {$0.position < $1.position}
-		}
-	}
+	private(set) var items: [MenuBarItem] // ordered left to right
 
 	init(
 		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
@@ -42,19 +38,43 @@ class MenuBarItems {
 	func update(
 		openableApps: OpenableApps
 	) {
-		let origItemCount = items.count
+		createEnoughStatusItems(openableApps: openableApps)
+
+		sortItems() // sort after adding them all for efficiency
+
 		for (index, app) in openableApps.apps.enumerated() {
-			if index >= origItemCount {
-				items.append(
-					MenuBarItem(
-						statusItem: NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth),
-						userPrefsDelegate: self,
-						preferencesDelegate: self
-					)
-				)
-			}
-			items[index].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			items[index].statusItem.title = String(index) // TODO: - remove
+//			items[index].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
 		}
+
+	}
+
+	private func createEnoughStatusItems(openableApps: OpenableApps) {
+		let origItemCount = items.count
+		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct in advance https://trello.com/c/Jz312bga
+			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth)
+			statusItem.button?.superview?.needsLayout = true
+			statusItem.button?.superview?.layout()
+			statusItem.button!.superview!.window!.layoutIfNeeded()
+			statusItem.button!.superview!.layoutSubtreeIfNeeded()
+			statusItem.button!.superview!.layout()
+			statusItem.button!.window!.displayIfNeeded()
+			statusItem.button?.superview?.window?.update()
+			items.append(
+				MenuBarItem(
+					statusItem: statusItem,
+					userPrefsDelegate: self,
+					preferencesDelegate: self
+				)
+			)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
+			items[index].statusItem.title = "E-" + String(index) // E for empty //TODO: - remove
+		}
+	}
+
+	private func sortItems() {
+		print("before: ", items.map {$0.position})
+		items = items.sorted {$0.position < $1.position}
+		print("after: ", items.map {$0.position})
 	}
 }
 

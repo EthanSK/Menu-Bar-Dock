@@ -34,8 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			userPrefsDelegate: userPrefs,
 			preferencesDelegate: self
 		)
-		openableApps = OpenableApps(userPrefsDelegate: userPrefs)
-		menuBarItems.update(openableApps: openableApps)
+		openableApps = OpenableApps(delegate: self, userPrefsDelegate: userPrefs)
+		updateMenuBarItems()
 	}
 
 	func setupLaunchAtLogin() {
@@ -50,6 +50,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			DistributedNotificationCenter.default().post(name: Notification.Name("killLauncher"), object: Bundle.main.bundleIdentifier!)
 		}
 	}
+
+	private func updateMenuBarItems() {
+		menuBarItems.update(openableApps: openableApps)
+	}
 }
 
 extension AppDelegate: MenuBarItemsPreferencesDelegate {
@@ -59,6 +63,7 @@ extension AppDelegate: MenuBarItemsPreferencesDelegate {
 
 	func openPreferencesWindow() {
 		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.ViewControllerIdentifiers.preferences) as? PreferencesViewController {
+			viewController.userPrefs = userPrefs
 			if !preferencesWindow.isVisible {
 				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
@@ -68,4 +73,15 @@ extension AppDelegate: MenuBarItemsPreferencesDelegate {
 			NSApp.activate(ignoringOtherApps: true)// stops bugz n shiz i think
 		}
 	}
+}
+
+extension AppDelegate: OpenableAppsDelegate {
+	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
+		updateMenuBarItems()
+	}
+
+	func runningAppWasQuit(_ runningApp: NSRunningApplication) {
+		updateMenuBarItems()
+	}
+
 }

@@ -27,6 +27,7 @@
 		38E394EA222D7790006F926E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E9222D7790006F926E /* Assets.xcassets */; };
 		38E394ED222D7790006F926E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38E394EB222D7790006F926E /* Main.storyboard */; };
 		38E394F9222D7B61006F926E /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38E394F8222D7B61006F926E /* ServiceManagement.framework */; };
+		38EEA8BF26238C14005DD6A1 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EEA8BE26238C14005DD6A1 /* Utils.swift */; };
 		8025B2CADE468941B1A841B9 /* Pods_Launcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98BF29A3FBD4222A2994CC63 /* Pods_Launcher.framework */; };
 		88AD155137A7D16EF21440CF /* Pods_Menu_Bar_DockUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B9AC2CA0427E3D1161227B /* Pods_Menu_Bar_DockUITests.framework */; };
 		B7AFA862BC6214A4D95098CC /* Pods_Menu_Bar_DockTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D61877253F489B8F948C27 /* Pods_Menu_Bar_DockTests.framework */; };
@@ -101,6 +102,7 @@
 		38E394EE222D7790006F926E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38E394EF222D7790006F926E /* Launcher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Launcher.entitlements; sourceTree = "<group>"; };
 		38E394F8222D7B61006F926E /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
+		38EEA8BE26238C14005DD6A1 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		489942CC5F97C7BABFC066E7 /* Pods-Menu Bar Dock.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu Bar Dock.debug.xcconfig"; path = "Target Support Files/Pods-Menu Bar Dock/Pods-Menu Bar Dock.debug.xcconfig"; sourceTree = "<group>"; };
 		4E25AD7108669ADAF8C59B09 /* Pods_Menu_Bar_Dock.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menu_Bar_Dock.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EECCBA0CAA1B9E8A1451213 /* Pods-Menu Bar DockTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu Bar DockTests.debug.xcconfig"; path = "Target Support Files/Pods-Menu Bar DockTests/Pods-Menu Bar DockTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				384CBEAA26226677000B08FC /* MenuBarItem.swift */,
 				384CBEB826227329000B08FC /* OpenableApp.swift */,
 				384CBEBE262276A9000B08FC /* OpenableApps.swift */,
+				38EEA8BE26238C14005DD6A1 /* Utils.swift */,
 			);
 			path = MenuBarDock;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 			files = (
 				384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */,
 				384CBEB926227329000B08FC /* OpenableApp.swift in Sources */,
+				38EEA8BF26238C14005DD6A1 /* Utils.swift in Sources */,
 				38412F32222B722100D3FA0C /* Constants.swift in Sources */,
 				38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */,
 				38412F02222B3E2F00D3FA0C /* PreferencesViewController.swift in Sources */,
