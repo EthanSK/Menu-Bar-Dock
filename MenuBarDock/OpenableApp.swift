@@ -11,15 +11,27 @@ import Cocoa
 class OpenableApp {
 	var bundleId: String
 	var icon: NSImage
-	var runningApp: NSRunningApplication?
+	var name: String
+	var bundleUrl: URL
+	var runningApplication: NSRunningApplication?
 	var appOpeningMethod: AppOpeningMethod
 	
-	init(bundleId: String, icon: NSImage) {
+	init(bundleId: String,
+		 icon: NSImage,
+		 appOpeningMethod: AppOpeningMethod,
+		 bundleUrl: URL
+	) {
 		self.bundleId = bundleId
 		self.icon = icon
+		self.appOpeningMethod = appOpeningMethod
+		self.bundleUrl = bundleUrl
 	}
 	
-	init(runningApp: NSRunningApplication) throws {
+	init(
+		runningApp: NSRunningApplication,
+		appOpeningMethod: AppOpeningMethod,
+		bundleUrl: URL
+	) throws {
 		guard let bundleId = runningApp.bundleIdentifier else {
 			throw OpenableAppError.noBundleId
 		}
@@ -28,7 +40,9 @@ class OpenableApp {
 		}
 		self.bundleId = bundleId
 		self.icon = icon
-		self.runningApp = runningApp
+		self.runningApplication = runningApp
+		self.appOpeningMethod = appOpeningMethod
+		self.bundleUrl = bundleUrl
 	}
 	
 	func open(){
@@ -36,17 +50,42 @@ class OpenableApp {
 		if bundleId == Constants.App.finderBundleId {
 			openFinder()
 			return
- 		}
+		}
 	}
+	
+	func quit(){
+		let wasTerminated = runningApplication?.terminate() //needs app sandbox off or explicit com.apple.security.temporary-exception.apple-events entitlement for the specific app
+		print("App \(bundleId) termination success status: " , wasTerminated ?? "null")
+	}
+	
+	func revealInFinder()
+	{
+		NSWorkspace.shared.activateFileViewerSelecting([bundleUrl])
+	}
+	
+	func setIsHidden(isHidden: Bool){
+		guard let runningApplication = runningApplication else { return }
+		if isHidden {
+			runningApplication.hide()
+		}else {
+			runningApplication.unhide()
+		}
+	}
+	
+	func activate(){
+		guard let runningApplication = runningApplication else { return }
+		runningApplication.activate(options: .activateIgnoringOtherApps)
+	}
+	
 	
 	private func openFinder(){
 		NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // do this as well if it's hidden
-		guard let runningApp = runningApp else { return }
+		guard let runningApp = runningApplication else { return }
 		runningApp.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) // this is the only way I can get working to show the finder app
 	}
 	
 	private func openRegularApp(){
-		if appOpeningMethod == .activate, let runningApp = runningApp{
+		if appOpeningMethod == .activate, let runningApp = runningApplication{
 			runningApp.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
 		} else {
 			//we still want to try and get it to work as much as possible, we can show a warning if there is an issue after
@@ -56,7 +95,7 @@ class OpenableApp {
 	
 	private func showWarningIfNeeded(){
 		//allows us to fail gracefully and alert the developer
-		if appOpeningMethod == .activate && runningApp == nil {
+		if appOpeningMethod == .activate && runningApplication == nil {
 			let warningMsg = "The app opening method is 'activate' for app \(bundleId) but there is no running app, so launched it instead! This shouldn't happen"
 			print(warningMsg)
 		}
