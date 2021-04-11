@@ -87,6 +87,8 @@ class MenuBarItem {
 	}
 
 	func showDropdownMenu() {
+		statusItem.button?.appearance = NSAppearance(named: NSAppearance.current.name)
+
 		let menu = NSMenu()
 		let appName = app.name
 
@@ -120,7 +122,7 @@ class MenuBarItem {
 			)
 		}
 
-		menu.addItem(appOpeningMethodMenuItem(menu: menu))
+		addAppOpeningMethodMenuItem(menu: menu)
 
 		menu.addItem(NSMenuItem.separator())
 
@@ -135,30 +137,30 @@ class MenuBarItem {
 		_ = addMenuItem(
 			menu: menu,
 			title: "Quit \(Constants.App.name)",
-			action: #selector(NSApplication.terminate(_:)),
+			action: #selector(quitMenuBarDock),
 			keyEquivalent: ""
 		)
 
 		statusItem.popUpMenu(menu)
 	}
 
-	private func appOpeningMethodMenuItem(menu: NSMenu) -> NSMenuItem {
+	private func addAppOpeningMethodMenuItem(menu: NSMenu) {
 		let appOpeningMethodMenuItem = addMenuItem(
 			menu: menu,
-			title: "Change opening method for \(app.name)",
+			title: "Change \(app.name) opening method",
 			action: nil,
 			keyEquivalent: ""
 		)
 		appOpeningMethodMenuItem.submenu = NSMenu()
 		let launchItem = addMenuItem(
 			menu: appOpeningMethodMenuItem.submenu!,
-			title: AppOpeningMethod.launch.rawValue,
+			title: "Launch",
 			action: #selector(setAppOpeningMethodLaunch),
 			keyEquivalent: ""
 		)
 		let activateItem = addMenuItem(
 			menu: appOpeningMethodMenuItem.submenu!,
-			title: AppOpeningMethod.activate.rawValue,
+			title: "Activate",
 			action: #selector(setAppOpeningMethodActivate),
 			keyEquivalent: ""
 		)
@@ -170,8 +172,7 @@ class MenuBarItem {
 			launchItem.state = .off
 			activateItem.state = .on
 		}
- 		return appOpeningMethodMenuItem
-	}
+ 	}
 
 	private func addMenuItem(menu: NSMenu, title: String, action: Selector?, keyEquivalent: String) -> NSMenuItem {
 		let item = NSMenuItem(
@@ -179,6 +180,7 @@ class MenuBarItem {
 			action: action,
 			keyEquivalent: keyEquivalent
 		)
+		item.target = self
 		menu.addItem(item)
 		return item
 	}
@@ -211,5 +213,9 @@ class MenuBarItem {
 
 	@objc private func openPreferencesWindow() {
 		preferencesDelegate.didOpenPreferencesWindow()
+	}
+
+	@objc private func quitMenuBarDock(_ sender: Any?) {
+		NSApp.terminate(nil)
 	}
 }
