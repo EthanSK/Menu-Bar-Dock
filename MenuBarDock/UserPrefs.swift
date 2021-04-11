@@ -20,6 +20,8 @@ enum UserPrefsDefaultValues {
 	static let hideFinder = false
 }
 
+
+
 class UserPrefs: NSObject {
 	var numberOfStatusItems = UserPrefsDefaultValues.numberOfStatusItems // make it go up really high so user has freedom if the have a very large long screen
 	var widthOfStatusItem = UserPrefsDefaultValues.widthOfStatusItem

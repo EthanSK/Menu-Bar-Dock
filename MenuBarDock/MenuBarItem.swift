@@ -8,18 +8,37 @@
 
 import Cocoa
 
+protocol MenuBarItemUserPrefsDelegate: AnyObject {
+	func getAppOpeningMethod(_ app: OpenableApp) -> AppOpeningMethod
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
+}
+
+protocol MenuBarItemPreferencesDelegate: AnyObject {
+	func didOpenPreferencesWindow()
+}
+
 class MenuBarItem {
 	var statusItem: NSStatusItem
 	var app: OpenableApp
+	
 	
 	var position {
 		return statusItem.button?.superview.window?.frame.minX
 	}
 	
+	weak var userPrefsDelegate: MenuBarItemUserPrefsDelegate!
+	weak var preferencesDelegate: MenuBarItemPreferencesDelegate!
+	
 	private(set) var bundleId: String
 	
-	init(statusItem: NSStatusItem) {
+	init(
+		statusItem: NSStatusItem,
+		userPrefsDelegate: MenuBarItemUserPrefsDelegate
+		preferencesDelegate: MenuBarItemPreferencesDelegate
+	) {
 		self.statusItem = statusItem
+		self.userPrefsDelegate = userPrefsDelegate
+		self.preferencesDelegate = preferencesDelegate
 		initButton()
 	}
 	
@@ -104,21 +123,22 @@ class MenuBarItem {
 		
 		menu.addItem(appOpeningMethodMenuItem(menu))
 		
-		
-		let launchInsteadActivateItem = NSMenuItem(title: "Launch \(appName) instead of activating on click", action: #selector(AppDelegate.launchInsteadOfActivateSpecificApp), keyEquivalent: "l")
-		if let shouldLaunchInsteadOfActivate = MenuBarDock.shared.userPrefs.launchInsteadOfActivateIndivApps[app?.bundleIdentifier ?? ""] {
-			launchInsteadActivateItem.state = shouldLaunchInsteadOfActivate ? .on : .off
-		} else {
-			launchInsteadActivateItem.state = MenuBarDock.shared.userPrefs.launchInsteadOfActivate ? .on : .off // fallback to the global setting
-		}
-		self.launchInsteadActivateItem = launchInsteadActivateItem
-		menu.addItem(launchInsteadActivateItem)
-		
 		menu.addItem(NSMenuItem.separator())
-		// then options to do with menu bar dock
-		menu.addItem(NSMenuItem(title: "\(Constants.App.name) Preferences...", action: #selector(AppDelegate.openPreferences), keyEquivalent: ","))
-		menu.addItem(NSMenuItem(title: "Quit \(Constants.App.name)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")) // make it hard for user to quit menu bar dock lolll
-		//		menu.addItem(NSMenuItem(title: "Creator's website", action: #selector(AppDelegate.openCreatorsWebsite), keyEquivalent: "w")) //bit needy, its good enough to just show it in preferences
+		
+		// options to do with menu bar dock itself
+		addMenuItem(
+			menu: menu
+			title: "\(Constants.App.name) Preferences...",
+			action: #selector(openPreferencesWindow),
+			keyEquivalent: ","
+		)
+		
+		addMenuItem(
+			menu: menu
+			title: "Quit \(Constants.App.name)",
+			action: #selector(NSApplication.terminate(_:)),
+			keyEquivalent: ""
+		)
 		
 		statusItem.popUpMenu(menu)
 	}
@@ -131,29 +151,36 @@ class MenuBarItem {
 			keyEquivalent: ""
 		)
 		appOpeningMethodMenuItem.submenu = NSMenu()
-		addMenuItem(
+		let launchItem = addMenuItem(
 			menu: appOpeningMethodMenuItem.submenu
 			title: AppOpeningMethod.launch.rawValue,
 			action: #selector(setAppOpeningMethodLaunch),
 			keyEquivalent: ""
 		)
-		addMenuItem(
+		let activateItem = addMenuItem(
 			menu: appOpeningMethodMenuItem.submenu
 			title: AppOpeningMethod.activate.rawValue,
 			action: #selector(setAppOpeningMethodActivate),
 			keyEquivalent: ""
 		)
 		
-		//TODO: - show the tick next to the item that is selected
+		switch delegate.appOpeningMethod {
+		case .launch:
+			launchItem.state = .on
+			activateItem.state = .off
+		case .activate:
+			launchItem.state = .off
+			activateItem.state = .on
+		}
 		return appOpeningMethodMenuItem
 	}
 	
 	private func addMenuItem(menu: NSMenu, title: String, action: Selector, keyEquivalent: String) -> NSMenuItem{
 		let item = NSMenuItem(
 			title: title,
-			   action: action,
-			   keyEquivalent: keyEquivalent
-		   )
+			action: action,
+			keyEquivalent: keyEquivalent
+		)
 		menu.addItem(item)
 		return item
 	}
@@ -177,8 +204,14 @@ class MenuBarItem {
 	}
 	
 	@objc private func setAppOpeningMethodLaunch(){
+		delegate.didSetAppOpeningMethod(.launch)
 	}
 	
 	@objc private func setAppOpeningMethodActivate(){
+		delegate.didSetAppOpeningMethod(.activate)
+	}
+	
+	@objc private func openPreferencesWindow(){
+		preferencesDelegate.didOpenPreferencesWindow()
 	}
 }
