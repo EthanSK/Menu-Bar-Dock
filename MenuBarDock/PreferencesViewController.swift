@@ -29,7 +29,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var hideFinderButton: NSButton!
 
 	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
-	
+
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		updateUI(for: MenuBarDock.shared.userPrefs)
@@ -57,7 +57,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			consistentSortOrderRadioButton.state = .on
 		}
 	}
-	
+
 	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
  		handleSliderChanged(
 			slider: sender,
@@ -152,7 +152,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		MenuBarDock.shared.userPrefs.hideFinder = sender.state == .on
 		MenuBarDock.shared.userPrefs.save()
 	}
-	
+
 	private func handleSliderChanged(
 		slider: NSSlider,
 		sliderLabel: NSTextField,
@@ -183,9 +183,9 @@ extension PreferencesViewController {
 	static func freshController() -> PreferencesViewController {
  		let storyboard = NSStoryboard(name: "Main", bundle: nil)
  		let identifier = "preferences"
- 		guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
+ 		guard let viewController = storyboard.instantiateController(withIdentifier: identifier) as? PreferencesViewController else {
 			fatalError("Can't find view controller with identifier " + identifier)
 		}
-		return viewcontroller
+		return viewController
 	}
 }

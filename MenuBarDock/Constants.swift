@@ -19,6 +19,10 @@ enum Constants {
 		static let bundleId = "bundleId"
 	}
 
+	enum ViewControllerIdentifiers {
+		static let preferences = "PreferencesViewController"
+	}
+
 	enum UserPrefs {
 		static let numberOfStatusItems = "numberOfStatusItems"
 		static let widthOfStatusItem = "widthOfStatusItem"

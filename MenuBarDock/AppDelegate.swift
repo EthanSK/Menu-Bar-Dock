@@ -17,22 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var preferencesWindow = NSWindow()
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
-
 		setupLaunchAtLogin()
-
-		MenuBarDock.shared.appManager.trackAppsBeingActivated { (_) in
-			self.updateStatusItems()
-		}
-		MenuBarDock.shared.appManager.trackAppsBeingQuit { (_) in
-			self.updateStatusItems()  // because the app actually quits aftre the activated app is switched meaninng otherwise we would keep the old app in the list showing
-		}
-		updateStatusItems()
-		NotificationCenter.default.addObserver(self, selector: #selector(numberOfAppsSliderDidChange), name: .numberOfAppsSliderEndedSliding, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .widthOfitemSliderChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sizeOfIconSliderChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .resetToDefaults, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sortingMethodChanged, object: nil)
-
+		attachListeners()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -52,6 +38,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
+	func attachListeners() {
+		MenuBarDock.shared.appManager.trackAppsBeingActivated { (_) in
+			self.updateStatusItems()
+		}
+		MenuBarDock.shared.appManager.trackAppsBeingQuit { (_) in
+			self.updateStatusItems()  // because the app actually quits aftre the activated app is switched meaninng otherwise we would keep the old app in the list showing
+		}
+		updateStatusItems()
+		NotificationCenter.default.addObserver(self, selector: #selector(numberOfAppsSliderDidChange), name: .numberOfAppsSliderEndedSliding, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .widthOfitemSliderChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sizeOfIconSliderChanged, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .resetToDefaults, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sortingMethodChanged, object: nil)
+	}
+
 	@objc func numberOfAppsSliderDidChange() {
 		updateStatusItems()
 	}
@@ -59,61 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@objc func updateStatusItems() {
 		// display running apps in order
 		// will be by default ordered newest on the right because that's the most likely place the status item will be if there are too many status items.
-		MenuBarDock.shared.statusItemManager.correctVisibleNumberOfStatusItems() // in case there are fewer running apps that status items in place.
-		for item in MenuBarDock.shared.statusItemManager.statusItems {
-			item.button?.wantsLayer = true
-			item.button?.action = #selector(statusBarPressed) // doing this coz if the item was re-added, it needs this assosiated with it.
-			item.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
-		}
-		var count = 0
-		for item in MenuBarDock.shared.statusItemManager.statusItemsBeingDisplayedInOrder {
-			if count >= MenuBarDock.shared.appManager.runningAppsInOrder.count {// then we need to hide it
-				return // all other i's will be higher and will fail too
-			}
-			let image = MenuBarDock.shared.appManager.runningAppsInOrder[count].icon
-			let imageSize = MenuBarDock.shared.userPrefs.iconSize
-			image?.size = NSSize(width: imageSize, height: imageSize)
-			item.button?.appearance = NSAppearance(named: .aqua) // so the full colour of the icon is shown
-//			item.button?.image = image //this casuse it to show as completely blank on secondary monitors. have to set view manually
-			let itemSlotWidth = MenuBarDock.shared.userPrefs.widthOfStatusItem
- 			let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
-
-			let view = NSImageView(frame: NSRect(
-				x: (itemSlotWidth - imageSize) / 2,
-				y: -(imageSize - menuBarHeight) / 2,
-				width: imageSize, height: imageSize)) // constructing image view from image is only available on macos >= 10.12
-			view.image = image
-			view.wantsLayer = true
-//			view.layer?.backgroundColor = NSColor.yellow.cgColor
-			if let existingSubview = item.button?.subviews.first as? NSImageView {
-//				existingSubview.image = image
-				item.button?.replaceSubview(existingSubview, with: view) // we have to replace it to get the correct sizing
-			} else {
-				item.button?.addSubview(view)
-			}
-
-			item.length = itemSlotWidth
-			let bundleId = MenuBarDock.shared.appManager.runningAppsInOrder[count].bundleIdentifier ?? MenuBarDock.shared.appManager.runningAppsInOrder[count].localizedName // ?? just in case
-			item.button?.layer?.setValue(bundleId, forKey: Constants.UserDefaultsKeys.bundleId) // layer doesn't exist on view did load. it takes some time to load for some reason so i guess we gotta add a timer
- 			count += 1
-		}
-	}
-
-	var bundleIdOfMenuJustOpened: String?
-	@objc func statusBarPressed(button: NSButton) {
-		let event = NSApp.currentEvent
-		guard let bundleId =  button.layer?.value(forKey: Constants.UserDefaultsKeys.bundleId) as? String else {return}
-		let item = MenuBarDock.shared.statusItemManager.statusItems.filter {$0.button == button}.first
-		if event?.type == NSEvent.EventType.rightMouseUp {
-			print("Right click")
-			item?.button?.appearance = NSAppearance(named: NSAppearance.current.name)
-			bundleIdOfMenuJustOpened = bundleId
-			item?.popUpMenu(menu(onItemWithBundleId: bundleId))
-
-		} else {
-			print("Left click")
-			MenuBarDock.shared.appManager.openApp(withBundleId: bundleId)
-		}
+		MenuBarDock.shared.statusItemManager.updateStatusItems()
 	}
 
 	var appBeingRightClicked: NSRunningApplication? // this is horrible but idk how else to pass the app through the nsmenuitem selector.
@@ -208,7 +155,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func openPreferencesWindow() {
-		if let viewController =  NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "PreferencesViewController") as? PreferencesViewController {
+		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.ViewControllerIdentifiers.preferences) as? PreferencesViewController {
 			if !preferencesWindow.isVisible {
 				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
@@ -216,6 +163,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			let controller = NSWindowController(window: preferencesWindow)
 			controller.showWindow(self)
 			NSApp.activate(ignoringOtherApps: true)// stops bugz n shiz i think
+		}
+	}
+
+	var bundleIdOfMenuJustOpened: String?
+
+	@objc func statusBarPressed(button: NSButton) {
+		let event = NSApp.currentEvent
+		guard let bundleId =  button.layer?.value(forKey: Constants.UserDefaultsKeys.bundleId) as? String else {return}
+		let item = MenuBarDock.shared.statusItemManager.statusItems.filter {$0.button == button}.first
+		if event?.type == NSEvent.EventType.rightMouseUp {
+			print("Right click")
+			item?.button?.appearance = NSAppearance(named: NSAppearance.current.name)
+			bundleIdOfMenuJustOpened = bundleId
+			item?.popUpMenu(menu(onItemWithBundleId: bundleId))
+
+		} else {
+			print("Left click")
+			MenuBarDock.shared.appManager.openApp(withBundleId: bundleId)
 		}
 	}
 

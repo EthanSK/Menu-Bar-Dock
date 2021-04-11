@@ -18,5 +18,4 @@ extension Notification.Name {
 	static let sizeOfIconSliderEndedSliding = Notification.Name("sizeOfIconSliderEndedSliding")
 	static let sortingMethodChanged = Notification.Name("sortingMethodChanged")
 	static let killLauncher = Notification.Name("killLauncher")
-
 }
