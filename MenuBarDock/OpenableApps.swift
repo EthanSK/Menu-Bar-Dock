@@ -60,7 +60,7 @@ class OpenableApps {
 
 	private func canShowRunningApp(app: NSRunningApplication) -> Bool {
 		if app.activationPolicy != .regular {return false}
-		if app.bundleIdentifier == Constants.App.finderBundleId {return !userPrefsDelegate.hideFinderFromRunningApps}
+		if app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDelegate.hideFinderFromRunningApps {return false}
 		if userPrefsDelegate.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
 	}
 

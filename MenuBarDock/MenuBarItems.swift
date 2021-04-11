@@ -41,10 +41,17 @@ class MenuBarItems {
 		createEnoughStatusItems(openableApps: openableApps)
 
 		sortItems() // sort after adding them all for efficiency
-
+		print("number of apps: ", openableApps.apps.count)
 		for (index, app) in openableApps.apps.enumerated() {
-			items[index].statusItem.title = String(index) // TODO: - remove
-//			items[index].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			let item = items[index]
+			item.statusItem.title = String(index) // TODO: - remove
+			showItem(item: item)
+ 			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+		}
+
+		for index in openableApps.apps.count...items.count - 1 { // loop over the rest of the status items that didn't get assigned an app, and hide them
+			let item = items[index]
+			hideItem(item: item)
 		}
 
 	}
@@ -68,6 +75,22 @@ class MenuBarItems {
 				)
 			)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
 			items[index].statusItem.title = "E-" + String(index) // E for empty //TODO: - remove
+		}
+	}
+
+	private func hideItem(item: MenuBarItem) {
+		if #available(OSX 10.12, *) {
+			item.statusItem.isVisible = false
+		} else {
+			item.statusItem.length = 0
+		}
+	}
+
+	private func showItem(item: MenuBarItem) {
+		if #available(OSX 10.12, *) {
+			item.statusItem.isVisible = true
+		} else {
+			item.statusItem.length = userPrefsDelegate.statusItemWidth
 		}
 	}
 
