@@ -15,7 +15,6 @@
 		38412F07222B3E3000D3FA0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38412F05222B3E3000D3FA0C /* Main.storyboard */; };
 		38412F13222B3E3000D3FA0C /* MenuBarDockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F12222B3E3000D3FA0C /* MenuBarDockTests.swift */; };
 		38412F1E222B3E3000D3FA0C /* MenuBarDockUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F1D222B3E3000D3FA0C /* MenuBarDockUITests.swift */; };
-		38412F2C222B47A900D3FA0C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2B222B47A900D3FA0C /* AppManager.swift */; };
 		38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2F222B715400D3FA0C /* UserPrefs.swift */; };
 		38412F32222B722100D3FA0C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F31222B722100D3FA0C /* Constants.swift */; };
 		384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEA426226333000B08FC /* MenuBarItems.swift */; };
@@ -24,7 +23,6 @@
 		384CBEBF262276A9000B08FC /* OpenableApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEBE262276A9000B08FC /* OpenableApps.swift */; };
 		3875B2B6222E1EF70042D748 /* Launcher.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38E394E3222D778F006F926E /* Launcher.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38D723EB222D8D8600D6F079 /* Launcher.app in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E3222D778F006F926E /* Launcher.app */; };
-		38E394DE222CC904006F926E /* NotificationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E394DD222CC904006F926E /* NotificationExtensions.swift */; };
 		38E394E6222D778F006F926E /* AppDelegateLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E394E5222D778F006F926E /* AppDelegateLauncher.swift */; };
 		38E394EA222D7790006F926E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38E394E9222D7790006F926E /* Assets.xcassets */; };
 		38E394ED222D7790006F926E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 38E394EB222D7790006F926E /* Main.storyboard */; };
@@ -90,14 +88,12 @@
 		38412F19222B3E3000D3FA0C /* Menu Bar DockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Menu Bar DockUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38412F1D222B3E3000D3FA0C /* MenuBarDockUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarDockUITests.swift; sourceTree = "<group>"; };
 		38412F1F222B3E3000D3FA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		38412F2B222B47A900D3FA0C /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		38412F2F222B715400D3FA0C /* UserPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
 		38412F31222B722100D3FA0C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		384CBEA426226333000B08FC /* MenuBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItems.swift; sourceTree = "<group>"; };
 		384CBEAA26226677000B08FC /* MenuBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		384CBEB826227329000B08FC /* OpenableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApp.swift; sourceTree = "<group>"; };
 		384CBEBE262276A9000B08FC /* OpenableApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApps.swift; sourceTree = "<group>"; };
-		38E394DD222CC904006F926E /* NotificationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtensions.swift; sourceTree = "<group>"; };
 		38E394E3222D778F006F926E /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38E394E5222D778F006F926E /* AppDelegateLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateLauncher.swift; sourceTree = "<group>"; };
 		38E394E9222D7790006F926E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -201,14 +197,12 @@
 				38412F09222B3E3000D3FA0C /* MenuBarDock.entitlements */,
 				38412EFF222B3E2F00D3FA0C /* AppDelegate.swift */,
 				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
-				38412F2B222B47A900D3FA0C /* AppManager.swift */,
 				38412F2F222B715400D3FA0C /* UserPrefs.swift */,
 				38412F31222B722100D3FA0C /* Constants.swift */,
 				384CBEA426226333000B08FC /* MenuBarItems.swift */,
 				384CBEAA26226677000B08FC /* MenuBarItem.swift */,
 				384CBEB826227329000B08FC /* OpenableApp.swift */,
 				384CBEBE262276A9000B08FC /* OpenableApps.swift */,
-				38E394DD222CC904006F926E /* NotificationExtensions.swift */,
 			);
 			path = MenuBarDock;
 			sourceTree = "<group>";
@@ -550,8 +544,6 @@
 				384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */,
 				384CBEB926227329000B08FC /* OpenableApp.swift in Sources */,
 				38412F32222B722100D3FA0C /* Constants.swift in Sources */,
-				38E394DE222CC904006F926E /* NotificationExtensions.swift in Sources */,
-				38412F2C222B47A900D3FA0C /* AppManager.swift in Sources */,
 				38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */,
 				38412F02222B3E2F00D3FA0C /* PreferencesViewController.swift in Sources */,
 				384CBEBF262276A9000B08FC /* OpenableApps.swift in Sources */,

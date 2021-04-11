@@ -21,8 +21,8 @@ class MenuBarItem {
 	var statusItem: NSStatusItem
 	var app: OpenableApp!
 
-	var position: CGFloat? {
-		return statusItem.button?.superview?.window?.frame.minX
+	var position: CGFloat {
+		return statusItem.button!.superview!.window!.frame.minX
 	}
 
 	weak var userPrefsDelegate: MenuBarItemUserPrefsDelegate!

@@ -23,19 +23,17 @@ class OpenableApps {
 	init(
 		userPrefsDelegate: OpenableAppsUserPrefsDelegate
 	) {
+		self.userPrefsDelegate = userPrefsDelegate
 		initApps()
 	}
 
 	private func initApps() {
 		for runningApp in runningApps() {
-			guard
-				let bundleId = runningApp.bundleIdentifier,
-				let appOpeningMethod = userPrefsDelegate.appOpeningMethods[bundleId]
-			else { continue }
+			guard let bundleId = runningApp.bundleIdentifier else { continue }
 
 			let openableApp = try? OpenableApp(
 				runningApp: runningApp,
-				appOpeningMethod: appOpeningMethod
+				appOpeningMethod: userPrefsDelegate.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 			)
 			if let openableApp = openableApp {
 				apps.append(openableApp)

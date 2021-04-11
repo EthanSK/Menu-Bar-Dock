@@ -20,7 +20,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
 		setupLaunchAtLogin()
-		attachListeners()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -35,6 +34,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		)
 		let openableApps = OpenableApps(userPrefsDelegate: userPrefs)
 
+		menuBarItems.update(openableApps: openableApps)
 	}
 
 	func setupLaunchAtLogin() {
@@ -46,30 +46,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		let isLauncherRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
 		if isLauncherRunning {
-			DistributedNotificationCenter.default().post(name: .killLauncher, object: Bundle.main.bundleIdentifier!)
+			DistributedNotificationCenter.default().post(name: Notification.Name("killLauncher"), object: Bundle.main.bundleIdentifier!)
 		}
 	}
-
-	func attachListeners() {
-
-		updateStatusItems()
-		NotificationCenter.default.addObserver(self, selector: #selector(numberOfAppsSliderDidChange), name: .numberOfAppsSliderEndedSliding, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .widthOfitemSliderChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .sizeOfIconSliderChanged, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .resetToDefaults, object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(updateStatusItems), name: .runningAppsSortingMethodChanged, object: nil)
-	}
-
-	@objc func numberOfAppsSliderDidChange() {
-		updateStatusItems()
-	}
-
-	@objc func updateStatusItems() {
-		// display running apps in order
-		// will be by default ordered newest on the right because that's the most likely place the status item will be if there are too many status items.
-//		MenuBarDock.shared.statusItemManager.updateStatusItems()
-	}
-
 }
 
 extension AppDelegate: MenuBarItemsPreferencesDelegate {

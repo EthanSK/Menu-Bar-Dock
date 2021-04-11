@@ -26,7 +26,7 @@ class MenuBarItems {
 
 	private var items: [MenuBarItem] { // ordered left to right
 		didSet {
-			items = items.sorted {$0.position ?? 0 < $1.position ?? 0}
+			items = items.sorted {$0.position < $1.position}
 		}
 	}
 
@@ -42,11 +42,9 @@ class MenuBarItems {
 	func update(
 		openableApps: OpenableApps
 	) {
-		let itemCount = items.count
-		for index in 0...openableApps.apps.count {
-			let app = openableApps.apps[index]
-
-			if index >= itemCount {
+		let origItemCount = items.count
+		for (index, app) in openableApps.apps.enumerated() {
+			if index >= origItemCount {
 				items.append(
 					MenuBarItem(
 						statusItem: NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth),
