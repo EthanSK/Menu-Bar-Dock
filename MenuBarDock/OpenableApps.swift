@@ -25,7 +25,7 @@ class OpenableApps {
 	) {
 		self.userPrefsDelegate = userPrefsDelegate
 		initApps()
-	}
+ 	}
 
 	private func initApps() {
 		for runningApp in runningApps() {
@@ -54,15 +54,16 @@ class OpenableApps {
 //	private func trackAppsBeingActivated() {// to allow us to form some sort of order in the menu bar
 //		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 //			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, NSWorkspace.shared.frontmostApplication == app { // make sure it wasn't triggered by some background process
-//				self.appActivationsTracked.insert(app, at: 0)
-//				updated(notification)
+////				self.appActivationsTracked.insert(app, at: 0)
+////				updated(notification)
+//				print("app activated")
 //			}
 //		}
 //	}
 //
 //	private func trackAppsBeingQuit() {
 //		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
-//			terminated(notification) // handle the updating in the calling closure
+////			terminated(notification) // handle the updating in the calling closure
 //		}
 //	}
 

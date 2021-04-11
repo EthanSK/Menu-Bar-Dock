@@ -16,6 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	let popover = NSPopover()
 	var preferencesWindow = NSWindow()
 	var userPrefs =  UserPrefs()
+	var menuBarItems: MenuBarItems! // need reference so it stays alive
+	var openableApps: OpenableApps!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
@@ -28,12 +30,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func initApp() {
 		userPrefs.load()
-		let menuBarItems = MenuBarItems(
+		menuBarItems = MenuBarItems(
 			userPrefsDelegate: userPrefs,
 			preferencesDelegate: self
 		)
-		let openableApps = OpenableApps(userPrefsDelegate: userPrefs)
-
+		openableApps = OpenableApps(userPrefsDelegate: userPrefs)
 		menuBarItems.update(openableApps: openableApps)
 	}
 

@@ -24,7 +24,7 @@ class MenuBarItems {
 	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
 	weak var preferencesDelegate: MenuBarItemsPreferencesDelegate!
 
-	private var items: [MenuBarItem] { // ordered left to right
+	private(set) var items: [MenuBarItem] { // ordered left to right
 		didSet {
 			items = items.sorted {$0.position < $1.position}
 		}

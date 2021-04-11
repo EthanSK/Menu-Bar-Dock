@@ -60,6 +60,7 @@ class OpenableApp {
 			openFinder()
 			return
 		}
+		openRegularApp()
 	}
 
 	func quit() {

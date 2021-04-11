@@ -18,8 +18,8 @@ protocol MenuBarItemPreferencesDelegate: AnyObject {
 }
 
 class MenuBarItem {
-	var statusItem: NSStatusItem
-	var app: OpenableApp!
+	private(set) var statusItem: NSStatusItem
+	private(set) var app: OpenableApp!
 
 	var position: CGFloat {
 		return statusItem.button!.superview!.window!.frame.minX
@@ -37,12 +37,12 @@ class MenuBarItem {
 		self.userPrefsDelegate = userPrefsDelegate
 		self.preferencesDelegate = preferencesDelegate
 		initButton()
+
 	}
 
 	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
 		self.app = app
-
-		let imageSize = appIconSize
+ 		let imageSize = appIconSize
 		let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
 		let newView = NSImageView(
 			frame: NSRect(
@@ -68,10 +68,11 @@ class MenuBarItem {
 
 	private func initButton() {
 		statusItem.button?.wantsLayer = true
+		statusItem.button?.target = self
 		statusItem.button?.action = #selector(handleClick)
 		statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 		statusItem.button?.appearance = NSAppearance(named: .aqua)
-	}
+ 	}
 
 	@objc private func handleClick() {
 		let event = NSApp.currentEvent
@@ -180,10 +181,6 @@ class MenuBarItem {
 		)
 		menu.addItem(item)
 		return item
-	}
-
-	private func setAppOpeningMethodUi(for appOpeningMethod: AppOpeningMethod) {
-
 	}
 
 	@objc private func quitApp() {
