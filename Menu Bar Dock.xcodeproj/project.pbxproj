@@ -18,7 +18,6 @@
 		38412F2C222B47A900D3FA0C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2B222B47A900D3FA0C /* AppManager.swift */; };
 		38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F2F222B715400D3FA0C /* UserPrefs.swift */; };
 		38412F32222B722100D3FA0C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F31222B722100D3FA0C /* Constants.swift */; };
-		38412F34222B729100D3FA0C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38412F33222B729100D3FA0C /* Model.swift */; };
 		384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEA426226333000B08FC /* MenuBarItems.swift */; };
 		384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEAA26226677000B08FC /* MenuBarItem.swift */; };
 		384CBEB926227329000B08FC /* OpenableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEB826227329000B08FC /* OpenableApp.swift */; };
@@ -94,7 +93,6 @@
 		38412F2B222B47A900D3FA0C /* AppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
 		38412F2F222B715400D3FA0C /* UserPrefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPrefs.swift; sourceTree = "<group>"; };
 		38412F31222B722100D3FA0C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		38412F33222B729100D3FA0C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		384CBEA426226333000B08FC /* MenuBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItems.swift; sourceTree = "<group>"; };
 		384CBEAA26226677000B08FC /* MenuBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		384CBEB826227329000B08FC /* OpenableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApp.swift; sourceTree = "<group>"; };
@@ -203,7 +201,6 @@
 				38412F09222B3E3000D3FA0C /* MenuBarDock.entitlements */,
 				38412EFF222B3E2F00D3FA0C /* AppDelegate.swift */,
 				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
-				38412F33222B729100D3FA0C /* Model.swift */,
 				38412F2B222B47A900D3FA0C /* AppManager.swift */,
 				38412F2F222B715400D3FA0C /* UserPrefs.swift */,
 				38412F31222B722100D3FA0C /* Constants.swift */,
@@ -551,7 +548,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */,
-				38412F34222B729100D3FA0C /* Model.swift in Sources */,
 				384CBEB926227329000B08FC /* OpenableApp.swift in Sources */,
 				38412F32222B722100D3FA0C /* Constants.swift in Sources */,
 				38E394DE222CC904006F926E /* NotificationExtensions.swift in Sources */,

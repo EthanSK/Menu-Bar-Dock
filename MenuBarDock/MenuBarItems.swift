@@ -24,12 +24,12 @@ class MenuBarItems {
 	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
 	weak var preferencesDelegate: MenuBarItemsPreferencesDelegate!
 
-	private var items: [MenuBarItem] { //ordered left to right
+	private var items: [MenuBarItem] { // ordered left to right
 		didSet {
-			items = items.sorted {$0.position < $1.position}
+			items = items.sorted {$0.position ?? 0 < $1.position ?? 0}
 		}
 	}
-	
+
 	init(
 		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
 		preferencesDelegate: MenuBarItemsPreferencesDelegate
@@ -38,15 +38,15 @@ class MenuBarItems {
 		self.preferencesDelegate = preferencesDelegate
 		items = []
 	}
-	
+
 	func update(
 		openableApps: OpenableApps
-	){
+	) {
 		let itemCount = items.count
-		for i in 0...openableApps.apps.count {
-			let app = openableApps.apps[i]
-			
-			if i >= itemCount{
+		for index in 0...openableApps.apps.count {
+			let app = openableApps.apps[index]
+
+			if index >= itemCount {
 				items.append(
 					MenuBarItem(
 						statusItem: NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth),
@@ -55,7 +55,7 @@ class MenuBarItems {
 					)
 				)
 			}
-			items[i].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			items[index].update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
 		}
 	}
 }
@@ -64,7 +64,7 @@ extension MenuBarItems: MenuBarItemUserPrefsDelegate {
 	func getAppOpeningMethod(_ app: OpenableApp) -> AppOpeningMethod {
 		return userPrefsDelegate.appOpeningMethods[app.bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 	}
-	
+
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
 		userPrefsDelegate.didSetAppOpeningMethod(method, app)
 	}

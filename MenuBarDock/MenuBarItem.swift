@@ -19,21 +19,18 @@ protocol MenuBarItemPreferencesDelegate: AnyObject {
 
 class MenuBarItem {
 	var statusItem: NSStatusItem
-	var app: OpenableApp
-	
-	
-	var position {
-		return statusItem.button?.superview.window?.frame.minX
+	var app: OpenableApp!
+
+	var position: CGFloat? {
+		return statusItem.button?.superview?.window?.frame.minX
 	}
-	
+
 	weak var userPrefsDelegate: MenuBarItemUserPrefsDelegate!
 	weak var preferencesDelegate: MenuBarItemPreferencesDelegate!
-	
-	private(set) var bundleId: String
-	
+
 	init(
 		statusItem: NSStatusItem,
-		userPrefsDelegate: MenuBarItemUserPrefsDelegate
+		userPrefsDelegate: MenuBarItemUserPrefsDelegate,
 		preferencesDelegate: MenuBarItemPreferencesDelegate
 	) {
 		self.statusItem = statusItem
@@ -41,10 +38,10 @@ class MenuBarItem {
 		self.preferencesDelegate = preferencesDelegate
 		initButton()
 	}
-	
+
 	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
 		self.app = app
-		
+
 		let imageSize = appIconSize
 		let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
 		let newView = NSImageView(
@@ -53,122 +50,129 @@ class MenuBarItem {
 				y: -(imageSize - menuBarHeight) / 2,
 				width: imageSize, height: imageSize)
 		)
-		
-		image.size =  NSSize(width: imageSize, height: imageSize)
-		
-		newView.image = app.image
+
+		app.icon.size =  NSSize(width: imageSize, height: imageSize)
+
+		newView.image = app.icon
 		newView.wantsLayer = true
-		
-		if let existingSubview = item.button?.subviews.first as? NSImageView {
-			item.button?.replaceSubview(existingSubview, with: view) // we have to replace it to get the correct sizing
+
+		if let existingSubview = statusItem.button?.subviews.first as? NSImageView {
+			statusItem.button?.replaceSubview(existingSubview, with: newView) // we have to replace it to get the correct sizing
 		} else {
-			item.button?.addSubview(view)
+			statusItem.button?.addSubview(newView)
 		}
-		
+
 		statusItem.length = slotWidth
-		
+
 	}
-	
-	
-	private func initButton(){
+
+	private func initButton() {
 		statusItem.button?.wantsLayer = true
-		item.button?.action = #selector(handleClick)
+		statusItem.button?.action = #selector(handleClick)
 		statusItem.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
-		item.button?.appearance = NSAppearance(named: .aqua)
+		statusItem.button?.appearance = NSAppearance(named: .aqua)
 	}
-	
-	@objc private func handleClick(){
+
+	@objc private func handleClick() {
 		let event = NSApp.currentEvent
 		switch event?.type {
 		case .rightMouseUp:
 			showDropdownMenu()
 		case .leftMouseUp:
 			app.open()
+		default: break
+
 		}
 	}
-	
+
 	func showDropdownMenu() {
 		let menu = NSMenu()
 		let appName = app.name
-		
-		addMenuItem(
-			menu: menu
+
+		_ = addMenuItem(
+			menu: menu,
 			title: "Quit \(appName)",
 			action: #selector(quitApp),
 			keyEquivalent: "q"
 		)
-		
-		addMenuItem(
-			menu: menu
+
+		_ = addMenuItem(
+			menu: menu,
 			title: "Reveal \(appName) in Finder",
 			action: #selector(revealAppInFinder),
 			keyEquivalent: "r"
 		)
-		
-		if let runningApplication? = app.runningApplication?{
-			//only makes sense to hide and show, and activate a running app, not just any app
-			addMenuItem(
-				menu: menu
-				title: "\(runningApplication?.isHidden ? "Unhide" : "Hide") \(appName)",
+
+		if let runningApplication = app.runningApplication {
+			// only makes sense to hide and show, and activate a running app, not just any app
+			_ = addMenuItem(
+				menu: menu,
+				title: "\(runningApplication.isHidden ? "Unhide" : "Hide") \(appName)",
 				action: #selector(toggleAppHidden),
 				keyEquivalent: "h"
 			)
-			addMenuItem(
-				menu: menu
+			_ = addMenuItem(
+				menu: menu,
 				title: "Activate \(appName)",
 				action: #selector(activateApp),
 				keyEquivalent: "a"
 			)
 		}
-		
-		menu.addItem(appOpeningMethodMenuItem(menu))
-		
+
+		menu.addItem(appOpeningMethodMenuItem(menu: menu))
+
 		menu.addItem(NSMenuItem.separator())
-		
+
 		// options to do with menu bar dock itself
-		addMenuItem(
-			menu: menu
+		_ = addMenuItem(
+			menu: menu,
 			title: "\(Constants.App.name) Preferences...",
 			action: #selector(openPreferencesWindow),
 			keyEquivalent: ","
 		)
-		
-		addMenuItem(
-			menu: menu
+
+		_ = addMenuItem(
+			menu: menu,
 			title: "Quit \(Constants.App.name)",
 			action: #selector(NSApplication.terminate(_:)),
 			keyEquivalent: ""
 		)
-		
+
 		statusItem.popUpMenu(menu)
 	}
-	
-	private func appOpeningMethodMenuItem(menu: NSMenu) -> NSMenuItem{
+
+	private func appOpeningMethodMenuItem(menu: NSMenu) -> NSMenuItem {
 		let appOpeningMethodMenuItem = addMenuItem(
-			menu: menu
-			title: "Change opening method for \(appName)",
+			menu: menu,
+			title: "Change opening method for \(app.name)",
 			action: nil,
 			keyEquivalent: ""
 		)
 		appOpeningMethodMenuItem.submenu = NSMenu()
 		let launchItem = addMenuItem(
-			menu: appOpeningMethodMenuItem.submenu
+			menu: appOpeningMethodMenuItem.submenu!,
 			title: AppOpeningMethod.launch.rawValue,
 			action: #selector(setAppOpeningMethodLaunch),
 			keyEquivalent: ""
 		)
 		let activateItem = addMenuItem(
-			menu: appOpeningMethodMenuItem.submenu
+			menu: appOpeningMethodMenuItem.submenu!,
 			title: AppOpeningMethod.activate.rawValue,
 			action: #selector(setAppOpeningMethodActivate),
 			keyEquivalent: ""
 		)
-		
-		setAppOpeningMethodUi(userPrefsDelegate.getAppOpeningMethod(app))
-		return appOpeningMethodMenuItem
+		switch userPrefsDelegate.getAppOpeningMethod(app) {
+		case .launch:
+			launchItem.state = .on
+			activateItem.state = .off
+		case .activate:
+			launchItem.state = .off
+			activateItem.state = .on
+		}
+ 		return appOpeningMethodMenuItem
 	}
-	
-	private func addMenuItem(menu: NSMenu, title: String, action: Selector, keyEquivalent: String) -> NSMenuItem{
+
+	private func addMenuItem(menu: NSMenu, title: String, action: Selector?, keyEquivalent: String) -> NSMenuItem {
 		let item = NSMenuItem(
 			title: title,
 			action: action,
@@ -177,47 +181,38 @@ class MenuBarItem {
 		menu.addItem(item)
 		return item
 	}
-	
-	private func setAppOpeningMethodUi(for appOpeningMethod: AppOpeningMethod){
-		switch setAppOpeningMethodUi {
-		case .launch:
-			launchItem.state = .on
-			activateItem.state = .off
-		case .activate:
-			launchItem.state = .off
-			activateItem.state = .on
-		}
+
+	private func setAppOpeningMethodUi(for appOpeningMethod: AppOpeningMethod) {
+
 	}
-	
-	@objc private func quitApp(){
+
+	@objc private func quitApp() {
 		app.quit()
 	}
-	
-	@objc private func revealAppInFinder(){
+
+	@objc private func revealAppInFinder() {
 		app.revealInFinder()
 	}
-	
-	@objc private func toggleAppHidden(){
-		if let runningApplication = app.runningApplication? {
-			app.setIsHidden(!runningApplication.isHidden)
+
+	@objc private func toggleAppHidden() {
+		if let runningApplication = app.runningApplication {
+			app.setIsHidden(isHidden: !runningApplication.isHidden)
 		}
 	}
-	
-	@objc private func activateApp(){
+
+	@objc private func activateApp() {
 		app.activate()
 	}
-	
-	@objc private func setAppOpeningMethodLaunch(){
-		delegate.didSetAppOpeningMethod(.launch)
-		setAppOpeningMethodUi(.launch)
-	}
-	
-	@objc private func setAppOpeningMethodActivate(){
-		delegate.didSetAppOpeningMethod(.activate)
-		setAppOpeningMethodUi(.activate)
-	}
-	
-	@objc private func openPreferencesWindow(){
+
+	@objc private func setAppOpeningMethodLaunch() {
+		userPrefsDelegate.didSetAppOpeningMethod(.launch, app)
+ 	}
+
+	@objc private func setAppOpeningMethodActivate() {
+		userPrefsDelegate.didSetAppOpeningMethod(.activate, app)
+ 	}
+
+	@objc private func openPreferencesWindow() {
 		preferencesDelegate.didOpenPreferencesWindow()
 	}
 }

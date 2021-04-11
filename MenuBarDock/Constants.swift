@@ -36,8 +36,8 @@ enum Constants {
 	}
 }
 
-enum runningAppsSortingMethod: Int {
-	case mostRecentOnRight = 0// newest active app on right
+enum RunningAppsSortingMethod: Int {
+	case mostRecentOnRight = 0
 	case mostRecentOnLeft = 1
 	case consistent = 2
 }

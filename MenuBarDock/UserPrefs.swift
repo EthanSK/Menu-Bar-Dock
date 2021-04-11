@@ -11,32 +11,25 @@ import Cocoa
 enum UserPrefsDefaultValues {
 	static let maxNumRunningApps = 15
 	static let statusItemWidth = CGFloat(30)
-	static let runningAppsSortingMethod: runningAppsSortingMethod = .mostRecentOnRight
+	static let runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight
 	static let appIconSize: CGFloat = 21
 	static let launchAtLogin = true
 	static let defaultAppOpeningMethod = AppOpeningMethod.launch
-	static let appOpeningMethods: [String: AppOpeningMethod] = [:] //bundleId is key
+	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // bundleId is key
 	static let hideActiveAppFromRunningApps = true
 	static let hideFinderFromRunningApps = false
 }
 
-
-
-class UserPrefs: NSObject {
+class UserPrefs {
 	var maxNumRunningApps = UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
 	var statusItemWidth = UserPrefsDefaultValues.statusItemWidth
-	var runningAppsSortingMethod: runningAppsSortingMethod = UserPrefsDefaultValues.runningAppsSortingMethod
+	var runningAppsSortingMethod: RunningAppsSortingMethod = UserPrefsDefaultValues.runningAppsSortingMethod
 	var appIconSize: CGFloat = UserPrefsDefaultValues.appIconSize
 	var launchAtLogin = UserPrefsDefaultValues.launchAtLogin
 	var defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
 	var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	var hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 	var hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
-
-	override init() {
-		super.init()
-		load()
-	}
 
 	func resetToDefaults() { // cba about this shitty code tbh not worth my time
 		maxNumRunningApps =  UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
@@ -78,7 +71,7 @@ class UserPrefs: NSObject {
 			self.statusItemWidth = statusItemWidth
 		}
 
-		if let runningAppsSortingMethodInt = UserDefaults.standard.object(forKey: Constants.UserPrefs.runningAppsSortingMethod) as? Int, let runningAppsSortingMethod = runningAppsSortingMethod(rawValue: runningAppsSortingMethodInt) {
+		if let runningAppsSortingMethodInt = UserDefaults.standard.object(forKey: Constants.UserPrefs.runningAppsSortingMethod) as? Int, let runningAppsSortingMethod = RunningAppsSortingMethod(rawValue: runningAppsSortingMethodInt) {
 			self.runningAppsSortingMethod = runningAppsSortingMethod
 		}
 
@@ -107,10 +100,13 @@ class UserPrefs: NSObject {
 	}
 }
 
-
 extension UserPrefs: MenuBarItemsUserPrefsDelegate {
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
 		appOpeningMethods[app.bundleId] = method
 		save()
 	}
+}
+
+extension UserPrefs: OpenableAppsUserPrefsDelegate {
+
 }
