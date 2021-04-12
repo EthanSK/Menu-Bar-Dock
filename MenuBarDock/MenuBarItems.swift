@@ -13,7 +13,7 @@ protocol MenuBarItemsUserPrefsDelegate: AnyObject {
 	var statusItemWidth: CGFloat { get }
 	var appIconSize: CGFloat { get }
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
-	
+
 }
 
 protocol MenuBarItemsPreferencesDelegate: AnyObject {
@@ -23,11 +23,9 @@ protocol MenuBarItemsPreferencesDelegate: AnyObject {
 class MenuBarItems {
 	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
 	weak var preferencesDelegate: MenuBarItemsPreferencesDelegate!
-	
+
 	private(set) var items: [MenuBarItem] // ordered left to right
-	
-	let autosaveNamePrefix = "autoSave-"
-	
+
 	init(
 		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
 		preferencesDelegate: MenuBarItemsPreferencesDelegate
@@ -36,6 +34,7 @@ class MenuBarItems {
 		self.preferencesDelegate = preferencesDelegate
 		items = []
 	}
+
 	/*
 	KNOWN ISSUE: After opening some apps, then closing some, there will be a gap of
 	empty space where the items of length 0 are (because they are trying to be hidden).
@@ -50,37 +49,25 @@ class MenuBarItems {
 	) {
 		createEnoughStatusItems(openableApps: openableApps)
 		sortItems() // sort after adding them all for efficiency. not all of them will be sorted due to layout not updating instantly, but that's fine since we have an extra item at all times.
-		
-		print("number of apps: ", openableApps.apps.count)
-		print("number of menu bar items: ", items.count)
-		
+
 		// try and populate the rightmost items since new ones are added to the left of the menu bar
 		for (index, app) in openableApps.apps.enumerated() {
 			let offset = items.count - openableApps.apps.count
 			let item = items[index + offset]
-			
-			if #available(OSX 10.12, *) {
-				item.statusItem.title = String(index)
-			}// TODO: - remove
-			
 			showItem(item: item)
-			
-			// 			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
 		}
-		
+
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)
 		for index in 0...items.count - openableApps.apps.count - 1 {
 			let item = items[index]
-			if #available(OSX 10.12, *) {
-				item.statusItem.title = String(index) + "h" + String(item.statusItem.autosaveName.split(separator: "-")[1])
-			}
 			hideItem(item: item)
 		}
 	}
-	
+
 	private func createEnoughStatusItems(openableApps: OpenableApps) {
 		let origItemCount = items.count
-		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct in advance https://trello.com/c/Jz312bga
+		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct as it has sorted one item in advance. https://trello.com/c/Jz312bga
 			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth)
 			let item = MenuBarItem(
 				statusItem: statusItem,
@@ -90,23 +77,23 @@ class MenuBarItems {
 			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
 		}
 	}
-	
+
 	private func hideItem(item: MenuBarItem) {
-		
+
 		item.statusItem.length = 0
 		if #available(OSX 10.12, *) {
-			//item.statusItem.isVisible = false // this prevents the item from remembering its position. Thanks Apple.
+			// item.statusItem.isVisible = false // this prevents the item from remembering its position. Thanks Apple.
 		}
 	}
-	
+
 	private func showItem(item: MenuBarItem) {
 		item.statusItem.length = userPrefsDelegate.statusItemWidth
-		
+
 		if #available(OSX 10.12, *) {
 			item.statusItem.isVisible = true // Don't remove this, no harm, only has benefits
 		}
 	}
-	
+
 	private func sortItems() { // sorts items array such that order matches that of actual status items being displayed
 		items = items.sorted {$0.position < $1.position}
 	}
@@ -116,7 +103,7 @@ extension MenuBarItems: MenuBarItemUserPrefsDelegate {
 	func getAppOpeningMethod(_ app: OpenableApp) -> AppOpeningMethod {
 		return userPrefsDelegate.appOpeningMethods[app.bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 	}
-	
+
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
 		userPrefsDelegate.didSetAppOpeningMethod(method, app)
 	}

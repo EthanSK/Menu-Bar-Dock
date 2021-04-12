@@ -48,10 +48,10 @@ class OpenableApps {
 				runningApp: runningApp,
 				appOpeningMethod: userPrefsDelegate.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 			) else { continue }
+			runningAppsOrder.append(bundleId)
 			apps.append(openableApp)
 		}
 		apps = apps.reorder(by: appsOrder())
-		print(apps.map {$0.bundleId})
 	}
 
 	private func runningApps() -> [NSRunningApplication] {
@@ -72,7 +72,7 @@ class OpenableApps {
 				let bundleId = app.bundleIdentifier
 			{
 				self.runningAppsOrder.removeAll(where: { $0 == app.bundleIdentifier })
-				self.runningAppsOrder.append(bundleId)
+				self.runningAppsOrder.append(bundleId) // needs this order for it to populate from the most helpful side correctly
 				self.populateApps()
 				self.delegate.runningAppWasActivated(app)
 			}
@@ -91,7 +91,7 @@ class OpenableApps {
 
 	private func appsOrder() -> [String] {
 		// here we combine the order arrays of running and non running apps in a way determined by user prefs to get the final app order array
-		return runningAppsOrder.reversed() // TODO: - change this to be correct
+		return runningAppsOrder // TODO: - change this to be correct
 	}
 
 }
