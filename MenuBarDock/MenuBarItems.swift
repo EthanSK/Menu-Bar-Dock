@@ -8,30 +8,28 @@
 
 import Cocoa
 
-protocol MenuBarItemsUserPrefsDelegate: AnyObject {
+protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
 	var statusItemWidth: CGFloat { get }
 	var appIconSize: CGFloat { get }
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
 
 }
 
-protocol MenuBarItemsPreferencesDelegate: AnyObject {
+protocol MenuBarItemsDelegate: AnyObject {
 	func didOpenPreferencesWindow()
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
 }
 
 class MenuBarItems {
-	weak var userPrefsDelegate: MenuBarItemsUserPrefsDelegate!
-	weak var preferencesDelegate: MenuBarItemsPreferencesDelegate!
+	public weak var userPrefsDataSource: MenuBarItemsUserPrefsDataSource!
+	public weak var delegate: MenuBarItemsDelegate?
 
 	private(set) var items: [MenuBarItem] // ordered left to right
 
 	init(
-		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
-		preferencesDelegate: MenuBarItemsPreferencesDelegate
-	) {
-		self.userPrefsDelegate = userPrefsDelegate
-		self.preferencesDelegate = preferencesDelegate
+		userPrefsDataSource: MenuBarItemsUserPrefsDataSource
+ 	) {
+		self.userPrefsDataSource = userPrefsDataSource
 		items = []
 	}
 
@@ -55,7 +53,7 @@ class MenuBarItems {
 			let offset = items.count - openableApps.apps.count
 			let item = items[index + offset]
 			showItem(item: item)
-			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.statusItemWidth)
 		}
 
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)
@@ -68,12 +66,12 @@ class MenuBarItems {
 	private func createEnoughStatusItems(openableApps: OpenableApps) {
 		let origItemCount = items.count
 		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct as it has sorted one item in advance. https://trello.com/c/Jz312bga
-			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth)
+			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDataSource.statusItemWidth)
 			let item = MenuBarItem(
 				statusItem: statusItem,
-				userPrefsDelegate: self,
-				preferencesDelegate: self
-			)
+				userPrefsDataSource: self
+ 			)
+			item.delegate = self
 			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
 		}
 	}
@@ -87,7 +85,7 @@ class MenuBarItems {
 	}
 
 	private func showItem(item: MenuBarItem) {
-		item.statusItem.length = userPrefsDelegate.statusItemWidth
+		item.statusItem.length = userPrefsDataSource.statusItemWidth
 
 		if #available(OSX 10.12, *) {
 			item.statusItem.isVisible = true // Don't remove this, no harm, only has benefits
@@ -99,18 +97,18 @@ class MenuBarItems {
 	}
 }
 
-extension MenuBarItems: MenuBarItemUserPrefsDelegate {
-	func getAppOpeningMethod(_ app: OpenableApp) -> AppOpeningMethod {
-		return userPrefsDelegate.appOpeningMethods[app.bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
-	}
-
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
-		userPrefsDelegate.didSetAppOpeningMethod(method, app)
+extension MenuBarItems: MenuBarItemUserPrefsDataSource {
+	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod {
+		return userPrefsDataSource.appOpeningMethods[app.bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 	}
 }
 
-extension MenuBarItems: MenuBarItemPreferencesDelegate {
+extension MenuBarItems: MenuBarItemDelegate {
 	func didOpenPreferencesWindow() {
-		preferencesDelegate.didOpenPreferencesWindow()
+		delegate?.didOpenPreferencesWindow()
+	}
+
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
+		delegate?.didSetAppOpeningMethod(method, app)
 	}
 }

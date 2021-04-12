@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var userPrefs =  UserPrefs()
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
+	var runningApps: RunningApps!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
@@ -31,10 +32,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func initApp() {
 		userPrefs.load()
 		menuBarItems = MenuBarItems(
-			userPrefsDelegate: userPrefs,
-			preferencesDelegate: self
+ 			userPrefsDataSource: userPrefs
 		)
-		openableApps = OpenableApps(delegate: self, userPrefsDelegate: userPrefs)
+		menuBarItems.delegate = self
+
+		runningApps = RunningApps(userPrefsDataSource: userPrefs)
+
+		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps)
+		openableApps.delegate = self
+
 		updateMenuBarItems()
 	}
 
@@ -56,7 +62,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 }
 
-extension AppDelegate: MenuBarItemsPreferencesDelegate {
+extension AppDelegate: MenuBarItemsDelegate {
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
+		userPrefs.appOpeningMethods[app.bundleId] = method
+		userPrefs.save()
+	}
+
 	func didOpenPreferencesWindow() {
 		openPreferencesWindow()
 	}
@@ -76,12 +87,7 @@ extension AppDelegate: MenuBarItemsPreferencesDelegate {
 }
 
 extension AppDelegate: OpenableAppsDelegate {
-	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
+	func appsDidChange() {
 		updateMenuBarItems()
 	}
-
-	func runningAppWasQuit(_ runningApp: NSRunningApplication) {
-		updateMenuBarItems()
-	}
-
 }

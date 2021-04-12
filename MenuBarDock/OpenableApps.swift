@@ -8,7 +8,7 @@
 
 import Cocoa
 
-protocol OpenableAppsUserPrefsDelegate: AnyObject {
+protocol OpenableAppsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
@@ -16,81 +16,55 @@ protocol OpenableAppsUserPrefsDelegate: AnyObject {
 }
 
 protocol OpenableAppsDelegate: AnyObject {
-	func runningAppWasActivated(_ runningApp: NSRunningApplication)
-	func runningAppWasQuit(_ runningApp: NSRunningApplication)
-}
+	func appsDidChange()
+ }
 
 class OpenableApps {
 	var apps: [OpenableApp] = [] // ground truth for all apps to show, both running and non running, ordered left to right
 
-	weak var userPrefsDelegate: OpenableAppsUserPrefsDelegate!
-	weak var delegate: OpenableAppsDelegate!
+	public weak var userPrefsDataSource: OpenableAppsUserPrefsDataSource!
+	public weak var delegate: OpenableAppsDelegate?
 
-	private var runningAppsOrder: [String] = [] // array of bundleIds in order of least to most recently activated
+ 	private var runningApps: RunningApps
 
 	init(
-		delegate: OpenableAppsDelegate,
-		userPrefsDelegate: OpenableAppsUserPrefsDelegate
-	) {
-		self.delegate = delegate
-		self.userPrefsDelegate = userPrefsDelegate
+ 		userPrefsDataSource: OpenableAppsUserPrefsDataSource,
+		runningApps: RunningApps
+ 	) {
+ 		self.userPrefsDataSource = userPrefsDataSource
+		self.runningApps = runningApps
+		runningApps.delegate = self
 		populateApps()
-		trackAppsBeingActivated()
-		trackAppsBeingQuit()
+
 	}
 
 	private func populateApps() {
 		apps = []
-		for runningApp in runningApps() {
+		for runningApp in runningApps.apps {
 			guard let bundleId = runningApp.bundleIdentifier else { continue }
 
 			guard let openableApp = try? OpenableApp(
 				runningApp: runningApp,
-				appOpeningMethod: userPrefsDelegate.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
+				appOpeningMethod: userPrefsDataSource.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 			) else { continue }
-			runningAppsOrder.append(bundleId)
 			apps.append(openableApp)
 		}
 		apps = apps.reorder(by: appsOrder())
-	}
-
-	private func runningApps() -> [NSRunningApplication] {
-		return NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
-	}
-
-	private func canShowRunningApp(app: NSRunningApplication) -> Bool {
-		if app.activationPolicy != .regular {return false}
-		if app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDelegate.hideFinderFromRunningApps {return false}
-		if userPrefsDelegate.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
-	}
-
-	private func trackAppsBeingActivated() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if
-				let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-				NSWorkspace.shared.frontmostApplication == app, // make sure it wasn't triggered by some background process
-				let bundleId = app.bundleIdentifier
-			{
-				self.runningAppsOrder.removeAll(where: { $0 == app.bundleIdentifier })
-				self.runningAppsOrder.append(bundleId) // needs this order for it to populate from the most helpful side correctly
-				self.populateApps()
-				self.delegate.runningAppWasActivated(app)
-			}
-		}
-	}
-
-	private func trackAppsBeingQuit() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-				self.runningAppsOrder.removeAll(where: { $0 == app.bundleIdentifier })
-				self.populateApps()
-				self.delegate.runningAppWasQuit(app)
-			}
-		}
+		delegate?.appsDidChange()
 	}
 
 	private func appsOrder() -> [String] {
 		// here we combine the order arrays of running and non running apps in a way determined by user prefs to get the final app order array
-		return runningAppsOrder // TODO: - change this to be correct
+		return runningApps.ordering // TODO: - change this to be correct
+	}
+}
+
+extension OpenableApps: RunningAppsDelegate {
+	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
+		populateApps()
+	}
+
+	func runningAppWasQuit(_ runningApp: NSRunningApplication) {
+		populateApps()
 	}
 }

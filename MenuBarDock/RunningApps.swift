@@ -6,50 +6,45 @@
 //  Copyright © 2021 Ethan Sarif-Kattan. All rights reserved.
 //
 
-import Foundation
+import Cocoa
+
+protocol RunningAppsUserPrefsDataSource: AnyObject {
+ 	var hideFinderFromRunningApps: Bool { get }
+	var hideActiveAppFromRunningApps: Bool { get }
+
+}
+
+protocol RunningAppsDelegate: AnyObject {
+	func runningAppWasActivated(_ runningApp: NSRunningApplication)
+	func runningAppWasQuit(_ runningApp: NSRunningApplication)
+}
 
 class RunningApps {
-	var apps: [OpenableApp] = [] // ground truth for all apps to show, both running and non running, ordered left to right
+	var apps: [NSRunningApplication] = [] // state not getter for efficiency
 
-	weak var userPrefsDelegate: OpenableAppsUserPrefsDelegate!
-	weak var delegate: OpenableAppsDelegate!
+	private(set) var ordering: [String] = [] // array of bundleIds in order of least to most recently activated
 
-	private var runningAppsOrder: [String] = [] // array of bundleIds in order of least to most recently activated
+	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
+	weak var delegate: RunningAppsDelegate?
 
 	init(
-		delegate: OpenableAppsDelegate,
-		userPrefsDelegate: OpenableAppsUserPrefsDelegate
+		userPrefsDataSource: RunningAppsUserPrefsDataSource
 	) {
-		self.delegate = delegate
-		self.userPrefsDelegate = userPrefsDelegate
+		self.userPrefsDataSource = userPrefsDataSource
 		populateApps()
+		ordering = apps.filter { $0.bundleIdentifier != nil }.map { $0.bundleIdentifier! } // populate the ordering array so the openable apps can start displaying correct order from the start
 		trackAppsBeingActivated()
 		trackAppsBeingQuit()
 	}
 
 	private func populateApps() {
-		apps = []
-		for runningApp in runningApps() {
-			guard let bundleId = runningApp.bundleIdentifier else { continue }
-
-			guard let openableApp = try? OpenableApp(
-				runningApp: runningApp,
-				appOpeningMethod: userPrefsDelegate.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
-			) else { continue }
-			runningAppsOrder.append(bundleId)
-			apps.append(openableApp)
-		}
-		apps = apps.reorder(by: appsOrder())
-	}
-
-	private func runningApps() -> [NSRunningApplication] {
-		return NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
+		apps = NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
 	}
 
 	private func canShowRunningApp(app: NSRunningApplication) -> Bool {
 		if app.activationPolicy != .regular {return false}
-		if app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDelegate.hideFinderFromRunningApps {return false}
-		if userPrefsDelegate.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
+		if app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDataSource.hideFinderFromRunningApps {return false}
+		if userPrefsDataSource.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
 	}
 
 	private func trackAppsBeingActivated() {
@@ -59,10 +54,10 @@ class RunningApps {
 				NSWorkspace.shared.frontmostApplication == app, // make sure it wasn't triggered by some background process
 				let bundleId = app.bundleIdentifier
 			{
-				self.runningAppsOrder.removeAll(where: { $0 == app.bundleIdentifier })
-				self.runningAppsOrder.append(bundleId) // needs this order for it to populate from the most helpful side correctly
 				self.populateApps()
-				self.delegate.runningAppWasActivated(app)
+				self.ordering.removeAll(where: { $0 == app.bundleIdentifier })
+				self.ordering.append(bundleId) // needs this order for it to populate from the most helpful side correctly
+ 				self.delegate?.runningAppWasActivated(app)
 			}
 		}
 	}
@@ -70,15 +65,11 @@ class RunningApps {
 	private func trackAppsBeingQuit() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-				self.runningAppsOrder.removeAll(where: { $0 == app.bundleIdentifier })
 				self.populateApps()
-				self.delegate.runningAppWasQuit(app)
+				self.ordering.removeAll(where: { $0 == app.bundleIdentifier })
+ 				self.delegate?.runningAppWasQuit(app)
 			}
 		}
 	}
 
-	private func appsOrder() -> [String] {
-		// here we combine the order arrays of running and non running apps in a way determined by user prefs to get the final app order array
-		return runningAppsOrder // TODO: - change this to be correct
-	}
 }

@@ -100,13 +100,14 @@ class UserPrefs {
 	}
 }
 
-extension UserPrefs: MenuBarItemsUserPrefsDelegate {
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
-		appOpeningMethods[app.bundleId] = method
-		save()
-	}
+extension UserPrefs: MenuBarItemsUserPrefsDataSource {
+
 }
 
-extension UserPrefs: OpenableAppsUserPrefsDelegate {
+extension UserPrefs: OpenableAppsUserPrefsDataSource {
+
+}
+
+extension UserPrefs: RunningAppsUserPrefsDataSource {
 
 }

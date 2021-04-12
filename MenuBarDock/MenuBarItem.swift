@@ -8,13 +8,14 @@
 
 import Cocoa
 
-protocol MenuBarItemUserPrefsDelegate: AnyObject {
-	func getAppOpeningMethod(_ app: OpenableApp) -> AppOpeningMethod
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
+protocol MenuBarItemUserPrefsDataSource: AnyObject {
+	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod
 }
 
-protocol MenuBarItemPreferencesDelegate: AnyObject {
+protocol MenuBarItemDelegate: AnyObject {
 	func didOpenPreferencesWindow()
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
+
 }
 
 class MenuBarItem {
@@ -25,17 +26,15 @@ class MenuBarItem {
 		return statusItem.button!.superview!.window!.frame.minX
 	}
 
-	weak var userPrefsDelegate: MenuBarItemUserPrefsDelegate!
-	weak var preferencesDelegate: MenuBarItemPreferencesDelegate!
+	public weak var userPrefsDataSource: MenuBarItemUserPrefsDataSource!
+	public weak var delegate: MenuBarItemDelegate?
 
 	init(
 		statusItem: NSStatusItem,
-		userPrefsDelegate: MenuBarItemUserPrefsDelegate,
-		preferencesDelegate: MenuBarItemPreferencesDelegate
-	) {
+		userPrefsDataSource: MenuBarItemUserPrefsDataSource
+ 	) {
 		self.statusItem = statusItem
-		self.userPrefsDelegate = userPrefsDelegate
-		self.preferencesDelegate = preferencesDelegate
+		self.userPrefsDataSource = userPrefsDataSource
 		initButton()
 
 	}
@@ -164,7 +163,7 @@ class MenuBarItem {
 			action: #selector(setAppOpeningMethodActivate),
 			keyEquivalent: ""
 		)
-		switch userPrefsDelegate.getAppOpeningMethod(app) {
+		switch userPrefsDataSource.appOpeningMethod(for: app) {
 		case .launch:
 			launchItem.state = .on
 			activateItem.state = .off
@@ -204,15 +203,15 @@ class MenuBarItem {
 	}
 
 	@objc private func setAppOpeningMethodLaunch() {
-		userPrefsDelegate.didSetAppOpeningMethod(.launch, app)
+		delegate?.didSetAppOpeningMethod(.launch, app)
  	}
 
 	@objc private func setAppOpeningMethodActivate() {
-		userPrefsDelegate.didSetAppOpeningMethod(.activate, app)
+		delegate?.didSetAppOpeningMethod(.activate, app)
  	}
 
 	@objc private func openPreferencesWindow() {
-		preferencesDelegate.didOpenPreferencesWindow()
+		delegate?.didOpenPreferencesWindow()
 	}
 
 	@objc private func quitMenuBarDock(_ sender: Any?) {
