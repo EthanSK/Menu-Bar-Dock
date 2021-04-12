@@ -23,13 +23,13 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	weak var delegate: PreferencesViewControllerDelegate?
 	weak var userPrefs: UserPrefs!
 
-	@IBOutlet weak var numberOfAppsSlider: NSSlider!
-	@IBOutlet weak var widthOfItemSlider: NSSlider!
-	@IBOutlet weak var sizeOfIconSlider: NSSlider!
+	@IBOutlet weak var maxNumRunningAppsSlider: NSSlider!
+	@IBOutlet weak var statusItemWidthSlider: NSSlider!
+	@IBOutlet weak var appIconSizeSlider: NSSlider!
 
-	@IBOutlet weak var numberOfAppsCounterLabel: NSTextField!
-	@IBOutlet weak var widthOfItemCouterLabel: NSTextField!
-	@IBOutlet weak var sizeOfIconCounterLabel: NSTextField!
+	@IBOutlet weak var maxNumRunningAppsLabel: NSTextField!
+	@IBOutlet weak var statusItemWidthLabel: NSTextField!
+	@IBOutlet weak var appIconSizeLabel: NSTextField!
 
 	@IBOutlet weak var consistentSortOrderRadioButton: NSButton!
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
@@ -39,8 +39,6 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
 	@IBOutlet weak var hideFinderFromRunningAppsButton: NSButton!
 
-	@IBOutlet weak var launchInsteadOfActivateRadioButton: NSButton!
-
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		updateUI(for: userPrefs)
@@ -48,12 +46,12 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	func updateUI(for userPrefs: UserPrefs) {
 		self.title = Constants.App.name + " Preferences"
-		numberOfAppsCounterLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
-		numberOfAppsSlider.integerValue = userPrefs.maxNumRunningApps
-		widthOfItemCouterLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
-		widthOfItemSlider.doubleValue = Double(userPrefs.statusItemWidth)
-		sizeOfIconCounterLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
-		sizeOfIconSlider.doubleValue = Double(userPrefs.appIconSize)
+		maxNumRunningAppsLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
+		maxNumRunningAppsSlider.integerValue = userPrefs.maxNumRunningApps
+		statusItemWidthLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
+		statusItemWidthSlider.doubleValue = Double(userPrefs.statusItemWidth)
+		appIconSizeLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
+		appIconSizeSlider.doubleValue = Double(userPrefs.appIconSize)
 		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
 		//		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off  //TODO: - do this
 		hideActiveAppFromRunningAppsButton.state = userPrefs.hideActiveAppFromRunningApps ? .on : .off
@@ -72,7 +70,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: widthOfItemCouterLabel,
+			sliderLabel: statusItemWidthLabel,
 			sliderChanged: { (value) in
 				self.delegate?.statusItemWidthSliderDidChange(value)
 			}
@@ -82,7 +80,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func sizeOfIconSliderChange(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: sizeOfIconCounterLabel,
+			sliderLabel: appIconSizeLabel,
 			sliderChanged: { (value) in
 				self.delegate?.appIconSizeSliderDidChange(value)
 			}
@@ -92,7 +90,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func numberOfAppsSliderChanged(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: numberOfAppsCounterLabel,
+			sliderLabel: maxNumRunningAppsLabel,
 			sliderEndedChanging: { value in
 				self.delegate?.maxNumRunningAppsSliderEndedChanging(Int(value))
 

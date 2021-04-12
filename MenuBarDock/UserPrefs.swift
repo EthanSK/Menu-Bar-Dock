@@ -11,8 +11,8 @@ import Cocoa
 enum UserPrefsDefaultValues {
 	static let maxNumRunningApps = 15
 	static let statusItemWidth = CGFloat(30)
-	static let runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight
 	static let appIconSize: CGFloat = 21
+	static let runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight
 	static let launchAtLogin = true
 	static let defaultAppOpeningMethod = AppOpeningMethod.launch
 	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // bundleId is key

@@ -93,5 +93,4 @@ class OpenableApps {
 		// here we combine the order arrays of running and non running apps in a way determined by user prefs to get the final app order array
 		return runningAppsOrder // TODO: - change this to be correct
 	}
-
 }
