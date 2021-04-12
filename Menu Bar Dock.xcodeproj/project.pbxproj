@@ -261,11 +261,11 @@
 			buildConfigurationList = 38412F22222B3E3000D3FA0C /* Build configuration list for PBXNativeTarget "Menu Bar Dock" */;
 			buildPhases = (
 				C5C0404AAACF2DAABE583079 /* [CP] Check Pods Manifest.lock */,
-				38E38B81262204CA00B95187 /* ShellScript */,
 				38412EF8222B3E2F00D3FA0C /* Sources */,
 				38412EF9222B3E2F00D3FA0C /* Frameworks */,
 				38412EFA222B3E2F00D3FA0C /* Resources */,
 				3875B2B5222E1EDA0042D748 /* CopyFiles */,
+				38E38B81262204CA00B95187 /* ShellScript */,
 			);
 			buildRules = (
 			);

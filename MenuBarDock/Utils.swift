@@ -29,3 +29,12 @@ extension Array where Element: Reorderable {
 		}
 	}
 }
+
+func randomString(of length: Int) -> String {
+	let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var str = ""
+	for _ in 0 ..< length {
+		str.append(letters.randomElement()!)
+	}
+	return str
+}

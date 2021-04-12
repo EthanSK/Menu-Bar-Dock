@@ -26,6 +26,8 @@ class MenuBarItems {
 
 	private(set) var items: [MenuBarItem] // ordered left to right
 
+	let autosaveNamePrefix = "3autoSave-"
+
 	init(
 		userPrefsDelegate: MenuBarItemsUserPrefsDelegate,
 		preferencesDelegate: MenuBarItemsPreferencesDelegate
@@ -40,18 +42,32 @@ class MenuBarItems {
 	) {
 		createEnoughStatusItems(openableApps: openableApps)
 
-		sortItems() // sort after adding them all for efficiency
+		sortItems() // sort after adding them all for efficiency. not all of them will be sorted due to layout not updating instantly, but that's fine since we have an extra item at all times.
 		print("number of apps: ", openableApps.apps.count)
+		print("number of menu bar items: ", items.count)
+
+		// try and populate the rightmost items since new ones are added to the left of the menu bar
 		for (index, app) in openableApps.apps.enumerated() {
-			let item = items[index]
-			item.statusItem.title = String(index) // TODO: - remove
-			showItem(item: item)
- 			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
+			let offset = items.count - openableApps.apps.count
+			let item = items[index + offset]
+
+			if #available(OSX 10.12, *) {
+				item.statusItem.title = String(index) + "a" + String(item.statusItem.autosaveName.split(separator: "-")[1])
+			}// TODO: - remove
+
+ 			showItem(item: item)
+
+// 			item.update(for: app, appIconSize: userPrefsDelegate.appIconSize, slotWidth: userPrefsDelegate.statusItemWidth)
 		}
 
-		for index in openableApps.apps.count...items.count - 1 { // loop over the rest of the status items that didn't get assigned an app, and hide them
-			let item = items[index]
-			hideItem(item: item)
+		// hide the leftmost items not being used
+		for index in 0...items.count - openableApps.apps.count - 1 {
+ 			let item = items[index]
+			if #available(OSX 10.12, *) {
+				item.statusItem.title = String(index) + "h" + String(item.statusItem.autosaveName.split(separator: "-")[1])
+			}
+ 			hideItem(item: item)
+
 		}
 
 	}
@@ -60,45 +76,47 @@ class MenuBarItems {
 		let origItemCount = items.count
 		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct in advance https://trello.com/c/Jz312bga
 			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDelegate.statusItemWidth)
-			statusItem.button?.superview?.needsLayout = true
-			statusItem.button?.superview?.layout()
-			statusItem.button!.superview!.window!.layoutIfNeeded()
-			statusItem.button!.superview!.layoutSubtreeIfNeeded()
-			statusItem.button!.superview!.layout()
-			statusItem.button!.window!.displayIfNeeded()
-			statusItem.button?.superview?.window?.update()
-			items.append(
-				MenuBarItem(
-					statusItem: statusItem,
-					userPrefsDelegate: self,
-					preferencesDelegate: self
-				)
-			)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
-			items[index].statusItem.title = "E-" + String(index) // E for empty //TODO: - remove
+			let item = MenuBarItem(
+				statusItem: statusItem,
+				   userPrefsDelegate: self,
+				   preferencesDelegate: self
+			   )
+			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
+			print("creating status item idx: ", index)
+			// self.setAutosaveName(item: item, name: autosaveNamePrefix + String(index))
+			if #available(OSX 10.12, *) {
+				print("autosave name: ", item.statusItem.autosaveName)
+			} else {
+				// Fallback on earlier versions
+			}
+			statusItem.title = "E" + String(index) // TODO: - remove
 		}
 	}
 
-	private func hideItem(item: MenuBarItem) {
+	private func setAutosaveName(item: MenuBarItem, name: String) {
 		if #available(OSX 10.12, *) {
-			item.statusItem.isVisible = false
-		} else {
-			item.statusItem.length = 0
+			item.statusItem.autosaveName = name // i think there might be a delay when doing this, so only do it when spawning them
+ 		}
+	}
+
+	private func hideItem(item: MenuBarItem) {
+		item.statusItem.length = 0
+ 		if #available(OSX 10.12, *) {
+//			item.statusItem.isVisible = false // this gets stored by the OS, and will restore its value when loaded up
+
 		}
 	}
 
 	private func showItem(item: MenuBarItem) {
+		item.statusItem.length = userPrefsDelegate.statusItemWidth
 		if #available(OSX 10.12, *) {
-			item.statusItem.isVisible = true
-		} else {
-			item.statusItem.length = userPrefsDelegate.statusItemWidth
+			item.statusItem.isVisible = true // NEVER uncomment
 		}
 	}
 
-	private func sortItems() {
-		print("before: ", items.map {$0.position})
+	private func sortItems() { // sorts items array such that order matches that of actual status items being displayed
 		items = items.sorted {$0.position < $1.position}
-		print("after: ", items.map {$0.position})
-	}
+ 	}
 }
 
 extension MenuBarItems: MenuBarItemUserPrefsDelegate {
