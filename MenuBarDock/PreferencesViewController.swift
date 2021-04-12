@@ -45,26 +45,26 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	func updateUI(for userPrefs: UserPrefs) {
-		self.title = Constants.App.name + " Preferences"
-		maxNumRunningAppsLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
-		maxNumRunningAppsSlider.integerValue = userPrefs.maxNumRunningApps
-		statusItemWidthLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
-		statusItemWidthSlider.doubleValue = Double(userPrefs.statusItemWidth)
-		appIconSizeLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
-		appIconSizeSlider.doubleValue = Double(userPrefs.appIconSize)
-		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
-		//		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off  //TODO: - do this
-		hideActiveAppFromRunningAppsButton.state = userPrefs.hideActiveAppFromRunningApps ? .on : .off
-		hideFinderFromRunningAppsButton.state = userPrefs.hideFinderFromRunningApps ? .on : .off
-
-		switch userPrefs.runningAppsSortingMethod {
-		case .mostRecentOnRight:
-			mostRecentRightRadioButton.state = .on
-		case .mostRecentOnLeft:
-			mostRecentLeftRadioButton.state = .on
-		case .consistent:
-			consistentSortOrderRadioButton.state = .on
-		}
+//		self.title = Constants.App.name + " Preferences"
+//		maxNumRunningAppsLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
+//		maxNumRunningAppsSlider.integerValue = userPrefs.maxNumRunningApps
+//		statusItemWidthLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
+//		statusItemWidthSlider.doubleValue = Double(userPrefs.statusItemWidth)
+//		appIconSizeLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
+//		appIconSizeSlider.doubleValue = Double(userPrefs.appIconSize)
+//		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
+//		//		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off  //TODO: - do this
+//		hideActiveAppFromRunningAppsButton.state = userPrefs.hideActiveAppFromRunningApps ? .on : .off
+//		hideFinderFromRunningAppsButton.state = userPrefs.hideFinderFromRunningApps ? .on : .off
+//
+//		switch userPrefs.runningAppsSortingMethod {
+//		case .mostRecentOnRight:
+//			mostRecentRightRadioButton.state = .on
+//		case .mostRecentOnLeft:
+//			mostRecentLeftRadioButton.state = .on
+//		case .consistent:
+//			consistentSortOrderRadioButton.state = .on
+//		}
 	}
 
 	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
