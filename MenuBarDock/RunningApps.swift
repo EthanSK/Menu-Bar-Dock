@@ -20,7 +20,7 @@ protocol RunningAppsDelegate: AnyObject {
 }
 
 class RunningApps {
-	var apps: [NSRunningApplication] = [] // state not getter for efficiency
+	public var apps: [NSRunningApplication] = [] // state not getter for efficiency
 
 	private(set) var ordering: [String] = [] // array of bundleIds in order of least to most recently activated
 

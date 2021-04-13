@@ -9,13 +9,12 @@
 import Cocoa
 
 class OpenableApp {
-	var bundleId: String
+	var bundleId: String // do NOT use to uniquely identify app. there can be multiple instances of the same app running
 	var icon: NSImage
 	var name: String
 	var bundleUrl: URL
 	var runningApplication: NSRunningApplication?
 	var appOpeningMethod: AppOpeningMethod
-	var representsRunningApp: Bool
 
 	init(
 		 bundleId: String,
@@ -29,8 +28,7 @@ class OpenableApp {
 		self.appOpeningMethod = appOpeningMethod
 		self.bundleUrl = bundleUrl
 		self.name = name
-		self.representsRunningApp = false
-	}
+ 	}
 
 	init(
 		runningApp: NSRunningApplication,
@@ -54,8 +52,7 @@ class OpenableApp {
 		self.appOpeningMethod = appOpeningMethod
 		self.bundleUrl = bundleUrl
 		self.name = name
-		self.representsRunningApp = true
-	}
+ 	}
 
 	func open() {
 		showOpeningAppWarningIfNeeded()
@@ -89,19 +86,46 @@ class OpenableApp {
 		runningApplication.activate(options: .activateIgnoringOtherApps)
 	}
 
+	func openNewAppInstance() {
+		if #available(OSX 10.15, *) {
+			let config = NSWorkspace.OpenConfiguration()
+			config.createsNewApplicationInstance = true
+			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (runningApp, error) in
+				print("openNewAppInstance running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
+			}
+		}
+	}
+
 	private func openFinder() {
-		NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // do this as well if it's hidden
-		guard let runningApp = runningApplication else { return }
-		runningApp.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) // this is the only way I can get working to show the finder app
+		launchApp()
+		if let runningApp = runningApplication {
+			runningApp.activate(options: [.activateAllWindows, .activateIgnoringOtherApps]) // this is the only way I can get working to show the finder app
+		}
 	}
 
 	private func openRegularApp() {
-		if appOpeningMethod == .activate, let runningApp = runningApplication {
-			runningApp.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
+		if appOpeningMethod == .activate, runningApplication != nil {
+			activateApp()
 		} else {
-			// we still want to try and get it to work as much as possible, we can show a warning if there is an issue after
-			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
+			launchApp()
 		}
+	}
+
+	private func launchApp() {
+		if #available(OSX 10.15, *) {
+			let config = NSWorkspace.OpenConfiguration()
+			config.activates = true
+			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (runningApp, error) in
+				print("launchApp running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
+			}
+		} else {
+			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // old way
+		}
+	}
+
+	private func activateApp() {
+		guard let runningApp = runningApplication else { return }
+		runningApp.activate(options: [.activateIgnoringOtherApps]) // I removed .activateAllWindows, but if that proves to be a problem, add it back to the options array
 	}
 
 	private func showOpeningAppWarningIfNeeded() {
@@ -122,7 +146,7 @@ enum OpenableAppError: Error {
 	case noBundleId // we need a bundleId to launch the app, so throwing an error if there isn't one is fine
 	case noIcon // we need an icon to show something in the menu bar, so throwing an error is fine if there isn't one.
 	case noName // we need some kind of name
-	case noBundleUrl // do we NEED this? don't think so but for now we can throw
+	case noBundleUrl // we need this for the exact path of the app, so we open the correct version
 }
 
 extension OpenableApp: Reorderable {
@@ -131,5 +155,4 @@ extension OpenableApp: Reorderable {
 	}
 
 	typealias OrderElement = String
-
 }

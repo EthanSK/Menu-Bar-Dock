@@ -22,7 +22,7 @@ class MenuBarItem {
 	private(set) var statusItem: NSStatusItem
 	private(set) var app: OpenableApp!
 
-	var position: CGFloat {
+	public var position: CGFloat {
 		return statusItem.button!.superview!.window!.frame.minX
 	}
 
@@ -121,6 +121,15 @@ class MenuBarItem {
 			)
 		}
 
+		if #available(OSX 10.15, *) {
+			_ = addMenuItem(
+				menu: menu,
+				title: "Open new instance of \(appName)",
+				action: #selector(openNewAppInstance),
+				keyEquivalent: "i"
+			)
+		}
+
 		addAppOpeningMethodMenuItem(menu: menu)
 
 		menu.addItem(NSMenuItem.separator())
@@ -146,7 +155,7 @@ class MenuBarItem {
 	private func addAppOpeningMethodMenuItem(menu: NSMenu) {
 		let appOpeningMethodMenuItem = addMenuItem(
 			menu: menu,
-			title: "Change \(app.name) opening method",
+			title: "Change opening method for \(app.name)",
 			action: nil,
 			keyEquivalent: ""
 		)
@@ -200,6 +209,10 @@ class MenuBarItem {
 
 	@objc private func activateApp() {
 		app.activate()
+	}
+
+	@objc private func openNewAppInstance() {
+		app.openNewAppInstance()
 	}
 
 	@objc private func setAppOpeningMethodLaunch() {

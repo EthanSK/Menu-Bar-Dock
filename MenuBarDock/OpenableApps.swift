@@ -20,7 +20,7 @@ protocol OpenableAppsDelegate: AnyObject {
  }
 
 class OpenableApps {
-	var apps: [OpenableApp] = [] // ground truth for all apps to show, both running and non running, ordered left to right
+	public var apps: [OpenableApp] = [] // ground truth for all apps to show, both running and non running, ordered left to right
 
 	public weak var userPrefsDataSource: OpenableAppsUserPrefsDataSource!
 	public weak var delegate: OpenableAppsDelegate?
@@ -35,7 +35,6 @@ class OpenableApps {
 		self.runningApps = runningApps
 		runningApps.delegate = self
 		populateApps()
-
 	}
 
 	private func populateApps() {

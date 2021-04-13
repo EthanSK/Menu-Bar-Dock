@@ -19,6 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
 	var runningApps: RunningApps!
+	var regularApps: RegularApps!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
@@ -37,6 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		menuBarItems.delegate = self
 
 		runningApps = RunningApps(userPrefsDataSource: userPrefs)
+		regularApps = RegularApps()
 
 		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps)
 		openableApps.delegate = self
