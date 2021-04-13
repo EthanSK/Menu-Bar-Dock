@@ -76,7 +76,8 @@ extension AppDelegate: MenuBarItemsDelegate {
 
 	func openPreferencesWindow() {
 		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.ViewControllerIdentifiers.preferences) as? PreferencesViewController {
-			viewController.userPrefs = userPrefs
+			viewController.userPrefsDataSource = userPrefs
+			viewController.delegate = self
 			if !preferencesWindow.isVisible {
 				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
@@ -92,4 +93,69 @@ extension AppDelegate: OpenableAppsDelegate {
 	func appsDidChange() {
 		updateMenuBarItems()
 	}
+}
+
+extension AppDelegate: PreferencesViewControllerDelegate {
+
+	func maxNumRunningAppsSliderEndedChanging(_ value: Int) {
+		userPrefs.maxNumRunningApps = value
+		userPrefsWasUpdated()
+	}
+
+	func statusItemWidthSliderDidChange(_ value: Double) {
+		userPrefs.statusItemWidth = CGFloat(value)
+		userPrefsWasUpdated()
+	}
+
+	func appIconSizeSliderDidChange(_ value: Double) {
+		userPrefs.appIconSize = CGFloat(value)
+		userPrefsWasUpdated()
+	}
+
+	func runningAppsSortingMethodDidChange(_ value: RunningAppsSortingMethod) {
+		userPrefs.runningAppsSortingMethod = value
+		userPrefsWasUpdated()
+	}
+
+	func resetPreferencesToDefaultsWasPressed() {
+		userPrefs.resetToDefaults()
+		userPrefsWasUpdated()
+	}
+
+	func resetAppOpeningMethodsWasPressed() {
+		userPrefs.resetAppOpeningMethodsToDefaults()
+		userPrefsWasUpdated()
+	}
+
+	func launchAtLoginDidChange(_ value: Bool) {
+		userPrefs.launchAtLogin = value
+		let launcherAppId = Constants.App.launcherBundleId
+		SMLoginItemSetEnabled(launcherAppId as CFString, value)
+		userPrefsWasUpdated()
+	}
+
+	func aboutWasPressed() {
+		// TODO: open about window
+	}
+
+	func hideFinderDidChange(_ value: Bool) {
+		userPrefs.hideFinderFromRunningApps = value
+		userPrefsWasUpdated()
+	}
+
+	func hideActiveAppDidChange(_ value: Bool) {
+		userPrefs.hideActiveAppFromRunningApps = value
+		userPrefsWasUpdated()
+	}
+
+	func appOpeningMethodDidChange(_ value: AppOpeningMethod) {
+		userPrefs.defaultAppOpeningMethod = value
+		userPrefsWasUpdated()
+	}
+
+	private func userPrefsWasUpdated() {
+		userPrefs.save()
+		updateMenuBarItems()
+	}
+
 }

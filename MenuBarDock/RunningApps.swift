@@ -11,7 +11,7 @@ import Cocoa
 protocol RunningAppsUserPrefsDataSource: AnyObject {
  	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
-
+	var maxNumRunningApps: Int { get }
 }
 
 protocol RunningAppsDelegate: AnyObject {
@@ -20,9 +20,9 @@ protocol RunningAppsDelegate: AnyObject {
 }
 
 class RunningApps {
-	public var apps: [NSRunningApplication] = [] // state not getter for efficiency
+	public var apps: [RunningApp] = [] // state not getter for efficiency, will be ordered correctly
 
-	private(set) var ordering: [String] = [] // array of bundleIds in order of least to most recently activated
+	private var ordering: [String] = [] // array of ids least to most recently activated
 
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
 	weak var delegate: RunningAppsDelegate?
@@ -32,44 +32,63 @@ class RunningApps {
 	) {
 		self.userPrefsDataSource = userPrefsDataSource
 		populateApps()
-		ordering = apps.filter { $0.bundleIdentifier != nil }.map { $0.bundleIdentifier! } // populate the ordering array so the openable apps can start displaying correct order from the start
+		ordering = apps
+			.filter { $0.app.bundleURL != nil }
+			.map { $0.app.bundleURL!.absoluteString } // populate the ordering array so the openable apps can start displaying correct order from the start
 		trackAppsBeingActivated()
 		trackAppsBeingQuit()
 	}
 
-	private func populateApps() {
-		apps = NSWorkspace.shared.runningApplications.filter {canShowRunningApp(app: $0)}
+	func update() {
+		// update for user preference change for example
+		populateApps()
 	}
 
-	private func canShowRunningApp(app: NSRunningApplication) -> Bool {
-		if app.activationPolicy != .regular {return false}
-		if app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDataSource.hideFinderFromRunningApps {return false}
-		if userPrefsDataSource.hideActiveAppFromRunningApps == false {return true} else {return app != NSWorkspace.shared.frontmostApplication}
+	private func populateApps() {
+		apps = NSWorkspace.shared.runningApplications
+			.map { RunningApp(app: $0) }
+			.filter {canShowRunningApp(app: $0)}
+			.reorder(by: ordering)
+	}
+
+	private func canShowRunningApp(app: RunningApp) -> Bool {
+		if app.app.activationPolicy != .regular {return false}
+		if app.app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDataSource.hideFinderFromRunningApps {return false}
+		if userPrefsDataSource.hideActiveAppFromRunningApps == false {return true} else {return app.app != NSWorkspace.shared.frontmostApplication}
 	}
 
 	private func trackAppsBeingActivated() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if
 				let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-				NSWorkspace.shared.frontmostApplication == app, // make sure it wasn't triggered by some background process
-				let bundleId = app.bundleIdentifier
+				NSWorkspace.shared.frontmostApplication == app // make sure it wasn't triggered by some background process
 			{
+				let runningApp = RunningApp(app: app)
+				self.ordering.removeAll(where: { $0 == runningApp.id })
+				self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
 				self.populateApps()
-				self.ordering.removeAll(where: { $0 == app.bundleIdentifier })
-				self.ordering.append(bundleId) // needs this order for it to populate from the most helpful side correctly
  				self.delegate?.runningAppWasActivated(app)
 			}
 		}
 	}
 
 	private func trackAppsBeingQuit() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
+		let a = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
+				let runningApp = RunningApp(app: app)
+
+				self.ordering.removeAll(where: { $0 == runningApp.id })
 				self.populateApps()
-				self.ordering.removeAll(where: { $0 == app.bundleIdentifier })
  				self.delegate?.runningAppWasQuit(app)
 			}
 		}
+		NSWorkspace.shared.notificationCenter.removeObserver(a)
 	}
 
+}
+
+enum RunningAppsSortingMethod: Int {
+	case mostRecentOnRight = 0
+	case mostRecentOnLeft = 1
+	case consistent = 2
 }

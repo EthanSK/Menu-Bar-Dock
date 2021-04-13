@@ -14,26 +14,45 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func maxNumRunningAppsSliderEndedChanging(_ value: Int)
 	func statusItemWidthSliderDidChange(_ value: Double)
 	func appIconSizeSliderDidChange(_ value: Double)
+	func runningAppsSortingMethodDidChange(_ value: RunningAppsSortingMethod)
+	func resetPreferencesToDefaultsWasPressed()
+	func resetAppOpeningMethodsWasPressed()
+	func launchAtLoginDidChange(_ value: Bool)
+	func aboutWasPressed()
+	func hideFinderDidChange(_ value: Bool)
+	func hideActiveAppDidChange(_ value: Bool)
+	func appOpeningMethodDidChange(_ value: AppOpeningMethod)
+}
 
-	// TODO: - add all other ui changes
+protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
+	var maxNumRunningApps: Int { get }
+	var statusItemWidth: CGFloat { get }
+	var runningAppsSortingMethod: RunningAppsSortingMethod { get }
+	var appIconSize: CGFloat { get }
+	var launchAtLogin: Bool { get }
+	var defaultAppOpeningMethod: AppOpeningMethod { get }
+	var hideFinderFromRunningApps: Bool { get }
+	var hideActiveAppFromRunningApps: Bool { get }
 }
 
 class PreferencesViewController: NSViewController { // this should do onthing
 
 	weak var delegate: PreferencesViewControllerDelegate?
-	weak var userPrefs: UserPrefs!
+	weak var userPrefsDataSource: PreferencesViewControllerUserPrefsDataSource!
 
 	@IBOutlet weak var maxNumRunningAppsSlider: NSSlider!
 	@IBOutlet weak var statusItemWidthSlider: NSSlider!
 	@IBOutlet weak var appIconSizeSlider: NSSlider!
 
-	@IBOutlet weak var maxNumRunningAppsLabel: NSTextField!
-	@IBOutlet weak var statusItemWidthLabel: NSTextField!
-	@IBOutlet weak var appIconSizeLabel: NSTextField!
+	@IBOutlet weak var maxNumRunningAppsCounterLabel: NSTextField!
+	@IBOutlet weak var statusItemWidthCounterLabel: NSTextField!
+	@IBOutlet weak var appIconSizeCounterLabel: NSTextField!
 
 	@IBOutlet weak var consistentSortOrderRadioButton: NSButton!
 	@IBOutlet weak var mostRecentRightRadioButton: NSButton!
 	@IBOutlet weak var mostRecentLeftRadioButton: NSButton!
+
+	@IBOutlet weak var appOpeningMethodPopUp: NSPopUpButton!
 
 	@IBOutlet weak var launchAtLoginButton: NSButton!
 	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
@@ -41,46 +60,63 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	override func viewWillAppear() {
 		super.viewWillAppear()
-		updateUI(for: userPrefs)
+		initAppOpeningMethodPopup()
+		updateUi()
 	}
 
-	func updateUI(for userPrefs: UserPrefs) {
-//		self.title = Constants.App.name + " Preferences"
-//		maxNumRunningAppsLabel.stringValue = "\(userPrefs.maxNumRunningApps)"
-//		maxNumRunningAppsSlider.integerValue = userPrefs.maxNumRunningApps
-//		statusItemWidthLabel.stringValue = "\(Int(userPrefs.statusItemWidth.rounded()))"
-//		statusItemWidthSlider.doubleValue = Double(userPrefs.statusItemWidth)
-//		appIconSizeLabel.stringValue = "\(Int(userPrefs.appIconSize.rounded()))"
-//		appIconSizeSlider.doubleValue = Double(userPrefs.appIconSize)
-//		launchAtLoginButton.state = userPrefs.launchAtLogin ? .on : .off
-//		//		launchInsteadOfActivateRadioButton.state = userPrefs.launchInsteadOfActivate ? .on : .off  //TODO: - do this
-//		hideActiveAppFromRunningAppsButton.state = userPrefs.hideActiveAppFromRunningApps ? .on : .off
-//		hideFinderFromRunningAppsButton.state = userPrefs.hideFinderFromRunningApps ? .on : .off
-//
-//		switch userPrefs.runningAppsSortingMethod {
-//		case .mostRecentOnRight:
-//			mostRecentRightRadioButton.state = .on
-//		case .mostRecentOnLeft:
-//			mostRecentLeftRadioButton.state = .on
-//		case .consistent:
-//			consistentSortOrderRadioButton.state = .on
-//		}
+	func updateUi() {
+		self.title = Constants.App.name + " Preferences"
+		maxNumRunningAppsCounterLabel.stringValue = "\(userPrefsDataSource.maxNumRunningApps)"
+
+		maxNumRunningAppsSlider.integerValue = userPrefsDataSource.maxNumRunningApps
+
+		statusItemWidthCounterLabel.stringValue = "\(Int(userPrefsDataSource.statusItemWidth.rounded()))"
+
+		statusItemWidthSlider.doubleValue = Double(userPrefsDataSource.statusItemWidth)
+
+		appIconSizeCounterLabel.stringValue = "\(Int(userPrefsDataSource.appIconSize.rounded()))"
+
+		appIconSizeSlider.doubleValue = Double(userPrefsDataSource.appIconSize)
+		launchAtLoginButton.state = userPrefsDataSource.launchAtLogin ? .on : .off
+
+		appOpeningMethodPopUp.selectItem(withTitle: userPrefsDataSource.defaultAppOpeningMethod.rawValue.capitalizingFirstLetter())
+
+		hideActiveAppFromRunningAppsButton.state = userPrefsDataSource.hideActiveAppFromRunningApps ? .on : .off
+
+		hideFinderFromRunningAppsButton.state = userPrefsDataSource.hideFinderFromRunningApps ? .on : .off
+
+		switch userPrefsDataSource.runningAppsSortingMethod {
+		case .mostRecentOnRight:
+			mostRecentRightRadioButton.state = .on
+		case .mostRecentOnLeft:
+			mostRecentLeftRadioButton.state = .on
+		case .consistent:
+			consistentSortOrderRadioButton.state = .on
+		}
 	}
 
-	@IBAction func widthOfItemSliderChanged(_ sender: NSSlider) {
+	private func initAppOpeningMethodPopup() {
+		appOpeningMethodPopUp.removeAllItems()
+		appOpeningMethodPopUp.addItems(withTitles: [
+			AppOpeningMethod.launch.rawValue.capitalizingFirstLetter(),
+			AppOpeningMethod.activate.rawValue.capitalizingFirstLetter()
+		])
+	}
+
+	@IBAction func statusItemWidthSliderChanged(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: statusItemWidthLabel,
+			sliderLabel: statusItemWidthCounterLabel,
 			sliderChanged: { (value) in
 				self.delegate?.statusItemWidthSliderDidChange(value)
 			}
 		)
 	}
 
-	@IBAction func sizeOfIconSliderChange(_ sender: NSSlider) {
+	@IBAction func appIconSizeSliderChange(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: appIconSizeLabel,
+			sliderLabel: appIconSizeCounterLabel,
 			sliderChanged: { (value) in
 				self.delegate?.appIconSizeSliderDidChange(value)
 			}
@@ -90,7 +126,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func numberOfAppsSliderChanged(_ sender: NSSlider) {
 		handleSliderChanged(
 			slider: sender,
-			sliderLabel: maxNumRunningAppsLabel,
+			sliderLabel: maxNumRunningAppsCounterLabel,
 			sliderEndedChanging: { value in
 				self.delegate?.maxNumRunningAppsSliderEndedChanging(Int(value))
 
@@ -99,62 +135,51 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@IBAction func radioButtonPressed(_ sender: Any) {
-//		if consistentSortOrderRadioButton.state == .on {
-//			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .consistent
-//		}
-//		if mostRecentLeftRadioButton.state == .on {
-//			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .mostRecentOnLeft
-//		}
-//		if mostRecentRightRadioButton.state == .on {
-//			MenuBarDock.shared.userPrefs.runningAppsSortingMethod = .mostRecentOnRight
-//		}
-//		NotificationCenter.default.post(name: .runningAppsSortingMethodChanged, object: nil)
-//		MenuBarDock.shared.userPrefs.save()
+		var value: RunningAppsSortingMethod?
+		if consistentSortOrderRadioButton.state == .on {
+			value = .consistent
+		}
+		if mostRecentLeftRadioButton.state == .on {
+			value = .mostRecentOnLeft
+		}
+		if mostRecentRightRadioButton.state == .on {
+			value = .mostRecentOnRight
+		}
+		if let value = value {
+			delegate?.runningAppsSortingMethodDidChange(value)
+		}
 	}
 
-	@IBAction func resetToDefaultPressed(_ sender: Any) {
-//		MenuBarDock.shared.userPrefs.resetToDefaults()
-//		updateUI(for: MenuBarDock.shared.userPrefs)
-//		NotificationCenter.default.post(name: .resetToDefaults, object: nil)
+	@IBAction func resetPreferencesToDefaultsPressed(_ sender: Any) {
+		delegate?.resetPreferencesToDefaultsWasPressed()
+		updateUi() // show updated user prefs
 	}
 
-	@IBAction func resetIndivAppSettings(_ sender: Any) {
-//		MenuBarDock.shared.userPrefs.resetIndivAppSettingsToDefaults()
+	@IBAction func resetAppOpeningMethodsPressed(_ sender: Any) {
+		delegate?.resetAppOpeningMethodsWasPressed()
 	}
 
 	@IBAction func aboutPressed(_ sender: Any) {
-		if let url = URL(string: "https://www.etggames.com/menu-bar-dock"),
-		   NSWorkspace.shared.open(url) {
-		}
-	}
-
-	@IBAction func logoPressed(_ sender: Any) {
-		if let url = URL(string: "https://www.etggames.com"),
-		   NSWorkspace.shared.open(url) {
-		}
+		delegate?.aboutWasPressed()
 	}
 
 	@IBAction func launchAtLoginPressed(_ sender: NSButton) {
-//		MenuBarDock.shared.userPrefs.launchAtLogin = sender.state == .on
-//		let launcherAppId = Constants.App.launcherBundleId
-//		SMLoginItemSetEnabled(launcherAppId as CFString, MenuBarDock.shared.userPrefs.launchAtLogin)
-//
-//		MenuBarDock.shared.userPrefs.save()
+		delegate?.launchAtLoginDidChange(sender.state == .on)
 	}
 
-	@IBAction func launchInsteadOfActivatingPressed(_ sender: NSButton) {
-		//		MenuBarDock.shared.userPrefs.launchInsteadOfActivate = sender.state == .on //TODO: - do this
-//		MenuBarDock.shared.userPrefs.save()
+	@IBAction func appOpeningMethodChanged(_ sender: NSPopUpButton) {
+		let value = AppOpeningMethod(rawValue: sender.selectedItem?.title.lowercased() ?? "")
+		if let value = value {
+			delegate?.appOpeningMethodDidChange(value)
+		}
 	}
 
 	@IBAction func hideActiveAppFromRunningAppsPressed(_ sender: NSButton) {
-//		MenuBarDock.shared.userPrefs.hideActiveAppFromRunningApps = sender.state == .on
-//		MenuBarDock.shared.userPrefs.save()
+		delegate?.hideActiveAppDidChange(sender.state == .on)
 	}
 
 	@IBAction func hideFinderFromRunningAppsPressed(_ sender: NSButton) {
-//		MenuBarDock.shared.userPrefs.hideFinderFromRunningApps = sender.state == .on
-//		MenuBarDock.shared.userPrefs.save()
+		delegate?.hideFinderDidChange(sender.state == .on	)
 	}
 
 	private func handleSliderChanged(

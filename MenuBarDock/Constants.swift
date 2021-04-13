@@ -35,9 +35,3 @@ enum Constants {
 		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
 	}
 }
-
-enum RunningAppsSortingMethod: Int {
-	case mostRecentOnRight = 0
-	case mostRecentOnLeft = 1
-	case consistent = 2
-}

@@ -8,39 +8,24 @@
 
 import Cocoa
 
- class RegularApp {
-	public var path: String
-	public var bundle: Bundle
-	public var icon: NSImage
-	public var name: String
-
-	init(
-		path: String,
-		bundle: Bundle,
-		icon: NSImage,
-		name: String
-	) {
-		self.path = path
-		self.bundle = bundle
-		self.icon = icon
-		self.name = name
-	}
-
- }
-
 class RegularApps { // regular apps are just apps that use user added manually
-	public var apps: [RegularApp]  = []
+	public var apps: [RegularApp]  = [] // order is correct
 
 	init() {
 		populateApps()
 	}
 
-	private func populateApps() {
-		let path = "/System/Applications/Mail.app"
+	func update() {
+		// update for user preference change for example
+		populateApps()
+	}
 
-		if let regularApp = regularApp(for: path) {
-			apps.append(regularApp)
-		}
+	private func populateApps() {
+//		let path = "/System/Applications/Mail.app"
+//
+//		if let regularApp = regularApp(for: path) {
+//			apps.append(regularApp)
+//		}
  	}
 
 	private func regularApp(for path: String) -> RegularApp? {

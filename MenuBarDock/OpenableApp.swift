@@ -9,9 +9,7 @@
 import Cocoa
 
 class OpenableApp {
-	var id: String {
-		bundleUrl.absoluteString // using this instead of bundleId allows users to have multiple versions of the same app in the dock, each with different preferences
-	}
+	var id: String
 	var bundleId: String? // do NOT use to uniquely identify app. there can be multiple instances of the same app running
 	var icon: NSImage
 	var name: String
@@ -20,15 +18,17 @@ class OpenableApp {
 	var appOpeningMethod: AppOpeningMethod = .launch
 
 	init(
-		 bundleId: String?,
-		 icon: NSImage,
-		 bundleUrl: URL,
-		 name: String
+		bundleId: String?,
+		icon: NSImage,
+		bundleUrl: URL,
+		name: String,
+		id: String
 	) {
 		self.bundleId = bundleId
 		self.icon = icon
 		self.bundleUrl = bundleUrl
 		self.name = name
+		self.id = id
  	}
 
 	convenience init(
@@ -38,32 +38,34 @@ class OpenableApp {
 			bundleId: regularApp.bundle.bundleIdentifier,
 			icon: regularApp.icon,
 			bundleUrl: regularApp.bundle.bundleURL,
-			name: regularApp.name
+			name: regularApp.name,
+			id: regularApp.id
 		)
 		appOpeningMethod = .launch // can't activate an app that ain't open!
 	}
 
 	convenience init(
-		runningApp: NSRunningApplication
+		runningApp: RunningApp
  	) throws {
 
-		guard let icon = runningApp.icon else {
+		guard let icon = runningApp.app.icon else {
 			throw OpenableAppError.noIcon
 		}
-		guard let name = runningApp.localizedName ?? runningApp.bundleIdentifier else {
+		guard let name = runningApp.app.localizedName ?? runningApp.app.bundleIdentifier else {
 			throw OpenableAppError.noName
 		}
-		guard let bundleUrl = runningApp.bundleURL else {
+		guard let bundleUrl = runningApp.app.bundleURL else {
 			throw OpenableAppError.noBundleUrl
 		}
 
 		self.init(
-			bundleId: runningApp.bundleIdentifier,
+			bundleId: runningApp.app.bundleIdentifier,
 			icon: icon,
 			bundleUrl: bundleUrl,
-			name: name
+			name: name,
+			id: runningApp.id
  		)
-		self.runningApplication = runningApp
+		self.runningApplication = runningApp.app
 
  	}
 

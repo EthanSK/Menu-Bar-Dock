@@ -42,7 +42,7 @@ class UserPrefs {
 
 		save()
 	}
-	func resetIndivAppSettingsToDefaults() {
+	func resetAppOpeningMethodsToDefaults() {
 		appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	}
 
@@ -109,5 +109,9 @@ extension UserPrefs: OpenableAppsUserPrefsDataSource {
 }
 
 extension UserPrefs: RunningAppsUserPrefsDataSource {
+
+}
+
+extension UserPrefs: PreferencesViewControllerUserPrefsDataSource {
 
 }

@@ -41,33 +41,42 @@ class OpenableApps {
 		populateApps()
 	}
 
+	func update() {
+		runningApps.update()
+		regularApps.update()
+		populateApps()
+	}
+
 	private func populateApps() {
 		apps = []
 
-		for regularApp in regularApps.apps {
-			guard let openableApp = try? OpenableApp(
-				regularApp: regularApp
-			) else { continue }
-			apps.append(openableApp)
-		}
+		// running and regular apps are already ordered internally, we just need to append them correctly.
+		// TODO: swap the order we populate depending on the user pref.
+		populateAppsWithRegularApps()
+		populateAppsWithRunningApps()
 
-		for runningApp in runningApps.apps {
-
-			guard let openableApp = try? OpenableApp(
-				runningApp: runningApp
- 			) else { continue }
-			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
-			apps.append(openableApp)
-		}
-
-		apps = apps.reorder(by: appsOrder())
 		delegate?.appsDidChange()
 	}
 
-	private func appsOrder() -> [String] {
-		// here we combine the order arrays of running and non running apps in a way determined by user prefs to get the final app order array
-		return runningApps.ordering // TODO: - change this to be correct
+	private func populateAppsWithRunningApps() {
+		for runningApp in runningApps.apps {
+			guard let openableApp = try? OpenableApp(
+				runningApp: runningApp
+			) else { continue }
+			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
+			apps.append(openableApp)
+		}
 	}
+
+	private func populateAppsWithRegularApps() {
+		for regularApp in regularApps.apps {
+			let openableApp = OpenableApp(
+				regularApp: regularApp
+			)
+			apps.append(openableApp)
+		}
+	}
+
 }
 
 extension OpenableApps: RunningAppsDelegate {
