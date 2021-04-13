@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		runningApps = RunningApps(userPrefsDataSource: userPrefs)
 		regularApps = RegularApps()
 
-		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps)
+		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps, regularApps: regularApps)
 		openableApps.delegate = self
 
 		updateMenuBarItems()

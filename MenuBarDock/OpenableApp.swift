@@ -9,7 +9,7 @@
 import Cocoa
 
 class OpenableApp {
-	var bundleId: String // do NOT use to uniquely identify app. there can be multiple instances of the same app running
+	var bundleId: String? // do NOT use to uniquely identify app. there can be multiple instances of the same app running
 	var icon: NSImage
 	var name: String
 	var bundleUrl: URL
@@ -17,11 +17,11 @@ class OpenableApp {
 	var appOpeningMethod: AppOpeningMethod
 
 	init(
-		 bundleId: String,
+		 bundleId: String?,
 		 icon: NSImage,
-		 appOpeningMethod: AppOpeningMethod,
 		 bundleUrl: URL,
-		 name: String
+		 name: String,
+		 appOpeningMethod: AppOpeningMethod
 	) {
 		self.bundleId = bundleId
 		self.icon = icon
@@ -30,13 +30,23 @@ class OpenableApp {
 		self.name = name
  	}
 
-	init(
+	convenience init(
+		regularApp: RegularApp
+	) {
+		self.init(
+			bundleId: regularApp.bundle.bundleIdentifier,
+			icon: regularApp.icon,
+			bundleUrl: regularApp.bundle.bundleURL,
+			name: regularApp.name,
+			appOpeningMethod: .launch // can't activate an app that ain't open!
+		)
+	}
+
+	convenience init(
 		runningApp: NSRunningApplication,
 		appOpeningMethod: AppOpeningMethod
 	) throws {
-		guard let bundleId = runningApp.bundleIdentifier else {
-			throw OpenableAppError.noBundleId
-		}
+
 		guard let icon = runningApp.icon else {
 			throw OpenableAppError.noIcon
 		}
@@ -46,12 +56,16 @@ class OpenableApp {
 		guard let bundleUrl = runningApp.bundleURL else {
 			throw OpenableAppError.noBundleUrl
 		}
-		self.bundleId = bundleId
-		self.icon = icon
+
+		self.init(
+			bundleId: runningApp.bundleIdentifier,
+			icon: icon,
+			bundleUrl: bundleUrl,
+			name: name,
+			appOpeningMethod: appOpeningMethod
+		)
 		self.runningApplication = runningApp
-		self.appOpeningMethod = appOpeningMethod
-		self.bundleUrl = bundleUrl
-		self.name = name
+
  	}
 
 	func open() {
@@ -65,7 +79,7 @@ class OpenableApp {
 
 	func quit() {
 		let wasTerminated = runningApplication?.terminate() // needs app sandbox off or explicit com.apple.security.temporary-exception.apple-events entitlement for the specific app
-		print("App \(bundleId) termination success status: ", wasTerminated ?? "null")
+		print("App \(bundleId ?? "none") termination success status: ", wasTerminated ?? "null")
 	}
 
 	func revealInFinder() {
@@ -118,7 +132,7 @@ class OpenableApp {
 			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (runningApp, error) in
 				print("launchApp running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
 			}
-		} else {
+		} else if let bundleId = bundleId {
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // old way
 		}
 	}
@@ -131,7 +145,7 @@ class OpenableApp {
 	private func showOpeningAppWarningIfNeeded() {
 		// allows us to fail gracefully and alert the developer
 		if appOpeningMethod == .activate && runningApplication == nil {
-			let warningMsg = "The app opening method is 'activate' for app \(bundleId) but there is no running app, so launched it instead! This shouldn't happen"
+			let warningMsg = "The app opening method is 'activate' for app \(bundleId ?? "none") but there is no running app, so launched it instead! This shouldn't happen"
 			print(warningMsg)
 		}
 	}
@@ -143,15 +157,14 @@ enum AppOpeningMethod: String {
 }
 
 enum OpenableAppError: Error {
-	case noBundleId // we need a bundleId to launch the app, so throwing an error if there isn't one is fine
-	case noIcon // we need an icon to show something in the menu bar, so throwing an error is fine if there isn't one.
+ 	case noIcon // we need an icon to show something in the menu bar, so throwing an error is fine if there isn't one.
 	case noName // we need some kind of name
 	case noBundleUrl // we need this for the exact path of the app, so we open the correct version
 }
 
 extension OpenableApp: Reorderable {
 	var orderElement: OrderElement { // so we can order using another array of bundleIds
-		bundleId
+		bundleUrl.absoluteString
 	}
 
 	typealias OrderElement = String

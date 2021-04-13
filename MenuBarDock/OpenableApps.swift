@@ -26,19 +26,31 @@ class OpenableApps {
 	public weak var delegate: OpenableAppsDelegate?
 
  	private var runningApps: RunningApps
+	private var regularApps: RegularApps
 
 	init(
- 		userPrefsDataSource: OpenableAppsUserPrefsDataSource,
-		runningApps: RunningApps
+		userPrefsDataSource: OpenableAppsUserPrefsDataSource,
+		runningApps: RunningApps,
+		regularApps: RegularApps
  	) {
  		self.userPrefsDataSource = userPrefsDataSource
 		self.runningApps = runningApps
+		self.regularApps = regularApps
 		runningApps.delegate = self
+
 		populateApps()
 	}
 
 	private func populateApps() {
 		apps = []
+
+		for regularApp in regularApps.apps {
+			guard let openableApp = try? OpenableApp(
+				regularApp: regularApp
+			) else { continue }
+			apps.append(openableApp)
+		}
+
 		for runningApp in runningApps.apps {
 			guard let bundleId = runningApp.bundleIdentifier else { continue }
 
@@ -48,6 +60,7 @@ class OpenableApps {
 			) else { continue }
 			apps.append(openableApp)
 		}
+
 		apps = apps.reorder(by: appsOrder())
 		delegate?.appsDidChange()
 	}
