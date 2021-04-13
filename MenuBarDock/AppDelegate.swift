@@ -66,7 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 extension AppDelegate: MenuBarItemsDelegate {
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
-		userPrefs.appOpeningMethods[app.bundleId] = method
+		userPrefs.appOpeningMethods[app.id] = method
 		userPrefs.save()
 	}
 

@@ -99,7 +99,7 @@ class MenuBarItems {
 
 extension MenuBarItems: MenuBarItemUserPrefsDataSource {
 	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod {
-		return userPrefsDataSource.appOpeningMethods[app.bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
+		return userPrefsDataSource.appOpeningMethods[app.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 	}
 }
 

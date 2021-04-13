@@ -9,23 +9,24 @@
 import Cocoa
 
 class OpenableApp {
+	var id: String {
+		bundleUrl.absoluteString // using this instead of bundleId allows users to have multiple versions of the same app in the dock, each with different preferences
+	}
 	var bundleId: String? // do NOT use to uniquely identify app. there can be multiple instances of the same app running
 	var icon: NSImage
 	var name: String
 	var bundleUrl: URL
 	var runningApplication: NSRunningApplication?
-	var appOpeningMethod: AppOpeningMethod
+	var appOpeningMethod: AppOpeningMethod = .launch
 
 	init(
 		 bundleId: String?,
 		 icon: NSImage,
 		 bundleUrl: URL,
-		 name: String,
-		 appOpeningMethod: AppOpeningMethod
+		 name: String
 	) {
 		self.bundleId = bundleId
 		self.icon = icon
-		self.appOpeningMethod = appOpeningMethod
 		self.bundleUrl = bundleUrl
 		self.name = name
  	}
@@ -37,15 +38,14 @@ class OpenableApp {
 			bundleId: regularApp.bundle.bundleIdentifier,
 			icon: regularApp.icon,
 			bundleUrl: regularApp.bundle.bundleURL,
-			name: regularApp.name,
-			appOpeningMethod: .launch // can't activate an app that ain't open!
+			name: regularApp.name
 		)
+		appOpeningMethod = .launch // can't activate an app that ain't open!
 	}
 
 	convenience init(
-		runningApp: NSRunningApplication,
-		appOpeningMethod: AppOpeningMethod
-	) throws {
+		runningApp: NSRunningApplication
+ 	) throws {
 
 		guard let icon = runningApp.icon else {
 			throw OpenableAppError.noIcon
@@ -61,9 +61,8 @@ class OpenableApp {
 			bundleId: runningApp.bundleIdentifier,
 			icon: icon,
 			bundleUrl: bundleUrl,
-			name: name,
-			appOpeningMethod: appOpeningMethod
-		)
+			name: name
+ 		)
 		self.runningApplication = runningApp
 
  	}
@@ -164,7 +163,7 @@ enum OpenableAppError: Error {
 
 extension OpenableApp: Reorderable {
 	var orderElement: OrderElement { // so we can order using another array of bundleIds
-		bundleUrl.absoluteString
+		id
 	}
 
 	typealias OrderElement = String

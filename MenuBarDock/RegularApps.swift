@@ -37,6 +37,7 @@ class RegularApps { // regular apps are just apps that use user added manually
 
 	private func populateApps() {
 		let path = "/System/Applications/Mail.app"
+
 		if let regularApp = regularApp(for: path) {
 			apps.append(regularApp)
 		}

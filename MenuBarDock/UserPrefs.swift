@@ -15,7 +15,7 @@ enum UserPrefsDefaultValues {
 	static let runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight
 	static let launchAtLogin = true
 	static let defaultAppOpeningMethod = AppOpeningMethod.launch
-	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // bundleId is key
+	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // openableApp id is the key
 	static let hideActiveAppFromRunningApps = true
 	static let hideFinderFromRunningApps = false
 }

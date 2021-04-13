@@ -52,12 +52,11 @@ class OpenableApps {
 		}
 
 		for runningApp in runningApps.apps {
-			guard let bundleId = runningApp.bundleIdentifier else { continue }
 
 			guard let openableApp = try? OpenableApp(
-				runningApp: runningApp,
-				appOpeningMethod: userPrefsDataSource.appOpeningMethods[bundleId] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
-			) else { continue }
+				runningApp: runningApp
+ 			) else { continue }
+			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
 			apps.append(openableApp)
 		}
 
