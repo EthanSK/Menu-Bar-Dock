@@ -92,7 +92,7 @@ class OpenableApps {
 
 extension OpenableApps: RunningAppsDelegate {
 	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
-		updateRegularApp(with: runningApp, updateType: .add)
+		updateRegularApp(with: runningApp, updateType: .add) //doing this here is kinda a hack, the right way would be to track the activations in regularApps, but for such a small feature, it's not worth duplicating all that code when its just as easy as this
 		populateApps()
 	}
 
