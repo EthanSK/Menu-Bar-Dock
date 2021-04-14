@@ -18,8 +18,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var userPrefs =  UserPrefs()
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
-	var runningApps: RunningApps!
-	var regularApps: RegularApps!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
@@ -37,8 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		)
 		menuBarItems.delegate = self
 
-		runningApps = RunningApps(userPrefsDataSource: userPrefs)
-		regularApps = RegularApps()
+		let runningApps = RunningApps(userPrefsDataSource: userPrefs)
+		let regularApps = RegularApps()
 
 		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps, regularApps: regularApps)
 		openableApps.delegate = self
@@ -96,7 +94,6 @@ extension AppDelegate: OpenableAppsDelegate {
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
-
 	func maxNumRunningAppsSliderEndedChanging(_ value: Int) {
 		userPrefs.maxNumRunningApps = value
 		userPrefsWasUpdated()
@@ -153,10 +150,27 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
+	func regularAppsUrlsWereAdded(_ value: [URL]) {
+		value.forEach { (url) in
+			if !userPrefs.regularAppsUrls.contains(url) {
+				userPrefs.regularAppsUrls.append(url)
+			}
+		}
+		userPrefsWasUpdated()
+	}
+
+	func regularAppsUrlsWereRemoved(_ value: [URL]) {
+		value.forEach { (url) in
+			userPrefs.regularAppsUrls.removeAll { (existing) -> Bool in
+				url == existing
+			}
+		}
+		userPrefsWasUpdated()
+	}
+
 	private func userPrefsWasUpdated() {
 		userPrefs.save()
 		openableApps.update()
 		updateMenuBarItems()
 	}
-
 }

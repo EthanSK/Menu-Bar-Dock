@@ -18,6 +18,7 @@ enum UserPrefsDefaultValues {
 	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // openableApp id is the key
 	static let hideActiveAppFromRunningApps = true
 	static let hideFinderFromRunningApps = false
+	static let regularAppsUrls: [URL] = []
 }
 
 class UserPrefs {
@@ -30,6 +31,7 @@ class UserPrefs {
 	var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	var hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 	var hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
+	var regularAppsUrls = UserPrefsDefaultValues.regularAppsUrls
 
 	func resetToDefaults() { // cba about this shitty code tbh not worth my time
 		maxNumRunningApps =  UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
@@ -39,7 +41,7 @@ class UserPrefs {
 		defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
 		hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 		hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
-
+		// don't reset regularAppsUrls, it's not right
 		save()
 	}
 	func resetAppOpeningMethodsToDefaults() {
@@ -59,7 +61,7 @@ class UserPrefs {
 		})), forKey: Constants.UserPrefs.appOpeningMethods)
 		UserDefaults.standard.set(hideActiveAppFromRunningApps, forKey: Constants.UserPrefs.hideActiveAppFromRunningApps)
 		UserDefaults.standard.set(hideFinderFromRunningApps, forKey: Constants.UserPrefs.hideFinderFromRunningApps)
-
+		UserDefaults.standard.set(regularAppsUrls.map { $0.absoluteString }, forKey: Constants.UserPrefs.regularAppsUrls)
 	}
 
 	func load() {
@@ -97,6 +99,16 @@ class UserPrefs {
 		if let hideFinderFromRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideFinderFromRunningApps) as? Bool {
 			self.hideFinderFromRunningApps = hideFinderFromRunningApps
 		}
+
+		if let regularAppsUrlsStrs = UserDefaults.standard.object(forKey: Constants.UserPrefs.regularAppsUrls) as? [String] {
+			var res: [URL] = []
+			for urlStr in regularAppsUrlsStrs {
+				if let url = URL(string: urlStr) {
+					res.append(url)
+				}
+			}
+			self.regularAppsUrls = res
+ 		}
 	}
 }
 

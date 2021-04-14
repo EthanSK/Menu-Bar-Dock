@@ -47,4 +47,5 @@ class RegularApps { // regular apps are just apps that use user added manually
 
 		return app
 	}
+
 }

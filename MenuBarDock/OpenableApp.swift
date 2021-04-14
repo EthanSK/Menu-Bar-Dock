@@ -135,7 +135,6 @@ class OpenableApp {
 			let config = NSWorkspace.OpenConfiguration()
 			config.activates = true
 			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (_, _) in
-//				print("launchApp running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
 			}
 		} else if let bundleId = bundleId {
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // old way

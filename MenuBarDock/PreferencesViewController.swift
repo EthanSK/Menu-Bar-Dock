@@ -22,6 +22,8 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func hideFinderDidChange(_ value: Bool)
 	func hideActiveAppDidChange(_ value: Bool)
 	func appOpeningMethodDidChange(_ value: AppOpeningMethod)
+	func regularAppsUrlsWereAdded(_ value: [URL])
+	func regularAppsUrlsWereRemoved(_ value: [URL])
 }
 
 protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
@@ -33,6 +35,7 @@ protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
+	var regularAppsUrls: [URL] { get }
 }
 
 class PreferencesViewController: NSViewController { // this should do onthing
@@ -58,6 +61,15 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
 	@IBOutlet weak var hideFinderFromRunningAppsButton: NSButton!
 
+	@IBOutlet weak var appsTable: NSTableView!
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		appsTable.delegate = self
+		appsTable.dataSource = self
+		appsTable.registerForDraggedTypes([.string])
+
+	}
 	override func viewWillAppear() {
 		super.viewWillAppear()
 		initAppOpeningMethodPopup()
@@ -182,6 +194,17 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		delegate?.hideFinderDidChange(sender.state == .on	)
 	}
 
+	@IBAction func addOrRemovePressed(_ sender: NSSegmentedControl) {
+		switch sender.selectedSegment {
+		case 0:
+			showFileExplorerToAddApp()
+		case 1:
+			break
+		default:
+			break
+		}
+	}
+
 	private func handleSliderChanged(
 		slider: NSSlider,
 		sliderLabel: NSTextField,
@@ -204,4 +227,24 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		}
 	}
 
+	private func showFileExplorerToAddApp() {
+		let dialog = NSOpenPanel()
+
+		dialog.title = "Choose apps, files, or folders"
+		dialog.showsResizeIndicator = true
+		dialog.directoryURL = URL(fileURLWithPath: "/Applications", isDirectory: true)
+		dialog.showsHiddenFiles = false
+		dialog.allowsMultipleSelection = true
+		dialog.canChooseDirectories = false
+		dialog.canChooseFiles = true
+		dialog.allowedFileTypes = ["app"]
+
+		if dialog.runModal() == NSApplication.ModalResponse.OK {
+			delegate?.regularAppsUrlsWereAdded(dialog.urls)
+			appsTable.reloadData()
+		} else {
+			// User clicked on "Cancel"
+			return
+		}
+	}
 }

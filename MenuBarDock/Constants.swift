@@ -33,5 +33,6 @@ enum Constants {
 		static let appOpeningMethods = "appOpeningMethods"
 		static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
 		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
+		static let regularAppsUrls = "regularAppsUrls"
 	}
 }
