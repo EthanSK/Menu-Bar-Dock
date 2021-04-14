@@ -23,7 +23,7 @@ extension PreferencesViewController: NSTableViewDelegate {
 		var cellIdentifier: String = ""
 
 		let url = userPrefsDataSource.regularAppsUrls[row]
-		guard let bundle = Bundle(url: url) else { return nil }
+		let bundle = Bundle(url: url)
 
 		let icon = NSWorkspace.shared.icon(forFile: url.path)
 
@@ -32,7 +32,7 @@ extension PreferencesViewController: NSTableViewDelegate {
 		}
 
 		if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
-			cell.textField?.stringValue = bundle.name
+			cell.textField?.stringValue = bundle?.name ?? "NOT FOUND"
 			cell.imageView?.image = icon
 			return cell
 		}

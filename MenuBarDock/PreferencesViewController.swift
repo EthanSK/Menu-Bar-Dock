@@ -68,6 +68,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		super.viewDidLoad()
 		appsTable.delegate = self
 		appsTable.dataSource = self
+		appsTable.doubleAction = #selector(tableRowDoubleClicked)
 		appsTable.registerForDraggedTypes([.string])
 		updateTable()
 
@@ -257,15 +258,9 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	private func updateTable() {
 		appsTable.reloadData()
-		var hiddenRows = IndexSet()
-		for (index, url) in userPrefsDataSource.regularAppsUrls.enumerated() {
-			if Bundle(url: url) == nil {
-				hiddenRows.insert(index)
-			}
-		}
-		print(hiddenRows)
-		if #available(OSX 10.11, *) {
-			appsTable.hideRows(at: hiddenRows)
-		}// hide deleted / unknown apps without messing up the ordering
+	}
+
+	@objc private func tableRowDoubleClicked() {
+		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[appsTable.clickedRow]]) //reveal in finder
 	}
 }
