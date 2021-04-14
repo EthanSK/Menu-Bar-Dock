@@ -69,6 +69,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		appsTable.delegate = self
 		appsTable.dataSource = self
 		appsTable.registerForDraggedTypes([.string])
+		updateTable()
 
 	}
 	override func viewWillAppear() {
@@ -242,7 +243,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 		if dialog.runModal() == NSApplication.ModalResponse.OK {
 			delegate?.regularAppsUrlsWereAdded(dialog.urls)
-			appsTable.reloadData()
+			updateTable()
 		} else {
 			// User clicked on "Cancel"
 			return
@@ -251,6 +252,20 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	private func removeSelectedApps() {
 		delegate?.regularAppsUrlsWereRemoved(appsTable.selectedRowIndexes)
+		updateTable()
+	}
+
+	private func updateTable() {
 		appsTable.reloadData()
+		var hiddenRows = IndexSet()
+		for (index, url) in userPrefsDataSource.regularAppsUrls.enumerated() {
+			if Bundle(url: url) == nil {
+				hiddenRows.insert(index)
+			}
+		}
+		print(hiddenRows)
+		if #available(OSX 10.11, *) {
+			appsTable.hideRows(at: hiddenRows)
+		}// hide deleted / unknown apps without messing up the ordering
 	}
 }

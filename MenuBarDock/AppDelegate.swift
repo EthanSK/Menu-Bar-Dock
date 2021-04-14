@@ -80,6 +80,7 @@ extension AppDelegate: MenuBarItemsDelegate {
 				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
 			}
+			preferencesWindow.minSize = preferencesWindow.frame.size
 			let controller = NSWindowController(window: preferencesWindow)
 			controller.showWindow(self)
 			NSApp.activate(ignoringOtherApps: true)// stops bugz n shiz i think
