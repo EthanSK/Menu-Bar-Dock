@@ -72,19 +72,37 @@ class OpenableApps {
 	private func populateAppsWithRegularApps() {
 		for regularApp in regularApps.apps {
 			let openableApp = OpenableApp(
-				regularApp: regularApp
+				regularApp: regularApp,
+				runningApp: regularApp.runningApp
 			)
 			apps.append(openableApp)
+		}
+	}
+
+	private func updateRegularApp(with runningApp: NSRunningApplication, updateType: UpdateRegularAppWithRunningAppType) {
+		let regularApp = regularApps.apps.first { $0.id == RunningApp(app: runningApp).id} // we just use RunningApp() to get the id...kinda hacky
+		switch updateType {
+		case .add:
+			regularApp?.runningApp = runningApp
+		case .remove:
+			regularApp?.runningApp = nil
 		}
 	}
 }
 
 extension OpenableApps: RunningAppsDelegate {
 	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
+		updateRegularApp(with: runningApp, updateType: .add)
 		populateApps()
 	}
 
 	func runningAppWasQuit(_ runningApp: NSRunningApplication) {
+		updateRegularApp(with: runningApp, updateType: .remove)
 		populateApps()
 	}
+}
+
+enum UpdateRegularAppWithRunningAppType {
+	case add
+	case remove
 }

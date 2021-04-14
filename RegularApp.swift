@@ -9,22 +9,23 @@
 import Cocoa
 
 class RegularApp {
-   public var bundle: Bundle
-   public var icon: NSImage
-   public var name: String
+	public var bundle: Bundle
+	public var icon: NSImage
+	public var name: String
+	public var runningApp: NSRunningApplication? // once we open a regular app, it will be running, and so we want to show options for running apps in the dropdown menu such as 'quit'
 
 	var id: String {
 		bundle.bundleURL.absoluteString
 	}
 
-   init(
-	   bundle: Bundle,
-	   icon: NSImage,
-	   name: String
-   ) {
-	   self.bundle = bundle
-	   self.icon = icon
-	   self.name = name
-   }
+	init(
+		bundle: Bundle,
+		icon: NSImage,
+		name: String
+	) {
+		self.bundle = bundle
+		self.icon = icon
+		self.name = name
+	}
 
 }

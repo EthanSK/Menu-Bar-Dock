@@ -9,8 +9,8 @@
 import Cocoa
 
 class RunningApp {
-	var app: NSRunningApplication
-	var id: String {
+	public var app: NSRunningApplication
+	public var id: String {
 		app.bundleURL?.absoluteString ?? "UNKNOWN" // should never be unknown, but if so, fail gracefully
 	}
 

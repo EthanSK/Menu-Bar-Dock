@@ -9,13 +9,13 @@
 import Cocoa
 
 class OpenableApp {
-	var id: String
-	var bundleId: String? // do NOT use to uniquely identify app. there can be multiple instances of the same app running
-	var icon: NSImage
-	var name: String
-	var bundleUrl: URL
-	var runningApplication: NSRunningApplication?
-	var appOpeningMethod: AppOpeningMethod? // should only have a value if the user explicitly set it
+	public var id: String
+	public var appOpeningMethod: AppOpeningMethod? // should only have a value if the user explicitly set it
+	public var bundleId: String? // do NOT use to uniquely identify app. there can be multiple instances of the same app running
+	public var icon: NSImage
+	public var name: String
+	public var bundleUrl: URL
+	public var runningApplication: NSRunningApplication?
 
 	init(
 		bundleId: String?,
@@ -32,7 +32,8 @@ class OpenableApp {
  	}
 
 	convenience init(
-		regularApp: RegularApp
+		regularApp: RegularApp,
+		runningApp: NSRunningApplication?
 	) {
 		self.init(
 			bundleId: regularApp.bundle.bundleIdentifier,
@@ -42,6 +43,7 @@ class OpenableApp {
 			id: regularApp.id
 		)
 		appOpeningMethod = .launch // can't activate an app that ain't open!
+		self.runningApplication = runningApp
 	}
 
 	convenience init(

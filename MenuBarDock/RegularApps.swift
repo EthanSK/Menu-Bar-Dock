@@ -22,6 +22,7 @@ class RegularApps { // regular apps are just apps that use user added manually
 	) {
 		self.userPrefsDataSource = userPrefsDataSource
 		populateApps()
+		addRunningApps() // only need to do this in init, updates to activated and quitted apps will be done in openable apps delegate. a bit confusing, but much less code for a small feature.
 	}
 
 	func update() {
@@ -50,6 +51,13 @@ class RegularApps { // regular apps are just apps that use user added manually
 		)
 
 		return app
+	}
+
+	private func addRunningApps() {
+		let runningApps = NSWorkspace.shared.runningApplications
+		for app in apps {
+			app.runningApp = runningApps.first {RunningApp(app: $0).id == app.id} // we instantiate RunningApp just to get id. kinda hacky, but oh well.
+		}
 	}
 
 }

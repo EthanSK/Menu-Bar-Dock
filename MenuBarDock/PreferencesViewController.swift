@@ -166,12 +166,20 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@IBAction func resetPreferencesToDefaultsPressed(_ sender: Any) {
-		delegate?.resetPreferencesToDefaultsWasPressed()
-		updateUi() // show updated user prefs
+		showResetConfirmationAlert(title: "Warning", message: "You are about to reset all the preferences for \(Constants.App.name). The '\(Constants.App.allAppsSectionTitle)' table will not be reset. Are you sure you want to proceed?") { (result) in
+			if result {
+				delegate?.resetPreferencesToDefaultsWasPressed()
+				updateUi() // show updated user prefs
+			}
+		}
 	}
 
 	@IBAction func resetAppOpeningMethodsPressed(_ sender: Any) {
-		delegate?.resetAppOpeningMethodsWasPressed()
+		showResetConfirmationAlert(title: "Warning", message: "You are about to reset all the individual app opening methods you may have previously set. Are you sure you want to proceed?") { (result) in
+			if result {
+				delegate?.resetAppOpeningMethodsWasPressed()
+			}
+		}
 	}
 
 	@IBAction func aboutPressed(_ sender: Any) {
@@ -262,5 +270,15 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	@objc private func tableRowDoubleClicked() {
 		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[appsTable.clickedRow]]) // reveal in finder
+	}
+
+	private func showResetConfirmationAlert(title: String, message: String, completion: (Bool) -> Void) {
+		   let alert = NSAlert()
+		   alert.messageText = title
+		   alert.informativeText = message
+		alert.alertStyle = .critical
+		   alert.addButton(withTitle: "Reset")
+		   alert.addButton(withTitle: "Cancel")
+		   completion(alert.runModal() == .alertFirstButtonReturn)
 	}
 }
