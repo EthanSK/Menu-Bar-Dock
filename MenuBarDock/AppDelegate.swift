@@ -94,6 +94,7 @@ extension AppDelegate: OpenableAppsDelegate {
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
+
 	func maxNumRunningAppsSliderEndedChanging(_ value: Int) {
 		userPrefs.maxNumRunningApps = value
 		userPrefsWasUpdated()
@@ -159,12 +160,14 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
-	func regularAppsUrlsWereRemoved(_ value: [URL]) {
-		value.forEach { (url) in
-			userPrefs.regularAppsUrls.removeAll { (existing) -> Bool in
-				url == existing
-			}
-		}
+	func regularAppsUrlsWereRemoved(_ removedIndexes: IndexSet) {
+		userPrefs.regularAppsUrls.remove(at: removedIndexes)
+		userPrefsWasUpdated()
+	}
+
+	func regularAppUrlWasMoved(oldIndex: Int, newIndex: Int) {
+		let url = userPrefs.regularAppsUrls.remove(at: oldIndex)
+		userPrefs.regularAppsUrls.insert(url, at: newIndex)
 		userPrefsWasUpdated()
 	}
 

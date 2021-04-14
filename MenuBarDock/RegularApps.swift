@@ -28,21 +28,15 @@ class RegularApps { // regular apps are just apps that use user added manually
 //		}
  	}
 
-	private func regularApp(for path: String) -> RegularApp? {
-		guard let bundle = Bundle(url: URL(fileURLWithPath: path)) else { return nil}
+	private func regularApp(for url: URL) -> RegularApp? {
+		guard let bundle = Bundle(url: url) else { return nil}
 
-		guard let name =
-				bundle.localizedInfoDictionary?[kCFBundleNameKey as String] as? String ??
-				bundle.infoDictionary?[kCFBundleNameKey as String] as? String
-		else { return nil }
-
-		let icon = NSWorkspace.shared.icon(forFile: path)
+		let icon = NSWorkspace.shared.icon(forFile: url.path)
 
 		let app = RegularApp(
-			path: path,
 			bundle: bundle,
 			icon: icon,
-			name: name
+			name: bundle.name
 		)
 
 		return app

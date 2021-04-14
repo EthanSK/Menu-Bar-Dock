@@ -9,7 +9,6 @@
 import Cocoa
 
 class RegularApp {
-   public var path: String
    public var bundle: Bundle
    public var icon: NSImage
    public var name: String
@@ -19,12 +18,10 @@ class RegularApp {
 	}
 
    init(
-	   path: String,
 	   bundle: Bundle,
 	   icon: NSImage,
 	   name: String
    ) {
-	   self.path = path
 	   self.bundle = bundle
 	   self.icon = icon
 	   self.name = name

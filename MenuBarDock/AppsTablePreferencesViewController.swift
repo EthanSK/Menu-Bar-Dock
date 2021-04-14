@@ -14,7 +14,6 @@ extension PreferencesViewController: NSTableViewDataSource {
 	}
 
 }
-
 extension PreferencesViewController: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 		return 30
@@ -25,10 +24,6 @@ extension PreferencesViewController: NSTableViewDelegate {
 
 		let url = userPrefsDataSource.regularAppsUrls[row]
 		guard let bundle = Bundle(url: url) else { return nil }
-		guard let name =
-				bundle.localizedInfoDictionary?[kCFBundleNameKey as String] as? String ??
-				bundle.infoDictionary?[kCFBundleNameKey as String] as? String
-		else { return nil }
 
 		let icon = NSWorkspace.shared.icon(forFile: url.path)
 
@@ -37,14 +32,14 @@ extension PreferencesViewController: NSTableViewDelegate {
 		}
 
 		if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
-			cell.textField?.stringValue = name
+			cell.textField?.stringValue = bundle.name
 			cell.imageView?.image = icon
 			return cell
 		}
 		return nil
 	}
-	
-	//drag and drop copied from https://stackoverflow.com/questions/2121907/drag-drop-reorder-rows-on-nstableview
+
+	// drag and drop copied from https://stackoverflow.com/questions/2121907/drag-drop-reorder-rows-on-nstableview
 
 	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 		let pasteboard = NSPasteboardItem()
@@ -68,20 +63,23 @@ extension PreferencesViewController: NSTableViewDelegate {
 		 var oldIndexOffset = 0
 		 var newIndexOffset = 0
 
-		 // For simplicity, the code below uses `tableView.moveRowAtIndex` to move rows around directly.
-		 // You may want to move rows in your content array and then call `tableView.reloadData()` instead.
-		 tableView.beginUpdates()
-		 for oldIndex in oldIndexes {
-			 if oldIndex < row {
-				 tableView.moveRow(at: oldIndex + oldIndexOffset, to: row - 1)
-				 oldIndexOffset -= 1
-			 } else {
-				 tableView.moveRow(at: oldIndex, to: row + newIndexOffset)
-				 newIndexOffset += 1
-			 }
-		 }
-		 tableView.endUpdates()
-
-		 return true
+		tableView.beginUpdates()
+ 		for oldIndex in oldIndexes {
+			if oldIndex < row {
+				let old = oldIndex + oldIndexOffset
+				let new = row - 1
+				tableView.moveRow(at: oldIndex + oldIndexOffset, to: row - 1)
+				delegate?.regularAppUrlWasMoved(oldIndex: old, newIndex: new)
+				oldIndexOffset -= 1
+			} else {
+				let old = oldIndex
+				let new = row + newIndexOffset
+				tableView.moveRow(at: oldIndex, to: row + newIndexOffset)
+				delegate?.regularAppUrlWasMoved(oldIndex: old, newIndex: new)
+				newIndexOffset += 1
+			}
+		}
+		tableView.endUpdates()
+		return true
 	}
 }

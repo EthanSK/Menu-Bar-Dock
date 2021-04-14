@@ -30,6 +30,14 @@ extension Array where Element: Reorderable {
 	}
 }
 
+extension Array {
+	mutating func remove(at set: IndexSet) {
+		var arr = Swift.Array(self.enumerated())
+		arr.removeAll {set.contains($0.offset)}
+		self = arr.map {$0.element}
+	}
+}
+
 extension String {
 	func capitalizingFirstLetter() -> String {
 		return prefix(1).capitalized + dropFirst()
@@ -37,5 +45,13 @@ extension String {
 
 	mutating func capitalizeFirstLetter() {
 		self = self.capitalizingFirstLetter()
+	}
+}
+
+extension Bundle {
+	var name: String {
+		self.localizedInfoDictionary?[kCFBundleNameKey as String] as? String ??
+		self.infoDictionary?[kCFBundleNameKey as String] as? String ??
+		self.bundleURL.lastPathComponent.components(separatedBy: ".")[0]
 	}
 }

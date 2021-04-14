@@ -23,7 +23,8 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func hideActiveAppDidChange(_ value: Bool)
 	func appOpeningMethodDidChange(_ value: AppOpeningMethod)
 	func regularAppsUrlsWereAdded(_ value: [URL])
-	func regularAppsUrlsWereRemoved(_ value: [URL])
+	func regularAppsUrlsWereRemoved(_ removedIndexes: IndexSet)
+	func regularAppUrlWasMoved(oldIndex: Int, newIndex: Int)
 }
 
 protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
@@ -35,7 +36,7 @@ protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
-	var regularAppsUrls: [URL] { get }
+	var regularAppsUrls: [URL] { get set }
 }
 
 class PreferencesViewController: NSViewController { // this should do onthing
@@ -197,9 +198,9 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBAction func addOrRemovePressed(_ sender: NSSegmentedControl) {
 		switch sender.selectedSegment {
 		case 0:
-			showFileExplorerToAddApp()
+			showFileExplorerToAddApps()
 		case 1:
-			break
+			removeSelectedApps()
 		default:
 			break
 		}
@@ -227,10 +228,10 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		}
 	}
 
-	private func showFileExplorerToAddApp() {
+	private func showFileExplorerToAddApps() {
 		let dialog = NSOpenPanel()
 
-		dialog.title = "Choose apps, files, or folders"
+		dialog.title = "Select some apps"
 		dialog.showsResizeIndicator = true
 		dialog.directoryURL = URL(fileURLWithPath: "/Applications", isDirectory: true)
 		dialog.showsHiddenFiles = false
@@ -246,5 +247,10 @@ class PreferencesViewController: NSViewController { // this should do onthing
 			// User clicked on "Cancel"
 			return
 		}
+	}
+
+	private func removeSelectedApps() {
+		delegate?.regularAppsUrlsWereRemoved(appsTable.selectedRowIndexes)
+		appsTable.reloadData()
 	}
 }
