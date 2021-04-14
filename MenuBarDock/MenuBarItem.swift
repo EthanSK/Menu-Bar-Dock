@@ -121,6 +121,13 @@ class MenuBarItem {
 			)
 		}
 
+		_ = addMenuItem(
+			menu: menu,
+			title: "Launch \(appName)",
+			action: #selector(launchApp),
+			keyEquivalent: "l"
+		)
+
 		if #available(OSX 10.15, *) {
 			_ = addMenuItem(
 				menu: menu,
@@ -213,6 +220,10 @@ class MenuBarItem {
 
 	@objc private func activateApp() {
 		app.activate()
+	}
+
+	@objc private func launchApp() {
+		app.launch()
 	}
 
 	@objc private func openNewAppInstance() {

@@ -97,8 +97,11 @@ class OpenableApp {
 	}
 
 	func activate() {
-		guard let runningApplication = runningApplication else { return }
-		runningApplication.activate(options: .activateIgnoringOtherApps)
+		activateApp()
+	}
+
+	func launch() {
+		launchApp()
 	}
 
 	func openNewAppInstance() {

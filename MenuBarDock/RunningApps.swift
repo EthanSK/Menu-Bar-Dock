@@ -96,7 +96,7 @@ class RunningApps {
 	}
 
 	private func trackAppsBeingQuit() {
-		let a = NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
+		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
 				let runningApp = RunningApp(app: app) // to get id
 				self.ordering.removeAll(where: { $0 == runningApp.id })
@@ -104,7 +104,6 @@ class RunningApps {
  				self.delegate?.runningAppWasQuit(app)
 			}
 		}
-		NSWorkspace.shared.notificationCenter.removeObserver(a)
 	}
 
 }

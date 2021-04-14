@@ -1040,7 +1040,7 @@
                                     <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-EK-2Yd" userLabel="Slider">
                                         <rect key="frame" x="-2" y="-6" width="254" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="200" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="tPJ-Lp-gyE"/>
+                                        <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="250" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="tPJ-Lp-gyE"/>
                                         <connections>
                                             <action selector="statusItemWidthSliderChanged:" target="XfG-lQ-9wD" id="aQp-Aj-Fsd"/>
                                         </connections>
@@ -1103,7 +1103,7 @@
                                     <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
                                         <rect key="frame" x="-2" y="-6" width="254" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="200" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="HaG-y8-qib"/>
+                                        <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="250" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="HaG-y8-qib"/>
                                         <connections>
                                             <action selector="appIconSizeSliderChange:" target="XfG-lQ-9wD" id="z4c-4b-s9c"/>
                                         </connections>
