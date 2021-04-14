@@ -36,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		menuBarItems.delegate = self
 
 		let runningApps = RunningApps(userPrefsDataSource: userPrefs)
-		let regularApps = RegularApps()
+		let regularApps = RegularApps(userPrefsDataSource: userPrefs)
 
 		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps, regularApps: regularApps)
 		openableApps.delegate = self

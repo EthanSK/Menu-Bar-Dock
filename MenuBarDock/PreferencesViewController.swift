@@ -261,6 +261,6 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@objc private func tableRowDoubleClicked() {
-		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[appsTable.clickedRow]]) //reveal in finder
+		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[appsTable.clickedRow]]) // reveal in finder
 	}
 }

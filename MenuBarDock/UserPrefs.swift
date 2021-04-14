@@ -127,3 +127,7 @@ extension UserPrefs: RunningAppsUserPrefsDataSource {
 extension UserPrefs: PreferencesViewControllerUserPrefsDataSource {
 
 }
+
+extension UserPrefs: RegularAppsUserPrefsDataSource {
+
+}

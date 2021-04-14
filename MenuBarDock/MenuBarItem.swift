@@ -91,12 +91,14 @@ class MenuBarItem {
 		let menu = NSMenu()
 		let appName = app.name
 
-		_ = addMenuItem(
-			menu: menu,
-			title: "Quit \(appName)",
-			action: #selector(quitApp),
-			keyEquivalent: "q"
-		)
+		if app.runningApplication != nil {
+			_ = addMenuItem(
+				menu: menu,
+				title: "Quit \(appName)",
+				action: #selector(quitApp),
+				keyEquivalent: "q"
+			)
+		}
 
 		_ = addMenuItem(
 			menu: menu,
@@ -128,14 +130,7 @@ class MenuBarItem {
 			keyEquivalent: "l"
 		)
 
-		if #available(OSX 10.15, *) {
-			_ = addMenuItem(
-				menu: menu,
-				title: "Open new instance of \(appName)",
-				action: #selector(openNewAppInstance),
-				keyEquivalent: "i"
-			)
-		}
+		// removed open new instance item because it's kinda pointless and will probably cause bugs
 
 		addAppOpeningMethodMenuItem(menu: menu)
 
