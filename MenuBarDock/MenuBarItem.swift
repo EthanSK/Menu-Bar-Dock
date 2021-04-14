@@ -8,13 +8,13 @@
 
 import Cocoa
 
-protocol MenuBarItemUserPrefsDataSource: AnyObject {
-	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod
+protocol MenuBarItemDataSource: AnyObject {
+	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod?
 }
 
 protocol MenuBarItemDelegate: AnyObject {
 	func didOpenPreferencesWindow()
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp)
 
 }
 
@@ -26,15 +26,15 @@ class MenuBarItem {
 		return statusItem.button!.superview!.window!.frame.minX
 	}
 
-	public weak var userPrefsDataSource: MenuBarItemUserPrefsDataSource!
+	public weak var dataSource: MenuBarItemDataSource!
 	public weak var delegate: MenuBarItemDelegate?
 
 	init(
 		statusItem: NSStatusItem,
-		userPrefsDataSource: MenuBarItemUserPrefsDataSource
+		dataSource: MenuBarItemDataSource
  	) {
 		self.statusItem = statusItem
-		self.userPrefsDataSource = userPrefsDataSource
+		self.dataSource = dataSource
 		initButton()
 
 	}
@@ -160,6 +160,7 @@ class MenuBarItem {
 			keyEquivalent: ""
 		)
 		appOpeningMethodMenuItem.submenu = NSMenu()
+
 		let launchItem = addMenuItem(
 			menu: appOpeningMethodMenuItem.submenu!,
 			title: "Launch",
@@ -172,13 +173,16 @@ class MenuBarItem {
 			action: #selector(setAppOpeningMethodActivate),
 			keyEquivalent: ""
 		)
-		switch userPrefsDataSource.appOpeningMethod(for: app) {
+		switch dataSource.appOpeningMethod(for: app) {
 		case .launch:
 			launchItem.state = .on
 			activateItem.state = .off
 		case .activate:
 			launchItem.state = .off
 			activateItem.state = .on
+		default:
+			launchItem.state = .off
+			activateItem.state = .off
 		}
  	}
 
@@ -216,11 +220,11 @@ class MenuBarItem {
 	}
 
 	@objc private func setAppOpeningMethodLaunch() {
-		delegate?.didSetAppOpeningMethod(.launch, app)
+		delegate?.didSetAppOpeningMethod(dataSource.appOpeningMethod(for: app) == .launch ? nil : .launch, app) // toggle the current state
  	}
 
 	@objc private func setAppOpeningMethodActivate() {
-		delegate?.didSetAppOpeningMethod(.activate, app)
+		delegate?.didSetAppOpeningMethod(dataSource.appOpeningMethod(for: app) == .activate ? nil : .activate, app)
  	}
 
 	@objc private func openPreferencesWindow() {

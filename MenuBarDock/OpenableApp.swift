@@ -15,7 +15,7 @@ class OpenableApp {
 	var name: String
 	var bundleUrl: URL
 	var runningApplication: NSRunningApplication?
-	var appOpeningMethod: AppOpeningMethod = .launch
+	var appOpeningMethod: AppOpeningMethod? // should only have a value if the user explicitly set it
 
 	init(
 		bundleId: String?,
@@ -75,7 +75,7 @@ class OpenableApp {
 			openFinder()
 			return
 		}
-		openRegularApp()
+		openApp()
 	}
 
 	func quit() {
@@ -118,7 +118,7 @@ class OpenableApp {
 		}
 	}
 
-	private func openRegularApp() {
+	private func openApp() {
 		if appOpeningMethod == .activate, runningApplication != nil {
 			activateApp()
 		} else {
@@ -127,11 +127,12 @@ class OpenableApp {
 	}
 
 	private func launchApp() {
+		print("Launching app: ", name)
 		if #available(OSX 10.15, *) {
 			let config = NSWorkspace.OpenConfiguration()
 			config.activates = true
-			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (runningApp, error) in
-				print("launchApp running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
+			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (_, _) in
+//				print("launchApp running app: ", runningApp?.bundleIdentifier ?? "none", "error: ", error ?? "none")
 			}
 		} else if let bundleId = bundleId {
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // old way
@@ -139,6 +140,7 @@ class OpenableApp {
 	}
 
 	private func activateApp() {
+		print("Activating app: ", name)
 		guard let runningApp = runningApplication else { return }
 		runningApp.activate(options: [.activateIgnoringOtherApps]) // I removed .activateAllWindows, but if that proves to be a problem, add it back to the options array
 	}

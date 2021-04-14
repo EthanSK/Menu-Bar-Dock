@@ -12,6 +12,7 @@ protocol OpenableAppsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
+	var defaultAppOpeningMethod: AppOpeningMethod { get }
 
 }
 
@@ -63,7 +64,7 @@ class OpenableApps {
 			guard let openableApp = try? OpenableApp(
 				runningApp: runningApp
 			) else { continue }
-			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
+			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod
 			apps.append(openableApp)
 		}
 	}
@@ -76,7 +77,6 @@ class OpenableApps {
 			apps.append(openableApp)
 		}
 	}
-
 }
 
 extension OpenableApps: RunningAppsDelegate {

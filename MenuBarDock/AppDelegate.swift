@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func initApp() {
 		userPrefs.load()
 		menuBarItems = MenuBarItems(
- 			userPrefsDataSource: userPrefs
+			userPrefsDataSource: userPrefs
 		)
 		menuBarItems.delegate = self
 
@@ -65,9 +65,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: MenuBarItemsDelegate {
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp) {
 		userPrefs.appOpeningMethods[app.id] = method
-		userPrefs.save()
+		userPrefsWasUpdated()
 	}
 
 	func didOpenPreferencesWindow() {
@@ -155,6 +155,7 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 
 	private func userPrefsWasUpdated() {
 		userPrefs.save()
+		openableApps.update()
 		updateMenuBarItems()
 	}
 

@@ -811,6 +811,16 @@
                                 <rect key="frame" x="300" y="149" width="5" height="425"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </box>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pK5-Uv-oP1">
+                                <rect key="frame" x="533" y="522" width="469" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" alignment="justified" id="jpm-Dh-vHN">
+                                    <font key="font" metaFont="system"/>
+                                    <string key="title">Tip: Consistent sort order doesn't really make sense for this Menu Bar Dock, but it was a highly requested feature, so therefore it is a best-effort implementation. We recommend you set the 'Number of Apps' slider to maximum, as well as untick 'Hide active app', to avoid unexpected behaviour.</string>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Num Runnig Apps">
                                 <rect key="frame" x="346" y="444" width="250" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1023,49 +1033,6 @@
                                     <action selector="appOpeningMethodChanged:" target="XfG-lQ-9wD" id="YCB-1S-ujU"/>
                                 </connections>
                             </popUpButton>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT6-Pq-nR1" userLabel="Max Num Runnig Apps">
-                                <rect key="frame" x="294" y="60" width="250" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <subviews>
-                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
-                                        <rect key="frame" x="-2" y="-6" width="254" height="28"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="200" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="HaG-y8-qib"/>
-                                        <connections>
-                                            <action selector="appIconSizeSliderChange:" target="XfG-lQ-9wD" id="z4c-4b-s9c"/>
-                                        </connections>
-                                    </slider>
-                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LE1-do-a8F">
-                                        <rect key="frame" x="0.0" y="24" width="109" height="16"/>
-                                        <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
-                                                <rect key="frame" x="-2" y="0.0" width="91" height="16"/>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" title="App Icon Size:" id="0DJ-rK-9Gp">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
-                                                <rect key="frame" x="90" y="0.0" width="21" height="16"/>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="5JD-fF-Myh">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                        </subviews>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
-                                </subviews>
-                            </customView>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z2q-pj-ZM8" userLabel="Max Num Runnig Apps">
                                 <rect key="frame" x="27" y="60" width="250" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1129,16 +1096,49 @@
                                     <action selector="launchAtLoginPressed:" target="XfG-lQ-9wD" id="aDQ-CI-4sT"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pK5-Uv-oP1">
-                                <rect key="frame" x="533" y="522" width="469" height="64"/>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT6-Pq-nR1" userLabel="Max Num Runnig Apps">
+                                <rect key="frame" x="318" y="60" width="250" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" alignment="justified" id="jpm-Dh-vHN">
-                                    <font key="font" metaFont="system"/>
-                                    <string key="title">Tip: Consistent sort order doesn't really make sense for this Menu Bar Dock, but it was a highly requested feature, so therefore it is a best-effort implementation. We recommend you set the 'Number of Apps' slider to maximum, as well as untick 'Hide active app', to avoid unexpected behaviour.</string>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                                <subviews>
+                                    <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
+                                        <rect key="frame" x="-2" y="-6" width="254" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="200" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="HaG-y8-qib"/>
+                                        <connections>
+                                            <action selector="appIconSizeSliderChange:" target="XfG-lQ-9wD" id="z4c-4b-s9c"/>
+                                        </connections>
+                                    </slider>
+                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LE1-do-a8F">
+                                        <rect key="frame" x="0.0" y="24" width="109" height="16"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
+                                                <rect key="frame" x="-2" y="0.0" width="91" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="App Icon Size:" id="0DJ-rK-9Gp">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
+                                                <rect key="frame" x="90" y="0.0" width="21" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="5JD-fF-Myh">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                </subviews>
+                            </customView>
                         </subviews>
                     </view>
                     <connections>

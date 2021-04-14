@@ -17,7 +17,7 @@ protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 
 protocol MenuBarItemsDelegate: AnyObject {
 	func didOpenPreferencesWindow()
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp)
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp)
 }
 
 class MenuBarItems {
@@ -69,7 +69,7 @@ class MenuBarItems {
 			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDataSource.statusItemWidth)
 			let item = MenuBarItem(
 				statusItem: statusItem,
-				userPrefsDataSource: self
+				dataSource: self
  			)
 			item.delegate = self
 			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
@@ -97,9 +97,9 @@ class MenuBarItems {
 	}
 }
 
-extension MenuBarItems: MenuBarItemUserPrefsDataSource {
-	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod {
-		return userPrefsDataSource.appOpeningMethods[app.id] ?? UserPrefsDefaultValues.defaultAppOpeningMethod
+extension MenuBarItems: MenuBarItemDataSource {
+	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod? {
+		return userPrefsDataSource.appOpeningMethods[app.id]
 	}
 }
 
@@ -108,7 +108,7 @@ extension MenuBarItems: MenuBarItemDelegate {
 		delegate?.didOpenPreferencesWindow()
 	}
 
-	func didSetAppOpeningMethod(_ method: AppOpeningMethod, _ app: OpenableApp) {
+	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp) {
 		delegate?.didSetAppOpeningMethod(method, app)
 	}
 }
