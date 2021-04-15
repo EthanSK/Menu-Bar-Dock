@@ -685,32 +685,21 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController title="Menu Bar Dock Preferences" storyboardIdentifier="PreferencesViewController" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="616" height="574"/>
+                    <view key="view" wantsLayer="YES" misplaced="YES" id="m2S-Jp-Qdl">
+                        <rect key="frame" x="0.0" y="0.0" width="698" height="700"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="ICJ-qX-X5b">
-                                <rect key="frame" x="317" y="150" width="5" height="424"/>
+                                <rect key="frame" x="317" y="250" width="5" height="450"/>
                             </box>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Ofz-3u-EDf">
-                                <rect key="frame" x="0.0" y="147" width="616" height="5"/>
+                                <rect key="frame" x="0.0" y="247" width="698" height="5"/>
                             </box>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="NNd-uk-gpv" userLabel="Running Apps">
-                                <rect key="frame" x="0.0" y="150" width="320" height="424"/>
+                                <rect key="frame" x="0.0" y="250" width="320" height="450"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hKX-0W-McQ">
-                                        <rect key="frame" x="13" y="29" width="208" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Reset App Opening Methods" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nd2-fW-CMi">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="resetAppOpeningMethodsPressed:" target="XfG-lQ-9wD" id="Gdk-KK-qlJ"/>
-                                        </connections>
-                                    </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
-                                        <rect key="frame" x="18" y="151" width="96" height="18"/>
+                                        <rect key="frame" x="18" y="164" width="96" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -721,7 +710,7 @@
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
-                                        <rect key="frame" x="18" y="123" width="121" height="18"/>
+                                        <rect key="frame" x="18" y="136" width="121" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -732,7 +721,7 @@
                                         </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vi7-Sj-Yc1">
-                                        <rect key="frame" x="18" y="81" width="137" height="16"/>
+                                        <rect key="frame" x="18" y="85" width="137" height="16"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="App Opening Method:" id="1Vb-2i-g1X">
                                             <font key="font" metaFont="system"/>
@@ -741,7 +730,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Gu-Jg-2zb">
-                                        <rect key="frame" x="18" y="280" width="121" height="16"/>
+                                        <rect key="frame" x="18" y="299" width="121" height="16"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Sort Order:" id="4Dg-kx-QtC">
                                             <font key="font" metaFont="system"/>
@@ -750,7 +739,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tgt-DJ-zg9" userLabel="defaultAppOpeningMethod">
-                                        <rect key="frame" x="170" y="74" width="104" height="25"/>
+                                        <rect key="frame" x="170" y="78" width="104" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" title="Launch" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="oaI-bl-443" id="gG9-Kv-3cF">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -771,7 +760,7 @@
                                         </connections>
                                     </popUpButton>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4vg-Re-H09">
-                                        <rect key="frame" x="18" y="378" width="137" height="26"/>
+                                        <rect key="frame" x="18" y="404" width="137" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Running Apps" id="1LF-XT-fRm">
                                             <font key="font" textStyle="title1" name=".SFNS-Regular"/>
@@ -780,7 +769,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <stackView distribution="equalSpacing" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="FTg-wZ-lzb" userLabel="Running Apps Sort Order">
-                                        <rect key="frame" x="20" y="197" width="147" height="70"/>
+                                        <rect key="frame" x="20" y="195" width="147" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-TY-FqY">
@@ -826,7 +815,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="20" y="314" width="250" height="45"/>
+                                        <rect key="frame" x="20" y="340" width="250" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0BC-GN-0F8" userLabel="Slider">
@@ -868,28 +857,61 @@
                                             </stackView>
                                         </subviews>
                                     </customView>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hKX-0W-McQ">
+                                        <rect key="frame" x="13" y="21" width="208" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Reset App Opening Methods" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nd2-fW-CMi">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="resetAppOpeningMethodsPressed:" target="XfG-lQ-9wD" id="Gdk-KK-qlJ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="oKf-oN-k5x"/>
                                 </constraints>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="sTP-YU-EaH" userLabel="All Apps">
-                                <rect key="frame" x="320" y="150" width="296" height="424"/>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="sTP-YU-EaH" userLabel="Regular Apps">
+                                <rect key="frame" x="320" y="250" width="378" height="450"/>
                                 <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
+                                        <rect key="frame" x="18" y="404" width="132" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Regular Apps" id="NAo-pf-e29">
+                                            <font key="font" textStyle="title1" name=".SFNS-Regular"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1uQ-SF-mEa" userLabel="Add Remove Buttons">
+                                        <rect key="frame" x="18" y="18" width="56" height="24"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="6Un-L3-2IH">
+                                            <font key="font" metaFont="system"/>
+                                            <segments>
+                                                <segment image="NSAddTemplate" width="25"/>
+                                                <segment image="NSRemoveTemplate" width="24" tag="1"/>
+                                            </segments>
+                                        </segmentedCell>
+                                        <connections>
+                                            <action selector="addOrRemovePressed:" target="XfG-lQ-9wD" id="qrh-Hb-Mm7"/>
+                                        </connections>
+                                    </segmentedControl>
                                     <scrollView autohidesScrollers="YES" horizontalLineScroll="33" horizontalPageScroll="10" verticalLineScroll="33" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B9h-9o-XeT" userLabel="AppsTable">
-                                        <rect key="frame" x="20" y="56" width="256" height="312"/>
+                                        <rect key="frame" x="20" y="56" width="338" height="338"/>
                                         <clipView key="contentView" id="ctg-cw-rcH">
-                                            <rect key="frame" x="1" y="1" width="254" height="310"/>
+                                            <rect key="frame" x="1" y="1" width="336" height="336"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="30" rowSizeStyle="automatic" viewBased="YES" id="bV7-Tv-c0G">
-                                                    <rect key="frame" x="0.0" y="0.0" width="254" height="310"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <size key="intercellSpacing" width="17" height="3"/>
                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                     <tableColumns>
-                                                        <tableColumn width="242" minWidth="40" maxWidth="1000" id="Lld-4M-BLc">
+                                                        <tableColumn width="324" minWidth="40" maxWidth="1000" id="Lld-4M-BLc">
                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -902,7 +924,7 @@
                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES"/>
                                                             <prototypeCellViews>
                                                                 <tableCellView identifier="AppCell" id="xTj-2p-KDm">
-                                                                    <rect key="frame" x="8" y="1" width="237" height="30"/>
+                                                                    <rect key="frame" x="8" y="1" width="319" height="30"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ywB-hU-MmR">
@@ -943,28 +965,6 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
-                                        <rect key="frame" x="18" y="378" width="83" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="All Apps" id="NAo-pf-e29">
-                                            <font key="font" textStyle="title1" name=".SFNS-Regular"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1uQ-SF-mEa" userLabel="Add Remove Buttons">
-                                        <rect key="frame" x="18" y="18" width="56" height="24"/>
-                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="momentary" id="6Un-L3-2IH">
-                                            <font key="font" metaFont="system"/>
-                                            <segments>
-                                                <segment image="NSAddTemplate" width="25"/>
-                                                <segment image="NSRemoveTemplate" width="24" tag="1"/>
-                                            </segments>
-                                        </segmentedCell>
-                                        <connections>
-                                            <action selector="addOrRemovePressed:" target="XfG-lQ-9wD" id="qrh-Hb-Mm7"/>
-                                        </connections>
-                                    </segmentedControl>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="B9h-9o-XeT" secondAttribute="trailing" constant="20" symbolic="YES" id="B3E-hz-Jh8"/>
@@ -978,21 +978,10 @@
                                 </constraints>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="xlE-X6-DKl" userLabel="General">
-                                <rect key="frame" x="0.0" y="0.0" width="616" height="150"/>
+                                <rect key="frame" x="0.0" y="0.0" width="698" height="250"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zjk-bH-HaW">
-                                        <rect key="frame" x="13" y="2" width="71" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="About" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pu8-cm-5YB">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="aboutPressed:" target="XfG-lQ-9wD" id="0wD-r9-vwv"/>
-                                        </connections>
-                                    </button>
                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT6-Pq-nR1" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="318" y="49" width="250" height="40"/>
+                                        <rect key="frame" x="318" y="149" width="250" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
@@ -1034,30 +1023,8 @@
                                             </stackView>
                                         </subviews>
                                     </customView>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pfs-x9-j8G">
-                                        <rect key="frame" x="485" y="10" width="123" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Launch at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jGJ-0Q-1Cd">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="launchAtLoginPressed:" target="XfG-lQ-9wD" id="aDQ-CI-4sT"/>
-                                        </connections>
-                                    </button>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6S3-3j-iu9">
-                                        <rect key="frame" x="85" y="2" width="215" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="Reset Preferences to Defaults" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XFl-jx-Cut">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="resetPreferencesToDefaultsPressed:" target="XfG-lQ-9wD" id="XaL-oF-JLD"/>
-                                        </connections>
-                                    </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JcA-ts-CKg">
-                                        <rect key="frame" x="25" y="104" width="79" height="26"/>
+                                        <rect key="frame" x="25" y="204" width="79" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="General" id="fm1-GG-b1Z">
                                             <font key="font" textStyle="title1" name=".SFNS-Regular"/>
@@ -1066,7 +1033,7 @@
                                         </textFieldCell>
                                     </textField>
                                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z2q-pj-ZM8" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="27" y="49" width="250" height="40"/>
+                                        <rect key="frame" x="27" y="149" width="250" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
                                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-EK-2Yd" userLabel="Slider">
@@ -1108,9 +1075,121 @@
                                             </stackView>
                                         </subviews>
                                     </customView>
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q33-fK-fox" userLabel="Show Running Apps on Left or Right">
+                                        <rect key="frame" x="27" y="107" width="354" height="22"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <subviews>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-WO-QqF">
+                                                <rect key="frame" x="249" y="4" width="101" height="16"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="of Regular Apps" id="jaR-Vj-B9O">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="soD-jE-N1N">
+                                                <rect key="frame" x="-2" y="4" width="149" height="16"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Show Running Apps on" id="f5W-qC-PWi">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ka3-Je-sNv">
+                                                <rect key="frame" x="149" y="-1" width="95" height="24"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="QTR-Pf-oAP">
+                                                    <font key="font" metaFont="system"/>
+                                                    <segments>
+                                                        <segment label="Left" width="43"/>
+                                                        <segment label="Right" width="43" selected="YES" tag="1"/>
+                                                    </segments>
+                                                </segmentedCell>
+                                            </segmentedControl>
+                                        </subviews>
+                                    </customView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="c0Z-B8-2jI" userLabel="Bottom Row">
+                                        <rect key="frame" x="0.0" y="20" width="698" height="20"/>
+                                        <subviews>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pfs-x9-j8G">
+                                                <rect key="frame" x="555" y="1" width="123" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Launch at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jGJ-0Q-1Cd">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="launchAtLoginPressed:" target="XfG-lQ-9wD" id="aDQ-CI-4sT"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6S3-3j-iu9">
+                                                <rect key="frame" x="82" y="-7" width="215" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Reset Preferences to Defaults" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XFl-jx-Cut">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="resetPreferencesToDefaultsPressed:" target="XfG-lQ-9wD" id="XaL-oF-JLD"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zjk-bH-HaW">
+                                                <rect key="frame" x="13" y="-7" width="71" height="32"/>
+                                                <buttonCell key="cell" type="push" title="About" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pu8-cm-5YB">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="aboutPressed:" target="XfG-lQ-9wD" id="0wD-r9-vwv"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="pfs-x9-j8G" secondAttribute="trailing" constant="20" symbolic="YES" id="Q8S-vf-AR2"/>
+                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="leading" secondItem="c0Z-B8-2jI" secondAttribute="leading" constant="20" symbolic="YES" id="Qah-bw-ZG2"/>
+                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="TRG-nE-Wnh"/>
+                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="leading" secondItem="zjk-bH-HaW" secondAttribute="trailing" constant="12" symbolic="YES" id="iJj-Ja-FUj"/>
+                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="k9f-n7-zh8"/>
+                                            <constraint firstAttribute="height" constant="20" id="mrU-UC-zaJ"/>
+                                            <constraint firstItem="pfs-x9-j8G" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="t5h-WY-dxB"/>
+                                        </constraints>
+                                    </customView>
+                                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L0Y-bR-owQ">
+                                        <rect key="frame" x="474" y="64" width="206" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Y7Q-FC-W5d">
+                                            <font key="font" metaFont="system"/>
+                                            <segments>
+                                                <segment label="Running Apps" width="99" selected="YES"/>
+                                                <segment label="Running Apps" width="98" tag="1"/>
+                                            </segments>
+                                        </segmentedCell>
+                                    </segmentedControl>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qb0-sN-69c">
+                                        <rect key="frame" x="25" y="68" width="367" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Hide apps duplicated in Running Apps and Regular Apps" bezelStyle="regularSquare" imagePosition="left" inset="2" id="mQQ-Jm-f1t">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
+                                        <rect key="frame" x="474" y="97" width="141" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Duplicate App Priority:" id="nsF-mJ-rf8">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="gwN-a2-n0x"/>
+                                    <constraint firstAttribute="trailing" secondItem="c0Z-B8-2jI" secondAttribute="trailing" id="9wo-CJ-Jw9"/>
+                                    <constraint firstAttribute="bottom" secondItem="c0Z-B8-2jI" secondAttribute="bottom" constant="20" symbolic="YES" id="SI5-Bx-Wh6"/>
+                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="Uem-CB-bx1"/>
+                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="UsI-H2-T9m"/>
+                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" id="XNX-90-qwi"/>
+                                    <constraint firstAttribute="height" constant="250" id="oUX-8Z-Vyn"/>
                                 </constraints>
                             </customView>
                         </subviews>
@@ -1153,7 +1232,7 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="d9e-IQ-Qsf"/>
             </objects>
-            <point key="canvasLocation" x="177" y="373"/>
+            <point key="canvasLocation" x="218" y="451"/>
         </scene>
     </scenes>
     <resources>

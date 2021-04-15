@@ -166,7 +166,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@IBAction func resetPreferencesToDefaultsPressed(_ sender: Any) {
-		showResetConfirmationAlert(title: "Warning", message: "You are about to reset all the preferences for \(Constants.App.name). The '\(Constants.App.allAppsSectionTitle)' table will not be reset. Are you sure you want to proceed?") { (result) in
+		showResetConfirmationAlert(title: "Warning", message: "You are about to reset all the preferences for \(Constants.App.name). The '\(Constants.App.regularAppsSectionTitle)' table will not be reset. Are you sure you want to proceed?") { (result) in
 			if result {
 				delegate?.resetPreferencesToDefaultsWasPressed()
 				updateUi() // show updated user prefs
