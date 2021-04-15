@@ -23,7 +23,7 @@ class RunningApps {
 
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
 
-	private var limit: Int {
+	public var limit: Int {
  		if userPrefsDataSource.maxNumRunningApps == 0 && userPrefsDataSource.regularAppsUrls.count == 0 {
 			// we need to show at least one app in the menu bar, or user won't be able to access preferences!
 			return 1

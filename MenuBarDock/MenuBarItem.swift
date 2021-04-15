@@ -20,7 +20,7 @@ protocol MenuBarItemDelegate: AnyObject {
 
 class MenuBarItem {
 	private(set) var statusItem: NSStatusItem
-	private(set) var app: OpenableApp!
+	private(set) var app: OpenableApp?
 
 	public var position: CGFloat {
 		return statusItem.button!.superview!.window!.frame.minX
@@ -80,7 +80,7 @@ class MenuBarItem {
 		case .rightMouseUp:
 			showDropdownMenu()
 		case .leftMouseUp:
-			app.open()
+			app?.open()
 		default: break
 
 		}
@@ -90,9 +90,9 @@ class MenuBarItem {
 		statusItem.button?.appearance = NSAppearance(named: NSAppearance.current.name)
 
 		let menu = NSMenu()
-		let appName = app.name
+		let appName = app?.name
 
-		if app.runningApplication != nil {
+		if app?.runningApplication != nil {
 			_ = addMenuItem(
 				menu: menu,
 				title: "Quit \(appName)",
@@ -108,7 +108,7 @@ class MenuBarItem {
 			keyEquivalent: "r"
 		)
 
-		if let runningApplication = app.runningApplication {
+		if let runningApplication = app?.runningApplication {
 			// only makes sense to hide and show, and activate a running app, not just any app
 			_ = addMenuItem(
 				menu: menu,
@@ -156,9 +156,10 @@ class MenuBarItem {
 	}
 
 	private func addAppOpeningMethodMenuItem(menu: NSMenu) {
+		guard let app = app else { return }
 		let appOpeningMethodMenuItem = addMenuItem(
 			menu: menu,
-			title: "Change opening method for \(app.name)",
+			title: "Change opening method for \(app.name ?? "None")",
 			action: nil,
 			keyEquivalent: ""
 		)
@@ -201,36 +202,38 @@ class MenuBarItem {
 	}
 
 	@objc private func quitApp() {
-		app.quit()
+		app?.quit()
 	}
 
 	@objc private func revealAppInFinder() {
-		app.revealInFinder()
+		app?.revealInFinder()
 	}
 
 	@objc private func toggleAppHidden() {
-		if let runningApplication = app.runningApplication {
-			app.setIsHidden(isHidden: !runningApplication.isHidden)
+		if let runningApplication = app?.runningApplication {
+			app?.setIsHidden(isHidden: !runningApplication.isHidden)
 		}
 	}
 
 	@objc private func activateApp() {
-		app.activate()
+		app?.activate()
 	}
 
 	@objc private func launchApp() {
-		app.launch()
+		app?.launch()
 	}
 
 	@objc private func openNewAppInstance() {
-		app.openNewAppInstance()
+		app?.openNewAppInstance()
 	}
 
 	@objc private func setAppOpeningMethodLaunch() {
+		guard let app = app else { return }
 		delegate?.didSetAppOpeningMethod(dataSource.appOpeningMethod(for: app) == .launch ? nil : .launch, app) // toggle the current state
  	}
 
 	@objc private func setAppOpeningMethodActivate() {
+		guard let app = app else { return }
 		delegate?.didSetAppOpeningMethod(dataSource.appOpeningMethod(for: app) == .activate ? nil : .activate, app)
  	}
 

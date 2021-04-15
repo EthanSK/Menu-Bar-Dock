@@ -62,8 +62,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	private func updateMenuBarItems() {
-		menuBarItems.update(openableApps: openableApps)
+	private func updateMenuBarItems(canSkipItemUpdateIfSameApp: Bool = false) {
+		menuBarItems.update(openableApps: openableApps, canSkipItemUpdateIfSameApp: canSkipItemUpdateIfSameApp)
 	}
 }
 
@@ -112,7 +112,11 @@ extension AppDelegate: AppTrackerDelegate {
 		runningApps.update()
 //		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
 		openableApps.update(runningApps: runningApps, regularApps: regularApps)
-		updateMenuBarItems()
+
+		// only update the menu bar items if we are showing running apps, otherwise we can be efficient and not bother (since regular apps are static with respect to app activations)
+		if runningApps.limit > 0 {
+			updateMenuBarItems(canSkipItemUpdateIfSameApp: true)
+		}
 	}
 }
 
