@@ -43,9 +43,8 @@ class MenuBarItems {
 	to have running at any given time
 	*/
 	func update(
-		openableApps: OpenableApps,
-		canSkipItemUpdateIfSameApp: Bool = false // for efficiency
-	) {
+		openableApps: OpenableApps
+ 	) {
 		createEnoughStatusItems(openableApps: openableApps)
 		sortItems() // sort after adding them all for efficiency. not all of them will be sorted due to layout not updating instantly, but that's fine since we have an extra item at all times.
 
@@ -54,7 +53,6 @@ class MenuBarItems {
 			let offset = items.count - openableApps.apps.count
 			let item = items[index + offset]
 			showItem(item: item)
-			if canSkipItemUpdateIfSameApp && item.app?.id == app.id { continue } // skip for efficiency
 			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.statusItemWidth)
 		}
 
