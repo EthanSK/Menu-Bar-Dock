@@ -14,6 +14,8 @@ protocol OpenableAppsUserPrefsDataSource: AnyObject {
 	var hideActiveAppFromRunningApps: Bool { get }
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
 	var sideToShowRunningApps: SideToShowRunningApps { get }
+	var hideDuplicateApps: Bool { get }
+	var duplicateAppsPriority: DuplicateAppsPriority { get }
 }
 
 class OpenableApps {
@@ -58,16 +60,29 @@ class OpenableApps {
 
 	private func populateAppsWithRunningApps() {
 		for runningApp in runningApps.apps {
+			if (
+				userPrefsDataSource.hideDuplicateApps &&
+				userPrefsDataSource.duplicateAppsPriority == .regularApps &&
+				regularApps.apps.contains(where: {$0.id == runningApp.id})
+			) { continue }
+
 			guard let openableApp = try? OpenableApp(
 				runningApp: runningApp,
 				appOpeningMethod: userPrefsDataSource.appOpeningMethods[runningApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod
 			) else { continue }
+
 			apps.append(openableApp)
 		}
 	}
 
 	private func populateAppsWithRegularApps() {
 		for regularApp in regularApps.apps {
+			if (
+				userPrefsDataSource.hideDuplicateApps &&
+				userPrefsDataSource.duplicateAppsPriority == .runningApps &&
+				runningApps.apps.contains(where: {$0.id == regularApp.id})
+			) { continue }
+
 			let openableApp = OpenableApp(
 				regularApp: regularApp,
 				appOpeningMethod: userPrefsDataSource.appOpeningMethods[regularApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod

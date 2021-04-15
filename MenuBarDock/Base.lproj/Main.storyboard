@@ -1172,9 +1172,9 @@
                                         </connections>
                                     </segmentedControl>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
-                                        <rect key="frame" x="474" y="97" width="141" height="16"/>
+                                        <rect key="frame" x="474" y="97" width="147" height="16"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Duplicate App Priority:" id="nsF-mJ-rf8">
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Duplicate Apps Priority:" id="nsF-mJ-rf8">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
