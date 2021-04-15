@@ -8,6 +8,7 @@
 
 import Cocoa
 
+// represents an app actually being shown in the menu bar
 class OpenableApp {
 	public var id: String
 	public var appOpeningMethod: AppOpeningMethod? // should only have a value if the user explicitly set it
@@ -22,32 +23,38 @@ class OpenableApp {
 		icon: NSImage,
 		bundleUrl: URL,
 		name: String,
-		id: String
+		id: String,
+		appOpeningMethod: AppOpeningMethod?,
+		runningApplication: NSRunningApplication?
 	) {
 		self.bundleId = bundleId
 		self.icon = icon
 		self.bundleUrl = bundleUrl
 		self.name = name
 		self.id = id
+		self.appOpeningMethod = appOpeningMethod
+		self.runningApplication = runningApplication
  	}
 
 	convenience init(
 		regularApp: RegularApp,
-		runningApp: NSRunningApplication?
+		appOpeningMethod: AppOpeningMethod
 	) {
+		print("regularApp.runningApp: ", regularApp.runningApp, " appOpeningMethod, ", appOpeningMethod)
 		self.init(
 			bundleId: regularApp.bundle.bundleIdentifier,
 			icon: regularApp.icon,
 			bundleUrl: regularApp.bundle.bundleURL,
 			name: regularApp.name,
-			id: regularApp.id
+			id: regularApp.id,
+			appOpeningMethod: appOpeningMethod,
+			runningApplication: regularApp.runningApp
 		)
-		appOpeningMethod = .launch // can't activate an app that ain't open!
-		self.runningApplication = runningApp
 	}
 
 	convenience init(
-		runningApp: RunningApp
+		runningApp: RunningApp,
+		appOpeningMethod: AppOpeningMethod
  	) throws {
 
 		guard let icon = runningApp.app.icon else {
@@ -65,9 +72,10 @@ class OpenableApp {
 			icon: icon,
 			bundleUrl: bundleUrl,
 			name: name,
-			id: runningApp.id
+			id: runningApp.id,
+			appOpeningMethod: appOpeningMethod,
+			runningApplication: runningApp.app
  		)
-		self.runningApplication = runningApp.app
 
  	}
 

@@ -22,12 +22,23 @@ class RegularApps { // regular apps are just apps that use user added manually
 	) {
 		self.userPrefsDataSource = userPrefsDataSource
 		populateApps()
-		addRunningApps() // only need to do this in init, updates to activated and quitted apps will be done in openable apps delegate. a bit confusing, but much less code for a small feature.
 	}
 
 	func update() {
-		// update for user preference change for example
 		populateApps()
+	}
+
+	func handleAppActivation(runningApp: NSRunningApplication) {
+		correspondingRegularApp(for: runningApp)?.runningApp = runningApp
+		// we DON'T want to update here, because it doesn't make sense to update regular apps based on app activations, otherwise they would be RunningApp()s!
+	}
+
+	func handleAppQuit(runningApp: NSRunningApplication) {
+		correspondingRegularApp(for: runningApp)?.runningApp = nil
+	}
+
+	private func correspondingRegularApp(for runningApp: NSRunningApplication) -> RegularApp? {
+		return apps.first { $0.id == RunningApp(app: runningApp).id} // we just use RunningApp() just to get the id...kinda hacky
 	}
 
 	private func populateApps() {
@@ -37,7 +48,8 @@ class RegularApps { // regular apps are just apps that use user added manually
 				apps.append(app)
 			}
 		}
- 	}
+		addRunningApps()
+	}
 
 	private func regularApp(for url: URL) -> RegularApp? {
 		guard let bundle = Bundle(url: url) else { return nil}
@@ -59,5 +71,4 @@ class RegularApps { // regular apps are just apps that use user added manually
 			app.runningApp = runningApps.first {RunningApp(app: $0).id == app.id} // we instantiate RunningApp just to get id. kinda hacky, but oh well.
 		}
 	}
-
 }

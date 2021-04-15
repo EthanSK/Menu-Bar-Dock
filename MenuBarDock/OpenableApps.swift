@@ -16,15 +16,10 @@ protocol OpenableAppsUserPrefsDataSource: AnyObject {
 	var sideToShowRunningApps: SideToShowRunningApps { get }
 }
 
-protocol OpenableAppsDelegate: AnyObject {
-	func appsDidChange()
- }
-
 class OpenableApps {
 	public var apps: [OpenableApp] = [] // ground truth for all apps to show, both running and non running, ordered left to right
 
 	public weak var userPrefsDataSource: OpenableAppsUserPrefsDataSource!
-	public weak var delegate: OpenableAppsDelegate?
 
  	private var runningApps: RunningApps
 	private var regularApps: RegularApps
@@ -37,14 +32,13 @@ class OpenableApps {
  		self.userPrefsDataSource = userPrefsDataSource
 		self.runningApps = runningApps
 		self.regularApps = regularApps
-		runningApps.delegate = self
 
 		populateApps()
 	}
 
-	func update() {
-		runningApps.update()
-		regularApps.update()
+	func update(runningApps: RunningApps, regularApps: RegularApps) {
+		self.runningApps = runningApps
+		self.regularApps = regularApps
 		populateApps()
 	}
 
@@ -61,15 +55,14 @@ class OpenableApps {
 			populateAppsWithRunningApps()
 		}
 
-		delegate?.appsDidChange()
-	}
+ 	}
 
 	private func populateAppsWithRunningApps() {
 		for runningApp in runningApps.apps {
 			guard let openableApp = try? OpenableApp(
-				runningApp: runningApp
+				runningApp: runningApp,
+				appOpeningMethod: userPrefsDataSource.appOpeningMethods[runningApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod
 			) else { continue }
-			openableApp.appOpeningMethod = userPrefsDataSource.appOpeningMethods[openableApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod
 			apps.append(openableApp)
 		}
 	}
@@ -78,32 +71,10 @@ class OpenableApps {
 		for regularApp in regularApps.apps {
 			let openableApp = OpenableApp(
 				regularApp: regularApp,
-				runningApp: regularApp.runningApp
+				appOpeningMethod: userPrefsDataSource.appOpeningMethods[regularApp.id] ?? userPrefsDataSource.defaultAppOpeningMethod
 			)
 			apps.append(openableApp)
 		}
-	}
-
-	private func updateRegularApp(with runningApp: NSRunningApplication, updateType: UpdateRegularAppWithRunningAppType) {
-		let regularApp = regularApps.apps.first { $0.id == RunningApp(app: runningApp).id} // we just use RunningApp() to get the id...kinda hacky
-		switch updateType {
-		case .add:
-			regularApp?.runningApp = runningApp
-		case .remove:
-			regularApp?.runningApp = nil
-		}
-	}
-}
-
-extension OpenableApps: RunningAppsDelegate {
-	func runningAppWasActivated(_ runningApp: NSRunningApplication) {
-		updateRegularApp(with: runningApp, updateType: .add) // doing this here is kinda a hack, the right way would be to track the activations in regularApps, but for such a small feature, it's not worth duplicating all that code when its just as easy as this
-		populateApps()
-	}
-
-	func runningAppWasQuit(_ runningApp: NSRunningApplication) {
-		updateRegularApp(with: runningApp, updateType: .remove)
-		populateApps()
 	}
 }
 

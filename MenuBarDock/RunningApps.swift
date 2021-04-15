@@ -16,18 +16,12 @@ protocol RunningAppsUserPrefsDataSource: AnyObject {
 	var regularAppsUrls: [URL] { get }
 }
 
-protocol RunningAppsDelegate: AnyObject {
-	func runningAppWasActivated(_ runningApp: NSRunningApplication)
-	func runningAppWasQuit(_ runningApp: NSRunningApplication)
-}
-
 class RunningApps {
 	public var apps: [RunningApp] = [] // state not getter for efficiency, will be ordered correctly
 
 	private var ordering: [String] = [] // array of ids least to most recently activated
 
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
-	weak var delegate: RunningAppsDelegate?
 
 	private var limit: Int {
  		if userPrefsDataSource.maxNumRunningApps == 0 && userPrefsDataSource.regularAppsUrls.count == 0 {
@@ -44,13 +38,23 @@ class RunningApps {
 		populateApps()
 		ordering = apps.map { $0.id } // populate the ordering array so the openable apps can start displaying correct order from the start.
 		// the reason it's not ordered straight away: https://trello.com/c/ZFs3C32g
-		trackAppsBeingActivated()
-		trackAppsBeingQuit()
-	}
+  	}
 
 	func update() {
-		// update for user preference change for example
 		populateApps()
+	}
+
+	func handleAppActivation(runningApp: NSRunningApplication) {
+		let runningApp = RunningApp(app: runningApp) // to get id
+		self.ordering.removeAll(where: { $0 == runningApp.id })
+		self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
+		update()
+	}
+
+	func handleAppQuit(runningApp: NSRunningApplication) {
+		let runningApp = RunningApp(app: runningApp) // to get id
+		self.ordering.removeAll(where: { $0 == runningApp.id })
+		update()
 	}
 
 	private func populateApps() {
@@ -92,34 +96,6 @@ class RunningApps {
 			return apps.suffix(limit) // doesn't matter for this, because it doesn't really make sense anyway
 		}
 	}
-
-	// this needs to be running regardless of number of running apps shown. Even if 0, we hackily rely on this for regular apps' running apps.
-	private func trackAppsBeingActivated() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if
-				let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-				NSWorkspace.shared.frontmostApplication == app // make sure it wasn't triggered by some background process
-			{
-				let runningApp = RunningApp(app: app) // to get id
-				self.ordering.removeAll(where: { $0 == runningApp.id })
-				self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
-				self.populateApps()
- 				self.delegate?.runningAppWasActivated(app)
-			}
-		}
-	}
-
-	private func trackAppsBeingQuit() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-				let runningApp = RunningApp(app: app) // to get id
-				self.ordering.removeAll(where: { $0 == runningApp.id })
-				self.populateApps()
- 				self.delegate?.runningAppWasQuit(app)
-			}
-		}
-	}
-
 }
 
 enum RunningAppsSortingMethod: Int {

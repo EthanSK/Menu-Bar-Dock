@@ -22,6 +22,7 @@
 		384319152626487200A6B6A0 /* RunningApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384319142626487200A6B6A0 /* RunningApp.swift */; };
 		3843191B2626487E00A6B6A0 /* RegularApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843191A2626487E00A6B6A0 /* RegularApp.swift */; };
 		3843194426267FC100A6B6A0 /* AppsTablePreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */; };
+		384319582628BD7800A6B6A0 /* AppTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384319572628BD7800A6B6A0 /* AppTracker.swift */; };
 		384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEA426226333000B08FC /* MenuBarItems.swift */; };
 		384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEAA26226677000B08FC /* MenuBarItem.swift */; };
 		384CBEB926227329000B08FC /* OpenableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEB826227329000B08FC /* OpenableApp.swift */; };
@@ -101,6 +102,7 @@
 		384319142626487200A6B6A0 /* RunningApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningApp.swift; sourceTree = "<group>"; };
 		3843191A2626487E00A6B6A0 /* RegularApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularApp.swift; sourceTree = SOURCE_ROOT; };
 		3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsTablePreferencesViewController.swift; sourceTree = "<group>"; };
+		384319572628BD7800A6B6A0 /* AppTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTracker.swift; sourceTree = "<group>"; };
 		384CBEA426226333000B08FC /* MenuBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItems.swift; sourceTree = "<group>"; };
 		384CBEAA26226677000B08FC /* MenuBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		384CBEB826227329000B08FC /* OpenableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApp.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				384318F72624A36A00A6B6A0 /* RunningApps.swift */,
 				3843191A2626487E00A6B6A0 /* RegularApp.swift */,
 				384319012624BAB800A6B6A0 /* RegularApps.swift */,
+				384319572628BD7800A6B6A0 /* AppTracker.swift */,
 			);
 			path = MenuBarDock;
 			sourceTree = "<group>";
@@ -567,6 +570,7 @@
 				3843191B2626487E00A6B6A0 /* RegularApp.swift in Sources */,
 				38412F32222B722100D3FA0C /* Constants.swift in Sources */,
 				38412F30222B715400D3FA0C /* UserPrefs.swift in Sources */,
+				384319582628BD7800A6B6A0 /* AppTracker.swift in Sources */,
 				384319022624BAB800A6B6A0 /* RegularApps.swift in Sources */,
 				384318F82624A36A00A6B6A0 /* RunningApps.swift in Sources */,
 				38412F02222B3E2F00D3FA0C /* PreferencesViewController.swift in Sources */,

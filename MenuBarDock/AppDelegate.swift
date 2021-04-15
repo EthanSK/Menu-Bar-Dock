@@ -18,6 +18,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var userPrefs =  UserPrefs()
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
+	var appTracker: AppTracker!
+	var runningApps: RunningApps!
+	var regularApps: RegularApps!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
@@ -35,11 +38,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		)
 		menuBarItems.delegate = self
 
-		let runningApps = RunningApps(userPrefsDataSource: userPrefs)
-		let regularApps = RegularApps(userPrefsDataSource: userPrefs)
+		appTracker = AppTracker()
+		appTracker.delegate = self
+
+		runningApps = RunningApps(userPrefsDataSource: userPrefs)
+		regularApps = RegularApps(userPrefsDataSource: userPrefs)
 
 		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps, regularApps: regularApps)
-		openableApps.delegate = self
 
 		updateMenuBarItems()
 	}
@@ -88,8 +93,25 @@ extension AppDelegate: MenuBarItemsDelegate {
 	}
 }
 
-extension AppDelegate: OpenableAppsDelegate {
-	func appsDidChange() {
+extension AppDelegate: AppTrackerDelegate {
+	func appWasActivated(runningApp: NSRunningApplication) {
+		runningApps.handleAppActivation(runningApp: runningApp)
+		regularApps.handleAppActivation(runningApp: runningApp)
+
+		appActivationChange()
+	}
+
+	func appWasQuit(runningApp: NSRunningApplication) {
+		runningApps.handleAppQuit(runningApp: runningApp)
+		regularApps.handleAppQuit(runningApp: runningApp)
+
+		appActivationChange()
+	}
+
+	private func appActivationChange() {
+		runningApps.update()
+//		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
+		openableApps.update(runningApps: runningApps, regularApps: regularApps)
 		updateMenuBarItems()
 	}
 }
@@ -189,7 +211,9 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 
 	private func userPrefsWasUpdated() {
 		userPrefs.save()
-		openableApps.update()
+		runningApps.update()
+		regularApps.update()
+		openableApps.update(runningApps: runningApps, regularApps: regularApps)
 		updateMenuBarItems()
 	}
 }
