@@ -13,7 +13,7 @@ protocol OpenableAppsUserPrefsDataSource: AnyObject {
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
-
+	var sideToShowRunningApps: SideToShowRunningApps { get }
 }
 
 protocol OpenableAppsDelegate: AnyObject {
@@ -51,10 +51,15 @@ class OpenableApps {
 	private func populateApps() {
 		apps = []
 
-		// running and regular apps are already ordered internally, we just need to append them correctly.
-		// TODO: swap the order we populate depending on the user pref.
-		populateAppsWithRegularApps()
-		populateAppsWithRunningApps()
+		// running and regular apps are already ordered internally
+		switch userPrefsDataSource.sideToShowRunningApps {
+		case .left:
+			populateAppsWithRunningApps()
+			populateAppsWithRegularApps()
+		case .right:
+			populateAppsWithRegularApps()
+			populateAppsWithRunningApps()
+		}
 
 		delegate?.appsDidChange()
 	}
