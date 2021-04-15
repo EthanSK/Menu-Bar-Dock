@@ -59,6 +59,7 @@ class MenuBarItems {
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)
 		for index in 0...items.count - openableApps.apps.count - 1 {
 			let item = items[index]
+			item.reset()
 			hideItem(item: item)
 		}
 	}

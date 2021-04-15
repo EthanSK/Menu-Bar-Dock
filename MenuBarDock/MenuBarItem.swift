@@ -51,7 +51,7 @@ class MenuBarItem {
 				width: imageSize, height: imageSize)
 		)
 
-		app.icon.size =  NSSize(width: imageSize, height: imageSize)
+		app.icon.size = NSSize(width: imageSize, height: imageSize)
 
 		newView.image = app.icon
 		newView.wantsLayer = true
@@ -63,7 +63,10 @@ class MenuBarItem {
 		}
 
 		statusItem.length = slotWidth
+	}
 
+	func reset() {
+		self.app = nil
 	}
 
 	private func initButton() {
@@ -90,7 +93,7 @@ class MenuBarItem {
 		statusItem.button?.appearance = NSAppearance(named: NSAppearance.current.name)
 
 		let menu = NSMenu()
-		let appName = app?.name
+		guard let appName = app?.name else { return }
 
 		if app?.runningApplication != nil {
 			_ = addMenuItem(
@@ -159,7 +162,7 @@ class MenuBarItem {
 		guard let app = app else { return }
 		let appOpeningMethodMenuItem = addMenuItem(
 			menu: menu,
-			title: "Change opening method for \(app.name ?? "None")",
+			title: "Change opening method for \(app.name)",
 			action: nil,
 			keyEquivalent: ""
 		)
