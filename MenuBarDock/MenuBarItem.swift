@@ -40,6 +40,7 @@ class MenuBarItem {
 	}
 
 	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
+
 		self.app = app
  		let imageSize = appIconSize
 		let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22

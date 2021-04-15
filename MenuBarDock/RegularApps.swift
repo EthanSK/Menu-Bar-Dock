@@ -52,7 +52,7 @@ class RegularApps { // regular apps are just apps that use user added manually
 	}
 
 	private func regularApp(for url: URL) -> RegularApp? {
-		guard let bundle = Bundle(url: url) else { return nil}
+		guard let bundle = Bundle(url: url) else { return nil }
 
 		let icon = NSWorkspace.shared.icon(forFile: url.path)
 

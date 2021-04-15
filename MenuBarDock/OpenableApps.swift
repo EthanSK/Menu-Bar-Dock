@@ -54,7 +54,6 @@ class OpenableApps {
 			populateAppsWithRegularApps()
 			populateAppsWithRunningApps()
 		}
-
  	}
 
 	private func populateAppsWithRunningApps() {

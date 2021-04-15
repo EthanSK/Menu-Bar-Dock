@@ -40,7 +40,6 @@ class OpenableApp {
 		regularApp: RegularApp,
 		appOpeningMethod: AppOpeningMethod
 	) {
-		print("regularApp.runningApp: ", regularApp.runningApp, " appOpeningMethod, ", appOpeningMethod)
 		self.init(
 			bundleId: regularApp.bundle.bundleIdentifier,
 			icon: regularApp.icon,
