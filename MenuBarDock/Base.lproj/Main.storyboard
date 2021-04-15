@@ -681,10 +681,112 @@
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>
+        <!--Window Controller-->
+        <scene sceneID="9lT-h9-rFR">
+            <objects>
+                <windowController storyboardIdentifier="AboutWindowController" showSeguePresentationStyle="single" id="qdu-rn-vPL" sceneMemberID="viewController">
+                    <window key="window" title="About" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="0ts-JK-4v9">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+                        <rect key="contentRect" x="1056" y="544" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+                        <view key="contentView" id="5fP-mo-fb9">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="qdu-rn-vPL" id="akg-0e-ipn"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="BVq-hD-zNV" kind="relationship" relationship="window.shadowedContentViewController" id="9JJ-AC-ExM"/>
+                    </connections>
+                </windowController>
+                <customObject id="Hbl-FP-CdP" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-444" y="168"/>
+        </scene>
+        <!--About-->
+        <scene sceneID="EhK-jd-MYs">
+            <objects>
+                <viewController title="About" storyboardIdentifier="AboutViewController" showSeguePresentationStyle="single" id="BVq-hD-zNV" customClass="AboutViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" wantsLayer="YES" id="Es4-SC-pal">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="200"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4yh-0T-Dlc">
+                                <rect key="frame" x="18" y="149" width="176" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Menu Bar Dock" id="lTe-NV-dYz">
+                                    <font key="font" textStyle="largeTitle" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ppJ-1n-UMA">
+                                <rect key="frame" x="18" y="20" width="227" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Copyright © 2021 Ethan Sarif-Kattan" id="gWN-Gm-FOF">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y7s-17-oDz">
+                                <rect key="frame" x="362" y="20" width="70" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Version 69" id="5Y0-e7-w1D">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FOi-iw-Qmp">
+                                <rect key="frame" x="13" y="106" width="179" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Menu Bar Dock Website" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vIX-M7-7Kg">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="menuBarDockWebsitePressed:" target="BVq-hD-zNV" id="bDt-pP-KGJ"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RYJ-Jo-fXA">
+                                <rect key="frame" x="13" y="71" width="143" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Creator's Website" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="l2I-km-L9C">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="myWebsitePressed:" target="BVq-hD-zNV" id="ehe-xP-UNE"/>
+                                </connections>
+                            </button>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e3f-4A-DRn">
+                                <rect key="frame" x="376" y="131" width="54" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="ETGgamesCircle" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="PSR-Q1-lZ5">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="etgGamesPressed:" target="BVq-hD-zNV" id="aGa-Q8-UGo"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="versionLabel" destination="y7s-17-oDz" id="OWG-YI-u4O"/>
+                    </connections>
+                </viewController>
+                <customObject id="w9C-5k-GIn" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-444" y="676"/>
+        </scene>
         <!--Menu Bar Dock Preferences-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController title="Menu Bar Dock Preferences" storyboardIdentifier="PreferencesViewController" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Menu Bar Dock Preferences" storyboardIdentifier="PreferencesViewController" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="698" height="700"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1244,10 +1346,11 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="d9e-IQ-Qsf"/>
             </objects>
-            <point key="canvasLocation" x="218" y="451"/>
+            <point key="canvasLocation" x="251" y="437"/>
         </scene>
     </scenes>
     <resources>
+        <image name="ETGgamesCircle" width="1024" height="1024"/>
         <image name="NSAddTemplate" width="14" height="13"/>
         <image name="NSRemoveTemplate" width="14" height="4"/>
     </resources>

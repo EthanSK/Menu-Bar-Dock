@@ -22,6 +22,7 @@ enum Constants {
 
 	enum ViewControllerIdentifiers {
 		static let preferences = "PreferencesViewController"
+		static let about = "AboutViewController"
 	}
 
 	enum UserPrefs {

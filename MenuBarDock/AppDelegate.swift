@@ -14,7 +14,9 @@ import ServiceManagement
 class AppDelegate: NSObject, NSApplicationDelegate {
 
 	let popover = NSPopover()
+	var storyboard: NSStoryboard!
 	var preferencesWindow = NSWindow()
+	var aboutWindowController: NSWindowController?
 	var userPrefs =  UserPrefs()
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
@@ -33,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func initApp() {
 		userPrefs.load()
+		storyboard = NSStoryboard(name: "Main", bundle: nil)
 		menuBarItems = MenuBarItems(
 			userPrefsDataSource: userPrefs
 		)
@@ -81,13 +84,15 @@ extension AppDelegate: MenuBarItemsDelegate {
 		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.ViewControllerIdentifiers.preferences) as? PreferencesViewController {
 			viewController.userPrefsDataSource = userPrefs
 			viewController.delegate = self
-			if !preferencesWindow.isVisible {
+
+			if !preferencesWindow.isVisible == true {
 				preferencesWindow = NSWindow(contentViewController: viewController)
 				preferencesWindow.makeKeyAndOrderFront(self)
 			}
+			preferencesWindow.makeKeyAndOrderFront(self)
+
 			preferencesWindow.minSize = preferencesWindow.frame.size
-			let controller = NSWindowController(window: preferencesWindow)
-			controller.showWindow(self)
+			preferencesWindow.windowController?.showWindow(self)
 			NSApp.activate(ignoringOtherApps: true)// stops bugz n shiz i think
 		}
 	}
@@ -110,11 +115,11 @@ extension AppDelegate: AppTrackerDelegate {
 
 	private func appActivationChange() {
 		runningApps.update()
-//		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
+		//		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
 		openableApps.update(runningApps: runningApps, regularApps: regularApps)
 
 		updateMenuBarItems()
- 	}
+	}
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
@@ -157,7 +162,10 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 	}
 
 	func aboutWasPressed() {
-		// TODO: open about window
+		if let windowController = aboutWindowController ?? storyboard.instantiateController(withIdentifier: "AboutWindowController") as? NSWindowController {
+			windowController.showWindow(self)
+			aboutWindowController = windowController
+		}
 	}
 
 	func hideFinderDidChange(_ value: Bool) {

@@ -23,6 +23,7 @@
 		3843191B2626487E00A6B6A0 /* RegularApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843191A2626487E00A6B6A0 /* RegularApp.swift */; };
 		3843194426267FC100A6B6A0 /* AppsTablePreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */; };
 		384319582628BD7800A6B6A0 /* AppTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384319572628BD7800A6B6A0 /* AppTracker.swift */; };
+		384319632628EC8700A6B6A0 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384319612628EC8700A6B6A0 /* AboutViewController.swift */; };
 		384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEA426226333000B08FC /* MenuBarItems.swift */; };
 		384CBEAB26226677000B08FC /* MenuBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEAA26226677000B08FC /* MenuBarItem.swift */; };
 		384CBEB926227329000B08FC /* OpenableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384CBEB826227329000B08FC /* OpenableApp.swift */; };
@@ -103,6 +104,7 @@
 		3843191A2626487E00A6B6A0 /* RegularApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularApp.swift; sourceTree = SOURCE_ROOT; };
 		3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsTablePreferencesViewController.swift; sourceTree = "<group>"; };
 		384319572628BD7800A6B6A0 /* AppTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTracker.swift; sourceTree = "<group>"; };
+		384319612628EC8700A6B6A0 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		384CBEA426226333000B08FC /* MenuBarItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItems.swift; sourceTree = "<group>"; };
 		384CBEAA26226677000B08FC /* MenuBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItem.swift; sourceTree = "<group>"; };
 		384CBEB826227329000B08FC /* OpenableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenableApp.swift; sourceTree = "<group>"; };
@@ -207,11 +209,12 @@
 			children = (
 				38412F03222B3E3000D3FA0C /* Assets.xcassets */,
 				38412F05222B3E3000D3FA0C /* Main.storyboard */,
+				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
+				384319612628EC8700A6B6A0 /* AboutViewController.swift */,
 				38412F08222B3E3000D3FA0C /* Info.plist */,
 				38412F09222B3E3000D3FA0C /* MenuBarDock.entitlements */,
 				38EEA8BE26238C14005DD6A1 /* Utils.swift */,
 				38412EFF222B3E2F00D3FA0C /* AppDelegate.swift */,
-				38412F01222B3E2F00D3FA0C /* PreferencesViewController.swift */,
 				3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */,
 				38412F2F222B715400D3FA0C /* UserPrefs.swift */,
 				38412F31222B722100D3FA0C /* Constants.swift */,
@@ -576,6 +579,7 @@
 				38412F02222B3E2F00D3FA0C /* PreferencesViewController.swift in Sources */,
 				384CBEBF262276A9000B08FC /* OpenableApps.swift in Sources */,
 				38412F00222B3E2F00D3FA0C /* AppDelegate.swift in Sources */,
+				384319632628EC8700A6B6A0 /* AboutViewController.swift in Sources */,
 				384CBEA526226333000B08FC /* MenuBarItems.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -781,7 +785,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 4;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -809,7 +813,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 4;
+				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ethansk.MenuBarDock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
