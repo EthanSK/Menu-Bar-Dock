@@ -9,7 +9,7 @@
 import Cocoa
 
 enum UserPrefsDefaultValues {
-	static let maxNumRunningApps = 0 // 0 coz we don't want to confuse new users with the running apps feature. it's something they can discover themselves
+	static let maxNumRunningApps = 10 // We need to show some apps when the user first open Menu Bar Dock, or it will be an instant turn off.
 	static let statusItemWidth = CGFloat(30)
 	static let appIconSize: CGFloat = 21
 	static let runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight

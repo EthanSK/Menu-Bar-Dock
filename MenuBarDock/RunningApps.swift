@@ -13,6 +13,7 @@ protocol RunningAppsUserPrefsDataSource: AnyObject {
 	var hideActiveAppFromRunningApps: Bool { get }
 	var maxNumRunningApps: Int { get }
 	var runningAppsSortingMethod: RunningAppsSortingMethod { get }
+	var regularAppsUrls: [URL] { get }
 }
 
 protocol RunningAppsDelegate: AnyObject {
@@ -27,6 +28,14 @@ class RunningApps {
 
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
 	weak var delegate: RunningAppsDelegate?
+
+	private var limit: Int {
+ 		if userPrefsDataSource.maxNumRunningApps == 0 && userPrefsDataSource.regularAppsUrls.count == 0 {
+			// we need to show at least one app in the menu bar, or user won't be able to access preferences!
+			return 1
+		}
+		return userPrefsDataSource.maxNumRunningApps
+	}
 
 	init(
 		userPrefsDataSource: RunningAppsUserPrefsDataSource
@@ -45,6 +54,10 @@ class RunningApps {
 	}
 
 	private func populateApps() {
+		if limit == 0 {
+			apps = [] // for efficiency
+			return
+		}
 		let newApps = NSWorkspace.shared.runningApplications
 			.map { RunningApp(app: $0) }
 			.filter {canShowRunningApp(app: $0)}
@@ -72,14 +85,15 @@ class RunningApps {
 	private func limitNumApps(apps: [RunningApp]) -> ArraySlice<RunningApp> {
 		switch userPrefsDataSource.runningAppsSortingMethod {
 		case .mostRecentOnRight:
-			return apps.suffix(userPrefsDataSource.maxNumRunningApps)
+			return apps.suffix(limit)
 		case .mostRecentOnLeft:
-			return apps.prefix(userPrefsDataSource.maxNumRunningApps)
+			return apps.prefix(limit)
 		default:
-			return apps.suffix(userPrefsDataSource.maxNumRunningApps) // doesn't matter for this, because it doesn't really make sense anyway
+			return apps.suffix(limit) // doesn't matter for this, because it doesn't really make sense anyway
 		}
 	}
 
+	// this needs to be running regardless of number of running apps shown. Even if 0, we hackily rely on this for regular apps' running apps.
 	private func trackAppsBeingActivated() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if
