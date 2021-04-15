@@ -19,6 +19,9 @@ enum UserPrefsDefaultValues {
 	static let hideActiveAppFromRunningApps = true
 	static let hideFinderFromRunningApps = false
 	static let regularAppsUrls: [URL] = []
+	static let sideToShowRunningApps: SideToShowRunningApps = .right
+	static let hideDuplicateApps = false
+	static let duplicateAppsPriority: DuplicateAppsPriority = .runningApps
 }
 
 class UserPrefs {
@@ -32,6 +35,9 @@ class UserPrefs {
 	var hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 	var hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
 	var regularAppsUrls = UserPrefsDefaultValues.regularAppsUrls
+	var sideToShowRunningApps = UserPrefsDefaultValues.sideToShowRunningApps
+	var hideDuplicateApps = UserPrefsDefaultValues.hideDuplicateApps
+	var duplicateAppsPriority = UserPrefsDefaultValues.duplicateAppsPriority
 
 	func resetToDefaults() { // cba about this shitty code tbh not worth my time
 		maxNumRunningApps =  UserPrefsDefaultValues.maxNumRunningApps // make it go up really high so user has freedom if the have a very large long screen
@@ -42,6 +48,9 @@ class UserPrefs {
 		hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 		hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
 		// don't reset regularAppsUrls, it's not right
+		sideToShowRunningApps = UserPrefsDefaultValues.sideToShowRunningApps
+		hideDuplicateApps = UserPrefsDefaultValues.hideDuplicateApps
+		duplicateAppsPriority = UserPrefsDefaultValues.duplicateAppsPriority
 		save()
 	}
 	func resetAppOpeningMethodsToDefaults() {
@@ -62,6 +71,10 @@ class UserPrefs {
 		UserDefaults.standard.set(hideActiveAppFromRunningApps, forKey: Constants.UserPrefs.hideActiveAppFromRunningApps)
 		UserDefaults.standard.set(hideFinderFromRunningApps, forKey: Constants.UserPrefs.hideFinderFromRunningApps)
 		UserDefaults.standard.set(regularAppsUrls.map { $0.absoluteString }, forKey: Constants.UserPrefs.regularAppsUrls)
+		UserDefaults.standard.set(sideToShowRunningApps.rawValue, forKey: Constants.UserPrefs.sideToShowRunningApps)
+		UserDefaults.standard.set(hideDuplicateApps, forKey: Constants.UserPrefs.hideDuplicateApps)
+		UserDefaults.standard.set(duplicateAppsPriority.rawValue, forKey: Constants.UserPrefs.duplicateAppsPriority)
+
 	}
 
 	func load() {
@@ -109,6 +122,18 @@ class UserPrefs {
 			}
 			self.regularAppsUrls = res
  		}
+
+		if let sideToShowRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.sideToShowRunningApps) as? String {
+			self.sideToShowRunningApps = SideToShowRunningApps(rawValue: sideToShowRunningApps) ?? UserPrefsDefaultValues.sideToShowRunningApps
+		}
+
+		if let hideDuplicateApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideDuplicateApps) as? Bool {
+			self.hideDuplicateApps = hideDuplicateApps
+		}
+
+		if let duplicateAppsPriority = UserDefaults.standard.object(forKey: Constants.UserPrefs.duplicateAppsPriority) as? String {
+			self.duplicateAppsPriority = DuplicateAppsPriority(rawValue: duplicateAppsPriority) ?? UserPrefsDefaultValues.duplicateAppsPriority
+		}
 	}
 }
 

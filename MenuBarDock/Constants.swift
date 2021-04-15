@@ -35,5 +35,8 @@ enum Constants {
 		static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
 		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
 		static let regularAppsUrls = "regularAppsUrls"
+		static let sideToShowRunningApps = "sideToShowRunningApps"
+		static let hideDuplicateApps = "hideDuplicateApps"
+		static let duplicateAppsPriority = "duplicateAppsPriority"
 	}
 }

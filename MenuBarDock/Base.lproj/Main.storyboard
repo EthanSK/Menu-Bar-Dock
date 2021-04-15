@@ -1107,6 +1107,9 @@
                                                         <segment label="Right" width="43" selected="YES" tag="1"/>
                                                     </segments>
                                                 </segmentedCell>
+                                                <connections>
+                                                    <action selector="showRunningAppsOnLeftOrRightSelected:" target="XfG-lQ-9wD" id="3Pa-M0-zHC"/>
+                                                </connections>
                                             </segmentedControl>
                                         </subviews>
                                     </customView>
@@ -1161,9 +1164,12 @@
                                             <font key="font" metaFont="system"/>
                                             <segments>
                                                 <segment label="Running Apps" width="99" selected="YES"/>
-                                                <segment label="Running Apps" width="98" tag="1"/>
+                                                <segment label="Regular Apps" width="98" tag="1"/>
                                             </segments>
                                         </segmentedCell>
+                                        <connections>
+                                            <action selector="duplicateAppsPrioritySelected:" target="XfG-lQ-9wD" id="r0s-VM-EUH"/>
+                                        </connections>
                                     </segmentedControl>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qb0-sN-69c">
                                         <rect key="frame" x="25" y="68" width="367" height="18"/>
@@ -1172,6 +1178,9 @@
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <connections>
+                                            <action selector="hideDuplicateAppsPressed:" target="XfG-lQ-9wD" id="u4L-4Q-rnT"/>
+                                        </connections>
                                     </button>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
                                         <rect key="frame" x="474" y="97" width="141" height="16"/>
@@ -1218,13 +1227,16 @@
                         <outlet property="appOpeningMethodPopUp" destination="tgt-DJ-zg9" id="u9U-SQ-yca"/>
                         <outlet property="appsTable" destination="bV7-Tv-c0G" id="InA-WD-nRH"/>
                         <outlet property="consistentSortOrderRadioButton" destination="i5z-3c-gg7" id="Po6-Aa-tPp"/>
+                        <outlet property="duplicateAppsPriorityControl" destination="L0Y-bR-owQ" id="jqX-e7-MHm"/>
                         <outlet property="hideActiveAppFromRunningAppsButton" destination="msg-1s-pvm" id="5lc-Qw-JGL"/>
+                        <outlet property="hideDuplicateAppsButton" destination="Qb0-sN-69c" id="kS8-F9-g1V"/>
                         <outlet property="hideFinderFromRunningAppsButton" destination="Jk5-LB-J8x" id="H9B-Kl-mhk"/>
                         <outlet property="launchAtLoginButton" destination="pfs-x9-j8G" id="xQM-Mz-wm5"/>
                         <outlet property="maxNumRunningAppsCounterLabel" destination="74E-kU-5tY" id="Xg6-zq-MDx"/>
                         <outlet property="maxNumRunningAppsSlider" destination="0BC-GN-0F8" id="XfP-NM-SR1"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>
                         <outlet property="mostRecentRightRadioButton" destination="Wqs-TY-FqY" id="vDf-O2-Mke"/>
+                        <outlet property="sideToShowRunningAppsControl" destination="Ka3-Je-sNv" id="dhn-KB-nwW"/>
                         <outlet property="statusItemWidthCounterLabel" destination="EKD-yl-6YO" id="O31-jk-k5j"/>
                         <outlet property="statusItemWidthSlider" destination="iKm-EK-2Yd" id="ZUH-pC-EAI"/>
                     </connections>

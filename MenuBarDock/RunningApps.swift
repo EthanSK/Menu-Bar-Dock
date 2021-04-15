@@ -113,3 +113,8 @@ enum RunningAppsSortingMethod: Int {
 	case mostRecentOnLeft = 1
 	case consistent = 2
 }
+
+enum SideToShowRunningApps: String {
+	case left = "left"
+	case right = "right"
+}

@@ -25,6 +25,9 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func regularAppsUrlsWereAdded(_ value: [URL])
 	func regularAppsUrlsWereRemoved(_ removedIndexes: IndexSet)
 	func regularAppUrlWasMoved(oldIndex: Int, newIndex: Int)
+	func sideToShowRunningAppsDidChange(_ value: SideToShowRunningApps)
+	func hideDuplicateAppsWasPressed(_ value: Bool)
+	func duplicateAppsPriorityDidChange(_ value: DuplicateAppsPriority)
 }
 
 protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
@@ -36,7 +39,10 @@ protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
-	var regularAppsUrls: [URL] { get set }
+	var regularAppsUrls: [URL] { get }
+	var sideToShowRunningApps: SideToShowRunningApps { get }
+	var hideDuplicateApps: Bool { get }
+	var duplicateAppsPriority: DuplicateAppsPriority { get }
 }
 
 class PreferencesViewController: NSViewController { // this should do onthing
@@ -58,9 +64,15 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	@IBOutlet weak var appOpeningMethodPopUp: NSPopUpButton!
 
-	@IBOutlet weak var launchAtLoginButton: NSButton!
 	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
 	@IBOutlet weak var hideFinderFromRunningAppsButton: NSButton!
+
+	@IBOutlet weak var sideToShowRunningAppsControl: NSSegmentedControl!
+
+	@IBOutlet weak var hideDuplicateAppsButton: NSButton!
+	@IBOutlet weak var duplicateAppsPriorityControl: NSSegmentedControl!
+
+	@IBOutlet weak var launchAtLoginButton: NSButton!
 
 	@IBOutlet weak var appsTable: NSTableView!
 
@@ -108,6 +120,24 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		case .consistent:
 			consistentSortOrderRadioButton.state = .on
 		}
+
+		switch userPrefsDataSource.sideToShowRunningApps {
+		case .left:
+			sideToShowRunningAppsControl.selectedSegment = 0
+		case .right:
+			sideToShowRunningAppsControl.selectedSegment = 1
+		}
+
+		hideDuplicateAppsButton.state = userPrefsDataSource.hideDuplicateApps ? .on : .off
+
+		switch userPrefsDataSource.duplicateAppsPriority {
+		case .runningApps:
+			duplicateAppsPriorityControl.selectedSegment = 0
+		case .regularApps:
+			duplicateAppsPriorityControl.selectedSegment = 1
+		}
+
+		duplicateAppsPriorityControl.isEnabled = userPrefsDataSource.hideDuplicateApps
 	}
 
 	private func initAppOpeningMethodPopup() {
@@ -216,6 +246,33 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		}
 	}
 
+	@IBAction func showRunningAppsOnLeftOrRightSelected(_ sender: NSSegmentedControl) {
+		switch sender.selectedSegment {
+		case 0:
+			delegate?.sideToShowRunningAppsDidChange(.left)
+		case 1:
+			delegate?.sideToShowRunningAppsDidChange(.right)
+		default:
+			break
+		}
+	}
+
+	@IBAction func hideDuplicateAppsPressed(_ sender: NSButton) {
+		delegate?.hideDuplicateAppsWasPressed(sender.state == .on)
+		updateUi() // to show or hide duplicate apps priority control
+	}
+
+	@IBAction func duplicateAppsPrioritySelected(_ sender: NSSegmentedControl) {
+		switch sender.selectedSegment {
+		case 0:
+			delegate?.duplicateAppsPriorityDidChange(.runningApps)
+		case 1:
+			delegate?.duplicateAppsPriorityDidChange(.regularApps)
+		default:
+			break
+		}
+	}
+
 	private func handleSliderChanged(
 		slider: NSSlider,
 		sliderLabel: NSTextField,
@@ -273,12 +330,12 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	private func showResetConfirmationAlert(title: String, message: String, completion: (Bool) -> Void) {
-		   let alert = NSAlert()
-		   alert.messageText = title
-		   alert.informativeText = message
+		let alert = NSAlert()
+		alert.messageText = title
+		alert.informativeText = message
 		alert.alertStyle = .critical
-		   alert.addButton(withTitle: "Reset")
-		   alert.addButton(withTitle: "Cancel")
-		   completion(alert.runModal() == .alertFirstButtonReturn)
+		alert.addButton(withTitle: "Reset")
+		alert.addButton(withTitle: "Cancel")
+		completion(alert.runModal() == .alertFirstButtonReturn)
 	}
 }

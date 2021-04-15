@@ -172,6 +172,21 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
+	func sideToShowRunningAppsDidChange(_ value: SideToShowRunningApps) {
+		userPrefs.sideToShowRunningApps = value
+		userPrefsWasUpdated()
+	}
+
+	func hideDuplicateAppsWasPressed(_ value: Bool) {
+		userPrefs.hideDuplicateApps = value
+		userPrefsWasUpdated()
+	}
+
+	func duplicateAppsPriorityDidChange(_ value: DuplicateAppsPriority) {
+		userPrefs.duplicateAppsPriority = value
+		userPrefsWasUpdated()
+	}
+
 	private func userPrefsWasUpdated() {
 		userPrefs.save()
 		openableApps.update()

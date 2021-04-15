@@ -106,3 +106,8 @@ enum UpdateRegularAppWithRunningAppType {
 	case add
 	case remove
 }
+
+enum DuplicateAppsPriority: String {
+	case runningApps = "runningApps"
+	case regularApps = "regularApps"
+}
