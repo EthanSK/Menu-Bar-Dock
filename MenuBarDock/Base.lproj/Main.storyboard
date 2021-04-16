@@ -1026,9 +1026,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QcC-Z6-GIk" userLabel="RegularAppsHintLabel">
-                                        <rect key="frame" x="80" y="23" width="283" height="16"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QcC-Z6-GIk" userLabel="RegularAppsHintLabel">
+                                        <rect key="frame" x="80" y="22" width="37" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="1jC-0v-NAA">
                                             <font key="font" usesAppearanceFont="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -1042,7 +1041,9 @@
                                     <constraint firstAttribute="bottom" secondItem="1uQ-SF-mEa" secondAttribute="bottom" constant="20" symbolic="YES" id="Ngt-84-0IO"/>
                                     <constraint firstItem="B9h-9o-XeT" firstAttribute="centerX" secondItem="sTP-YU-EaH" secondAttribute="centerX" id="a1i-Zj-uXq"/>
                                     <constraint firstItem="B9h-9o-XeT" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="20" symbolic="YES" id="dkB-Zx-aHw"/>
+                                    <constraint firstItem="QcC-Z6-GIk" firstAttribute="leading" secondItem="1uQ-SF-mEa" secondAttribute="trailing" constant="11" id="fKL-GZ-cMS"/>
                                     <constraint firstItem="1uQ-SF-mEa" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="21" id="m9V-Lf-UAD"/>
+                                    <constraint firstItem="QcC-Z6-GIk" firstAttribute="centerY" secondItem="1uQ-SF-mEa" secondAttribute="centerY" id="pD2-zM-lDQ"/>
                                     <constraint firstItem="B9h-9o-XeT" firstAttribute="centerY" secondItem="sTP-YU-EaH" secondAttribute="centerY" id="wSg-XX-FoD"/>
                                 </constraints>
                             </customView>
@@ -1316,9 +1317,8 @@
                                             </popUpButton>
                                         </subviews>
                                     </customView>
-                                    <button toolTip="View more information and tips on how to best use Menu Bar Dock." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHM-s2-BR1">
+                                    <button toolTip="View more information and tips on how to best use Menu Bar Dock." misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHM-s2-BR1">
                                         <rect key="frame" x="650" y="252" width="28" height="28"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSInfo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="e4b-VV-uaE">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -1331,10 +1331,12 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="c0Z-B8-2jI" secondAttribute="trailing" id="9wo-CJ-Jw9"/>
                                     <constraint firstAttribute="bottom" secondItem="c0Z-B8-2jI" secondAttribute="bottom" constant="20" symbolic="YES" id="SI5-Bx-Wh6"/>
+                                    <constraint firstAttribute="trailing" secondItem="gHM-s2-BR1" secondAttribute="trailing" constant="20" symbolic="YES" id="UYG-Dm-sr6"/>
                                     <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="Uem-CB-bx1"/>
                                     <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="UsI-H2-T9m"/>
                                     <constraint firstItem="c0Z-B8-2jI" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" id="XNX-90-qwi"/>
                                     <constraint firstAttribute="height" constant="300" id="oUX-8Z-Vyn"/>
+                                    <constraint firstItem="gHM-s2-BR1" firstAttribute="top" secondItem="xlE-X6-DKl" secondAttribute="top" constant="20" symbolic="YES" id="zrm-jQ-I3k"/>
                                 </constraints>
                             </customView>
                         </subviews>
