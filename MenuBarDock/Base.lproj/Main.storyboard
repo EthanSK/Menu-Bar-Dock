@@ -1379,8 +1379,8 @@
                 <windowController storyboardIdentifier="InfoWindowController" id="XRR-jO-swA" sceneMemberID="viewController">
                     <window key="window" title="Info" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WLk-nf-o42">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="425" y="462" width="480" height="270"/>
+                        <windowPositionMask key="initialPositionMask" topStrut="YES"/>
+                        <rect key="contentRect" x="425" y="915" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
                         <view key="contentView" id="Gqs-Kz-v1f">
                             <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
@@ -1403,7 +1403,7 @@
             <objects>
                 <viewController title="Info" id="mMj-Bl-pmB" customClass="InfoViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="Xp2-m6-ExB">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="56"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="107"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pCD-Np-yRG">
@@ -1417,11 +1417,22 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bF9-kI-97t">
+                                <rect key="frame" x="18" y="56" width="182" height="31"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Tips, FAQ &amp; Info" id="fAf-s8-fin">
+                                    <font key="font" textStyle="largeTitle" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pCD-Np-yRG" firstAttribute="leading" secondItem="Xp2-m6-ExB" secondAttribute="leading" constant="20" symbolic="YES" id="2tW-N3-ReA"/>
-                            <constraint firstItem="pCD-Np-yRG" firstAttribute="top" secondItem="Xp2-m6-ExB" secondAttribute="top" constant="20" symbolic="YES" id="GCp-AQ-VY9"/>
+                            <constraint firstItem="bF9-kI-97t" firstAttribute="top" secondItem="Xp2-m6-ExB" secondAttribute="top" constant="20" symbolic="YES" id="7fL-pb-O2T"/>
+                            <constraint firstItem="bF9-kI-97t" firstAttribute="leading" secondItem="Xp2-m6-ExB" secondAttribute="leading" constant="20" symbolic="YES" id="NYp-gK-8zU"/>
                             <constraint firstAttribute="bottom" secondItem="pCD-Np-yRG" secondAttribute="bottom" constant="20" symbolic="YES" id="PQG-td-iLr"/>
+                            <constraint firstItem="pCD-Np-yRG" firstAttribute="top" secondItem="bF9-kI-97t" secondAttribute="bottom" constant="20" id="Waw-Ke-6mt"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="bF9-kI-97t" secondAttribute="trailing" constant="20" symbolic="YES" id="pvi-90-m9P"/>
                             <constraint firstAttribute="trailing" secondItem="pCD-Np-yRG" secondAttribute="trailing" constant="20" symbolic="YES" id="rHj-sn-pXc"/>
                         </constraints>
                     </view>
@@ -1431,7 +1442,7 @@
                 </viewController>
                 <customObject id="wH7-nz-J93" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="898" y="856"/>
+            <point key="canvasLocation" x="918" y="637.5"/>
         </scene>
     </scenes>
     <resources>
