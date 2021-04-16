@@ -102,7 +102,7 @@
 		384318F72624A36A00A6B6A0 /* RunningApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningApps.swift; sourceTree = "<group>"; };
 		384319012624BAB800A6B6A0 /* RegularApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularApps.swift; sourceTree = "<group>"; };
 		384319142626487200A6B6A0 /* RunningApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunningApp.swift; sourceTree = "<group>"; };
-		3843191A2626487E00A6B6A0 /* RegularApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegularApp.swift; sourceTree = SOURCE_ROOT; };
+		3843191A2626487E00A6B6A0 /* RegularApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RegularApp.swift; path = MenuBarDock/RegularApp.swift; sourceTree = SOURCE_ROOT; };
 		3843194326267FC100A6B6A0 /* AppsTablePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsTablePreferencesViewController.swift; sourceTree = "<group>"; };
 		384319572628BD7800A6B6A0 /* AppTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTracker.swift; sourceTree = "<group>"; };
 		384319612628EC8700A6B6A0 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
