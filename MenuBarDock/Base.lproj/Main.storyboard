@@ -763,7 +763,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e3f-4A-DRn">
-                                <rect key="frame" x="376" y="131" width="54" height="49"/>
+                                <rect key="frame" x="376" y="126" width="54" height="54"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="ETGgamesCircle" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="PSR-Q1-lZ5">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1411,7 +1411,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="500" id="gXr-PS-kal"/>
                                 </constraints>
-                                <textFieldCell key="cell" title="Label" id="R0f-iC-IVb">
+                                <textFieldCell key="cell" title="Gets populated in view controller" id="R0f-iC-IVb">
                                     <font key="font" usesAppearanceFont="YES"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

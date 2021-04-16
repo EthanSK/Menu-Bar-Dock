@@ -1,6 +1,6 @@
 # Menu Bar Dock
 
-![Preview Image](./menu-bar-dock-preview.webp)
+![Preview Image](./assets/menu-bar-dock-preview.webp)
 
 <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
@@ -28,4 +28,4 @@ You can change the number of apps shown, icon size and spacing, and sorting orde
 
 The of downloads of this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
 
-![Preferences example](./menu-bar-dock-prefs.png)
+![Preferences example](./assets/menu-bar-dock-prefs.png)
