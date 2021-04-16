@@ -4,14 +4,13 @@
 
 <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
-### We place the apps you currently have open onto the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
+### Menu Bar Dock shows MacOS apps in the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
-### Check out our website [here](https://www.etggames.com/menu-bar-dock)
+### Check out our website [here](https://www.menubardock.com/)
 
 ### Download it [here](https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip)
 
 <button name="button">Click me</button>
-{% include button.html url="http://www.google.com" %}
 
 [Click me](http://www.google.com){: .btn}
 [button url="http://www.google.com"]
