@@ -76,6 +76,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	@IBOutlet weak var launchAtLoginButton: NSButton!
 
 	@IBOutlet weak var appsTable: NSTableView!
+	@IBOutlet weak var regularAppsHintLabel: NSTextField!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -139,6 +140,12 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		}
 
 		duplicateAppsPriorityControl.isEnabled = userPrefsDataSource.hideDuplicateApps
+
+		if userPrefsDataSource.regularAppsUrls.count > 0 {
+			regularAppsHintLabel.stringValue = "Drag apps to reorder them!"
+		} else {
+			regularAppsHintLabel.stringValue = "Click + to add some apps!"
+		}
 	}
 
 	private func initAppOpeningMethodPopup() {
@@ -315,6 +322,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		if dialog.runModal() == NSApplication.ModalResponse.OK {
 			delegate?.regularAppsUrlsWereAdded(dialog.urls)
 			updateTable()
+			updateUi()
 		} else {
 			// User clicked on "Cancel"
 			return
@@ -324,6 +332,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	private func removeSelectedApps() {
 		delegate?.regularAppsUrlsWereRemoved(appsTable.selectedRowIndexes)
 		updateTable()
+		updateUi()
 	}
 
 	private func updateTable() {

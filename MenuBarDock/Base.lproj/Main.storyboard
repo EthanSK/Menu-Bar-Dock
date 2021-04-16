@@ -1026,6 +1026,15 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QcC-Z6-GIk" userLabel="RegularAppsHintLabel">
+                                        <rect key="frame" x="80" y="23" width="283" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="1jC-0v-NAA">
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="B9h-9o-XeT" secondAttribute="trailing" constant="20" symbolic="YES" id="B3E-hz-Jh8"/>
@@ -1363,6 +1372,7 @@
                         <outlet property="maxNumRunningAppsSlider" destination="0BC-GN-0F8" id="XfP-NM-SR1"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>
                         <outlet property="mostRecentRightRadioButton" destination="Wqs-TY-FqY" id="vDf-O2-Mke"/>
+                        <outlet property="regularAppsHintLabel" destination="QcC-Z6-GIk" id="iiB-R0-UW4"/>
                         <outlet property="sideToShowRunningAppsControl" destination="Ka3-Je-sNv" id="dhn-KB-nwW"/>
                         <outlet property="statusItemWidthCounterLabel" destination="EKD-yl-6YO" id="O31-jk-k5j"/>
                         <outlet property="statusItemWidthSlider" destination="iKm-EK-2Yd" id="ZUH-pC-EAI"/>
