@@ -32,8 +32,6 @@ Menu Bar Dock works in 2 ways: running apps and regular apps. To get an experien
 
 If you hold command while dragging the icons to place them where you would like on the menu bar. It will reorder automatically once you change apps again.
 
-You can change the number of apps shown, icon size and spacing, and sorting order in the app's preferences (accessed by **right clicking on any of the app icons in the menu bar, then selecting Menu Bar Dock Preferences...**). You can even set the app to launch at login automatically (Highly recommended)
+For more info and tips, press the blue 'i' in the general section of the preferences window of the app.
 
-For more info and tips, press the blue 'i' in the preferences window of the app.
-
-The of downloads of this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
+The of downloads for this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
