@@ -14,15 +14,26 @@ enum Constants {
 		static let launcherBundleId = "com.ethansk.MenuBarDockLauncher"
 		static let finderBundleId = "com.apple.finder"
 		static let regularAppsSectionTitle = "Regular Apps"
+		static let runningAppsSectionTitle = "Running Apps"
 	}
 
 	enum UserDefaultsKeys {
 		static let bundleId = "bundleId"
 	}
 
-	enum ViewControllerIdentifiers {
-		static let preferences = "PreferencesViewController"
-		static let about = "AboutViewController"
+	enum Identifiers {
+		enum ViewControllers {
+			static let preferences = "PreferencesViewController"
+			static let about = "AboutViewController"
+			static let info = "InfoViewController"
+
+		}
+
+		enum WindowControllers {
+			static let info = "InfoWindowController"
+			static let about = "AboutWindowController"
+		}
+
 	}
 
 	enum UserPrefs {

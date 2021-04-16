@@ -143,7 +143,7 @@ class MenuBarItem {
 		// options to do with menu bar dock itself
 		_ = addMenuItem(
 			menu: menu,
-			title: "\(Constants.App.name) Preferences...",
+			title: "\(Constants.App.name) Preferences...", // ... is a standard...
 			action: #selector(openPreferencesWindow),
 			keyEquivalent: ","
 		)

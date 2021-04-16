@@ -800,19 +800,8 @@
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="NNd-uk-gpv" userLabel="Running Apps">
                                 <rect key="frame" x="0.0" y="300" width="320" height="350"/>
                                 <subviews>
-                                    <button toolTip="Hide Finder from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
-                                        <rect key="frame" x="18" y="71" width="96" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
-                                        </connections>
-                                    </button>
                                     <button toolTip="Hide the currently active app from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
-                                        <rect key="frame" x="18" y="23" width="121" height="18"/>
+                                        <rect key="frame" x="18" y="66" width="121" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -840,49 +829,6 @@
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <customView toolTip="Set a maximum number of running apps to show." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="20" y="240" width="250" height="45"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <subviews>
-                                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0BC-GN-0F8" userLabel="Slider">
-                                                <rect key="frame" x="-2" y="-4" width="254" height="28"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="n6V-ec-EVI"/>
-                                                <connections>
-                                                    <action selector="numberOfAppsSliderChanged:" target="XfG-lQ-9wD" id="F19-nY-NfR"/>
-                                                </connections>
-                                            </slider>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-s5-8Lf">
-                                                <rect key="frame" x="0.0" y="24" width="207" height="16"/>
-                                                <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
-                                                        <rect key="frame" x="-2" y="0.0" width="189" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Max Number of Running Apps:" id="YAC-8U-teb">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
-                                                        <rect key="frame" x="188" y="0.0" width="21" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="bHQ-Vv-xd7">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                        </subviews>
-                                    </customView>
                                     <stackView toolTip="Choose a sort order for the running apps." distribution="equalSpacing" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="FTg-wZ-lzb" userLabel="Running Apps Sort Order">
                                         <rect key="frame" x="20" y="124" width="147" height="70"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -929,6 +875,60 @@
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
+                                    <customView toolTip="Set a maximum number of running apps to show." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Num Runnig Apps">
+                                        <rect key="frame" x="20" y="240" width="250" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <subviews>
+                                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0BC-GN-0F8" userLabel="Slider">
+                                                <rect key="frame" x="-2" y="-4" width="254" height="28"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="n6V-ec-EVI"/>
+                                                <connections>
+                                                    <action selector="numberOfAppsSliderChanged:" target="XfG-lQ-9wD" id="F19-nY-NfR"/>
+                                                </connections>
+                                            </slider>
+                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-s5-8Lf">
+                                                <rect key="frame" x="0.0" y="24" width="207" height="16"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
+                                                        <rect key="frame" x="-2" y="0.0" width="189" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Max Number of Running Apps:" id="YAC-8U-teb">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
+                                                        <rect key="frame" x="188" y="0.0" width="21" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="bHQ-Vv-xd7">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                        </subviews>
+                                    </customView>
+                                    <button toolTip="Hide Finder from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
+                                        <rect key="frame" x="190" y="66" width="96" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="oKf-oN-k5x"/>
@@ -1018,7 +1018,7 @@
                                             </subviews>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="tLf-Qi-dXJ">
-                                            <rect key="frame" x="1" y="118" width="238" height="16"/>
+                                            <rect key="frame" x="1" y="222" width="336" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="LBC-Ii-G6l">
@@ -1240,9 +1240,10 @@
                                             <action selector="hideDuplicateAppsPressed:" target="XfG-lQ-9wD" id="u4L-4Q-rnT"/>
                                         </connections>
                                     </button>
-                                    <customView toolTip="Set which section the duplicate app appears in if there is a duplicate at all." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ns3-x1-lJK" userLabel="Duplicate apps priority">
+                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ns3-x1-lJK" userLabel="Duplicate apps priority">
                                         <rect key="frame" x="476" y="115" width="202" height="48"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <string key="toolTip">Set which section the duplicate app appears in if there is the same app in both the running and regular section of the menu bar dock.</string>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
                                                 <rect key="frame" x="-2" y="32" width="147" height="16"/>
@@ -1306,6 +1307,17 @@
                                             </popUpButton>
                                         </subviews>
                                     </customView>
+                                    <button toolTip="View more information and tips on how to best use Menu Bar Dock." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHM-s2-BR1">
+                                        <rect key="frame" x="650" y="252" width="28" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSInfo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="e4b-VV-uaE">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="infoPressed:" target="XfG-lQ-9wD" id="VMg-ro-ynz"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="c0Z-B8-2jI" secondAttribute="trailing" id="9wo-CJ-Jw9"/>
@@ -1361,10 +1373,71 @@
             </objects>
             <point key="canvasLocation" x="200" y="458"/>
         </scene>
+        <!--Window Controller-->
+        <scene sceneID="ubh-fe-yHG">
+            <objects>
+                <windowController storyboardIdentifier="InfoWindowController" id="XRR-jO-swA" sceneMemberID="viewController">
+                    <window key="window" title="Info" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WLk-nf-o42">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="425" y="462" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+                        <view key="contentView" id="Gqs-Kz-v1f">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="XRR-jO-swA" id="6FM-ot-hCU"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="mMj-Bl-pmB" kind="relationship" relationship="window.shadowedContentViewController" id="8qz-BZ-BKE"/>
+                    </connections>
+                </windowController>
+                <customObject id="dOY-lE-IYT" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="918" y="245"/>
+        </scene>
+        <!--Info-->
+        <scene sceneID="IAG-Fx-Ke6">
+            <objects>
+                <viewController title="Info" id="mMj-Bl-pmB" customClass="InfoViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="Xp2-m6-ExB">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pCD-Np-yRG">
+                                <rect key="frame" x="18" y="20" width="504" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="500" id="gXr-PS-kal"/>
+                                </constraints>
+                                <textFieldCell key="cell" title="Label" id="R0f-iC-IVb">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="pCD-Np-yRG" firstAttribute="leading" secondItem="Xp2-m6-ExB" secondAttribute="leading" constant="20" symbolic="YES" id="2tW-N3-ReA"/>
+                            <constraint firstItem="pCD-Np-yRG" firstAttribute="top" secondItem="Xp2-m6-ExB" secondAttribute="top" constant="20" symbolic="YES" id="GCp-AQ-VY9"/>
+                            <constraint firstAttribute="bottom" secondItem="pCD-Np-yRG" secondAttribute="bottom" constant="20" symbolic="YES" id="PQG-td-iLr"/>
+                            <constraint firstAttribute="trailing" secondItem="pCD-Np-yRG" secondAttribute="trailing" constant="20" symbolic="YES" id="rHj-sn-pXc"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="label" destination="pCD-Np-yRG" id="kBi-FJ-KTe"/>
+                    </connections>
+                </viewController>
+                <customObject id="wH7-nz-J93" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="898" y="856"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ETGgamesCircle" width="1024" height="1024"/>
         <image name="NSAddTemplate" width="14" height="13"/>
+        <image name="NSInfo" width="32" height="32"/>
         <image name="NSRemoveTemplate" width="14" height="4"/>
     </resources>
 </document>

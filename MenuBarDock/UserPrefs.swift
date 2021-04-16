@@ -20,7 +20,7 @@ enum UserPrefsDefaultValues {
 	static let hideFinderFromRunningApps = false
 	static let regularAppsUrls: [URL] = []
 	static let sideToShowRunningApps: SideToShowRunningApps = .right
-	static let hideDuplicateApps = false
+	static let hideDuplicateApps = true
 	static let duplicateAppsPriority: DuplicateAppsPriority = .runningApps
 }
 

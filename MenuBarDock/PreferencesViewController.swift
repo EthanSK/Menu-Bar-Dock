@@ -28,6 +28,7 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func sideToShowRunningAppsDidChange(_ value: SideToShowRunningApps)
 	func hideDuplicateAppsWasPressed(_ value: Bool)
 	func duplicateAppsPriorityDidChange(_ value: DuplicateAppsPriority)
+	func infoWasPressed()
 }
 
 protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
@@ -271,6 +272,10 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		default:
 			break
 		}
+	}
+
+	@IBAction func infoPressed(_ sender: NSButton) {
+		delegate?.infoWasPressed()
 	}
 
 	private func handleSliderChanged(

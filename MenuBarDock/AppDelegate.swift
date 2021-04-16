@@ -17,6 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var storyboard: NSStoryboard!
 	var preferencesWindow = NSWindow()
 	var aboutWindowController: NSWindowController?
+	var infoWindowController: NSWindowController?
+
 	var userPrefs =  UserPrefs()
 	var menuBarItems: MenuBarItems! // need reference so it stays alive
 	var openableApps: OpenableApps!
@@ -81,7 +83,7 @@ extension AppDelegate: MenuBarItemsDelegate {
 	}
 
 	func openPreferencesWindow() {
-		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.ViewControllerIdentifiers.preferences) as? PreferencesViewController {
+		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.Identifiers.ViewControllers.preferences) as? PreferencesViewController {
 			viewController.userPrefsDataSource = userPrefs
 			viewController.delegate = self
 
@@ -162,7 +164,7 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 	}
 
 	func aboutWasPressed() {
-		if let windowController = aboutWindowController ?? storyboard.instantiateController(withIdentifier: "AboutWindowController") as? NSWindowController {
+		if let windowController = aboutWindowController ?? storyboard.instantiateController(withIdentifier: Constants.Identifiers.WindowControllers.about) as? NSWindowController {
 			windowController.showWindow(self)
 			aboutWindowController = windowController
 		}
@@ -216,6 +218,13 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 	func duplicateAppsPriorityDidChange(_ value: DuplicateAppsPriority) {
 		userPrefs.duplicateAppsPriority = value
 		userPrefsWasUpdated()
+	}
+
+	func infoWasPressed() {
+		if let windowController = infoWindowController ?? storyboard.instantiateController(withIdentifier: Constants.Identifiers.WindowControllers.info) as? NSWindowController {
+			windowController.showWindow(self)
+			infoWindowController = windowController
+		}
 	}
 
 	private func userPrefsWasUpdated() {
