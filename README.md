@@ -12,7 +12,7 @@
 
 <button name="button">Click me</button>
 
-[Click me](http://www.google.com){: .btn}
+[Click meeeeeee](http://www.google.com){: .btn}
 [button url="http://www.google.com"]
 
 **It is highly recommended that you enable automatically hide and show the dock in system preferences**. Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps with your mouse by clicking their icon in the menu bar at the top!
