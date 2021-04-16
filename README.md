@@ -36,4 +36,4 @@ For more info and tips, press the blue 'i' in the general section of the prefere
 
 Any feedback or queries can be submitted [here](https://github.com/EthanSK/Menu-Bar-Dock/issues)
 
-The of downloads for this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
+The number of downloads for this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
