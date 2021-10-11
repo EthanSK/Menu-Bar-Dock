@@ -34,6 +34,8 @@ If you hold command while dragging the icons to place them where you would like 
 
 For more info and tips, press the blue 'i' in the general section of the preferences window of the app.
 
+Open preferences by right clicking an app and then selecting 'Menu Bar Dock Preferences' at the bottom.
+
 Any feedback or queries can be submitted [here](https://github.com/EthanSK/Menu-Bar-Dock/issues)
 
 The number of downloads for this app can be found by running `curl -s https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases | egrep '"name"|"updated_at"|"download_count"'` in a terminal.
