@@ -43,7 +43,7 @@ class MenuBarItem {
 
 		self.app = app
  		let imageSize = appIconSize
-		let menuBarHeight = NSApplication.shared.mainMenu?.menuBarHeight ?? 22
+        let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
 		let newView = NSImageView(
 			frame: NSRect(
 				x: (slotWidth - imageSize) / 2,
