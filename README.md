@@ -28,7 +28,7 @@ Menu Bar Dock can work in two ways: running apps and regular apps. To get an exp
 
 ### Extra info
 
-Access the preferences windown by right clicking any app being displayed in the menu bar dock, and then selecting 'Menu Bar Dock Preferences' at the bottom.
+Access the preferences window by right clicking any app being displayed in the menu bar dock, and then selecting 'Menu Bar Dock Preferences' at the bottom.
 
 If you hold command while dragging the icons to place them where you would like on the menu bar. It will reorder automatically once you change apps again.
 
