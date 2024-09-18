@@ -21,6 +21,7 @@ protocol PreferencesViewControllerDelegate: AnyObject {
 	func aboutWasPressed()
 	func hideFinderDidChange(_ value: Bool)
 	func hideActiveAppDidChange(_ value: Bool)
+    func preserveAppOrderDidChange(_ value: Bool)
 	func appOpeningMethodDidChange(_ value: AppOpeningMethod)
 	func regularAppsUrlsWereAdded(_ value: [URL])
 	func regularAppsUrlsWereRemoved(_ removedIndexes: IndexSet)
@@ -40,14 +41,14 @@ protocol PreferencesViewControllerUserPrefsDataSource: AnyObject {
 	var defaultAppOpeningMethod: AppOpeningMethod { get }
 	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
+    var preserveAppOrder: Bool { get }
 	var regularAppsUrls: [URL] { get }
 	var sideToShowRunningApps: SideToShowRunningApps { get }
 	var hideDuplicateApps: Bool { get }
 	var duplicateAppsPriority: DuplicateAppsPriority { get }
 }
 
-class PreferencesViewController: NSViewController { // this should do onthing
-
+class PreferencesViewController: NSViewController { // this should do nothing
 	weak var delegate: PreferencesViewControllerDelegate?
 	weak var userPrefsDataSource: PreferencesViewControllerUserPrefsDataSource!
 
@@ -67,6 +68,7 @@ class PreferencesViewController: NSViewController { // this should do onthing
 
 	@IBOutlet weak var hideActiveAppFromRunningAppsButton: NSButton!
 	@IBOutlet weak var hideFinderFromRunningAppsButton: NSButton!
+    @IBOutlet weak var preserveAppOrderButton: NSButton!
 
 	@IBOutlet weak var sideToShowRunningAppsControl: NSSegmentedControl!
 
@@ -113,6 +115,8 @@ class PreferencesViewController: NSViewController { // this should do onthing
 		hideActiveAppFromRunningAppsButton.state = userPrefsDataSource.hideActiveAppFromRunningApps ? .on : .off
 
 		hideFinderFromRunningAppsButton.state = userPrefsDataSource.hideFinderFromRunningApps ? .on : .off
+
+        preserveAppOrderButton.state = userPrefsDataSource.preserveAppOrder ? .on : .off
 
 		switch userPrefsDataSource.runningAppsSortingMethod {
 		case .mostRecentOnRight:
@@ -240,8 +244,12 @@ class PreferencesViewController: NSViewController { // this should do onthing
 	}
 
 	@IBAction func hideFinderFromRunningAppsPressed(_ sender: NSButton) {
-		delegate?.hideFinderDidChange(sender.state == .on	)
+		delegate?.hideFinderDidChange(sender.state == .on)
 	}
+
+    @IBAction func preserveAppOrderPressed(_ sender: NSButton) {
+        delegate?.preserveAppOrderDidChange(sender.state == .on)
+    }
 
 	@IBAction func addOrRemovePressed(_ sender: NSSegmentedControl) {
 		switch sender.selectedSegment {

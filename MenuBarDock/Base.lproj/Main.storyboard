@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -713,7 +713,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="200"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4yh-0T-Dlc">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4yh-0T-Dlc">
                                 <rect key="frame" x="18" y="149" width="176" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Menu Bar Dock" id="lTe-NV-dYz">
@@ -722,7 +722,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ppJ-1n-UMA">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ppJ-1n-UMA">
                                 <rect key="frame" x="18" y="20" width="227" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Copyright © 2021 Ethan Sarif-Kattan" id="gWN-Gm-FOF">
@@ -731,7 +731,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y7s-17-oDz">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y7s-17-oDz">
                                 <rect key="frame" x="362" y="20" width="70" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Version 69" id="5Y0-e7-w1D">
@@ -800,18 +800,7 @@
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="NNd-uk-gpv" userLabel="Running Apps">
                                 <rect key="frame" x="0.0" y="300" width="320" height="350"/>
                                 <subviews>
-                                    <button toolTip="Hide the currently active app from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
-                                        <rect key="frame" x="18" y="66" width="121" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="hideActiveAppFromRunningAppsPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
-                                        </connections>
-                                    </button>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Gu-Jg-2zb">
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Gu-Jg-2zb">
                                         <rect key="frame" x="18" y="202" width="121" height="16"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Sort Order:" id="4Dg-kx-QtC">
@@ -820,7 +809,7 @@
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <textField toolTip="Preferences for the running apps shown in the menu bar dock." horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4vg-Re-H09">
+                                    <textField toolTip="Preferences for the running apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4vg-Re-H09">
                                         <rect key="frame" x="18" y="304" width="137" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Running Apps" id="1LF-XT-fRm">
@@ -890,7 +879,7 @@
                                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-s5-8Lf">
                                                 <rect key="frame" x="0.0" y="24" width="207" height="16"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
                                                         <rect key="frame" x="-2" y="0.0" width="189" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Max Number of Running Apps:" id="YAC-8U-teb">
                                                             <font key="font" metaFont="system"/>
@@ -898,7 +887,7 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
                                                         <rect key="frame" x="188" y="0.0" width="21" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="bHQ-Vv-xd7">
                                                             <font key="font" metaFont="system"/>
@@ -918,6 +907,17 @@
                                             </stackView>
                                         </subviews>
                                     </customView>
+                                    <button toolTip="Hide the currently active app from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
+                                        <rect key="frame" x="18" y="66" width="121" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="hideActiveAppFromRunningAppsPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
+                                        </connections>
+                                    </button>
                                     <button toolTip="Hide Finder from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
                                         <rect key="frame" x="190" y="66" width="96" height="18"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -929,6 +929,17 @@
                                             <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
                                         </connections>
                                     </button>
+                                    <button toolTip="Preserve the user-specified order of apps. Causes blank spaces when an app is closed." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJN-Jt-bgi">
+                                        <rect key="frame" x="18" y="40" width="142" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Preserve app order" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Qbo-Ea-oxo">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="preserveAppOrderPressed:" target="XfG-lQ-9wD" id="EpP-vo-3sx"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="oKf-oN-k5x"/>
@@ -937,7 +948,7 @@
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="sTP-YU-EaH" userLabel="Regular Apps">
                                 <rect key="frame" x="320" y="300" width="378" height="350"/>
                                 <subviews>
-                                    <textField toolTip="Preferences for the regular, manually added apps shown in the menu bar dock." horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
+                                    <textField toolTip="Preferences for the regular, manually added apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
                                         <rect key="frame" x="18" y="304" width="132" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Regular Apps" id="NAo-pf-e29">
@@ -993,7 +1004,7 @@
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="zDL-xg-uvH"/>
                                                                         </imageView>
-                                                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="gXR-Ux-upG">
+                                                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="gXR-Ux-upG">
                                                                             <rect key="frame" x="36" y="7" width="96" height="16"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" title="Table View Cell" id="cH7-50-tnZ">
                                                                                 <font key="font" usesAppearanceFont="YES"/>
@@ -1026,7 +1037,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                     </scrollView>
-                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QcC-Z6-GIk" userLabel="RegularAppsHintLabel">
+                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QcC-Z6-GIk" userLabel="RegularAppsHintLabel">
                                         <rect key="frame" x="80" y="22" width="37" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="1jC-0v-NAA">
                                             <font key="font" usesAppearanceFont="YES"/>
@@ -1065,7 +1076,7 @@
                                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LE1-do-a8F">
                                                 <rect key="frame" x="0.0" y="24" width="109" height="16"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
                                                         <rect key="frame" x="-2" y="0.0" width="91" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="App Icon Size:" id="0DJ-rK-9Gp">
                                                             <font key="font" metaFont="system"/>
@@ -1073,7 +1084,7 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
                                                         <rect key="frame" x="90" y="0.0" width="21" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="5JD-fF-Myh">
                                                             <font key="font" metaFont="system"/>
@@ -1093,7 +1104,7 @@
                                             </stackView>
                                         </subviews>
                                     </customView>
-                                    <textField toolTip="General app preferences." horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JcA-ts-CKg">
+                                    <textField toolTip="General app preferences." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JcA-ts-CKg">
                                         <rect key="frame" x="18" y="254" width="79" height="26"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="General" id="fm1-GG-b1Z">
@@ -1117,7 +1128,7 @@
                                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdj-du-mJe">
                                                 <rect key="frame" x="0.0" y="24" width="119" height="16"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8La-OF-owi" userLabel="Label">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8La-OF-owi" userLabel="Label">
                                                         <rect key="frame" x="-2" y="0.0" width="101" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Item Slot Width:" id="JLn-2c-9Sd">
                                                             <font key="font" metaFont="system"/>
@@ -1125,7 +1136,7 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EKD-yl-6YO" userLabel="Counter">
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EKD-yl-6YO" userLabel="Counter">
                                                         <rect key="frame" x="100" y="0.0" width="21" height="16"/>
                                                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="8lF-8X-cbq">
                                                             <font key="font" metaFont="system"/>
@@ -1149,7 +1160,7 @@
                                         <rect key="frame" x="20" y="157" width="396" height="22"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-WO-QqF">
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-WO-QqF">
                                                 <rect key="frame" x="268" y="4" width="101" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="of Regular Apps" id="jaR-Vj-B9O">
@@ -1158,7 +1169,7 @@
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="soD-jE-N1N">
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="soD-jE-N1N">
                                                 <rect key="frame" x="-2" y="4" width="167" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Show Running Apps on the" id="f5W-qC-PWi">
@@ -1255,7 +1266,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <string key="toolTip">Set which section the duplicate app appears in if there is the same app in both the running and regular section of the menu bar dock.</string>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
                                                 <rect key="frame" x="-2" y="32" width="147" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Duplicate Apps Priority:" id="nsF-mJ-rf8">
@@ -1285,7 +1296,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <string key="toolTip">The default way to open apps. We recommend you  set this to 'launch', and change individual apps' opening methods to 'activate' when needed (which can be done through the menu opened by right clicking an app in the menu bar dock).</string>
                                         <subviews>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vi7-Sj-Yc1">
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vi7-Sj-Yc1">
                                                 <rect key="frame" x="-2" y="2" width="137" height="16"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="App Opening Method:" id="1Vb-2i-g1X">
@@ -1299,7 +1310,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <popUpButtonCell key="cell" type="push" title="Launch" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="oaI-bl-443" id="gG9-Kv-3cF">
                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="menu"/>
+                                                    <font key="font" metaFont="message"/>
                                                     <menu key="menu" id="Zhw-qA-He8">
                                                         <items>
                                                             <menuItem title="Launch" state="on" id="oaI-bl-443">
@@ -1374,6 +1385,7 @@
                         <outlet property="maxNumRunningAppsSlider" destination="0BC-GN-0F8" id="XfP-NM-SR1"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>
                         <outlet property="mostRecentRightRadioButton" destination="Wqs-TY-FqY" id="vDf-O2-Mke"/>
+                        <outlet property="preserveAppOrderButton" destination="PJN-Jt-bgi" id="kMI-6i-vEi"/>
                         <outlet property="regularAppsHintLabel" destination="QcC-Z6-GIk" id="iiB-R0-UW4"/>
                         <outlet property="sideToShowRunningAppsControl" destination="Ka3-Je-sNv" id="dhn-KB-nwW"/>
                         <outlet property="statusItemWidthCounterLabel" destination="EKD-yl-6YO" id="O31-jk-k5j"/>
@@ -1418,7 +1430,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="107"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pCD-Np-yRG">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pCD-Np-yRG">
                                 <rect key="frame" x="18" y="20" width="504" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="500" id="gXr-PS-kal"/>
@@ -1429,7 +1441,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bF9-kI-97t">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bF9-kI-97t">
                                 <rect key="frame" x="18" y="56" width="182" height="31"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Tips, FAQ &amp; Info" id="fAf-s8-fin">
                                     <font key="font" textStyle="largeTitle" name=".SFNS-Regular"/>
@@ -1459,8 +1471,8 @@
     </scenes>
     <resources>
         <image name="ETGgamesCircle" width="1024" height="1024"/>
-        <image name="NSAddTemplate" width="14" height="13"/>
+        <image name="NSAddTemplate" width="18" height="17"/>
         <image name="NSInfo" width="32" height="32"/>
-        <image name="NSRemoveTemplate" width="14" height="4"/>
+        <image name="NSRemoveTemplate" width="18" height="5"/>
     </resources>
 </document>
