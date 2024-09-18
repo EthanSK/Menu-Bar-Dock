@@ -15,13 +15,13 @@ protocol AppTrackerDelegate: AnyObject {
 
 // tracks app activations and quits
 class AppTracker {
-
 	public weak var delegate: AppTrackerDelegate?
 
 	init() {
 		trackAppsBeingActivated()
 		trackAppsBeingQuit()
 	}
+
 	private func trackAppsBeingActivated() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if

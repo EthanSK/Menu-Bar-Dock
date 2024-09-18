@@ -140,6 +140,13 @@ class OpenableApp {
 
 	private func launchApp() {
 		print("Launching app: ", name)
+
+        // workaround needed to open Steam, otherwise it opens the app path in Finder
+        if bundleId == "com.valvesoftware.steam" {
+            NSWorkspace.shared.launchApplication(withBundleIdentifier: "com.valvesoftware.steam", options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil)
+            return
+        }
+
 		if #available(OSX 10.15, *) {
 			let config = NSWorkspace.OpenConfiguration()
 			config.activates = true
