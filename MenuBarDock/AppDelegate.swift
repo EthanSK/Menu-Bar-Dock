@@ -125,7 +125,6 @@ extension AppDelegate: AppTrackerDelegate {
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
-
 	func maxNumRunningAppsSliderEndedChanging(_ value: Int) {
 		userPrefs.maxNumRunningApps = value
 		userPrefsWasUpdated()
@@ -179,6 +178,11 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefs.hideActiveAppFromRunningApps = value
 		userPrefsWasUpdated()
 	}
+
+    func preserveAppOrderDidChange(_ value: Bool) {
+        userPrefs.preserveAppOrder = value
+        userPrefsWasUpdated()
+    }
 
 	func appOpeningMethodDidChange(_ value: AppOpeningMethod) {
 		userPrefs.defaultAppOpeningMethod = value

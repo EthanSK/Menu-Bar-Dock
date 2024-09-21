@@ -40,7 +40,6 @@ class MenuBarItem {
 	}
 
 	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
-
 		self.app = app
  		let imageSize = appIconSize
         let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
@@ -95,14 +94,21 @@ class MenuBarItem {
 		let menu = NSMenu()
 		guard let appName = app?.name else { return }
 
-		if app?.runningApplication != nil {
-			_ = addMenuItem(
-				menu: menu,
-				title: "Quit \(appName)",
-				action: #selector(quitApp),
-				keyEquivalent: "q"
-			)
-		}
+        if let runningApplication = app?.runningApplication {
+            // only makes sense to hide and show, and activate a running app, not just any app
+            _ = addMenuItem(
+                menu: menu,
+                title: "\(runningApplication.isHidden ? "Unhide" : "Hide") \(appName)",
+                action: #selector(toggleAppHidden),
+                keyEquivalent: "h"
+            )
+            _ = addMenuItem(
+                menu: menu,
+                title: "Activate \(appName)",
+                action: #selector(activateApp),
+                keyEquivalent: "a"
+            )
+        }
 
 		_ = addMenuItem(
 			menu: menu,
@@ -111,22 +117,6 @@ class MenuBarItem {
 			keyEquivalent: "r"
 		)
 
-		if let runningApplication = app?.runningApplication {
-			// only makes sense to hide and show, and activate a running app, not just any app
-			_ = addMenuItem(
-				menu: menu,
-				title: "\(runningApplication.isHidden ? "Unhide" : "Hide") \(appName)",
-				action: #selector(toggleAppHidden),
-				keyEquivalent: "h"
-			)
-			_ = addMenuItem(
-				menu: menu,
-				title: "Activate \(appName)",
-				action: #selector(activateApp),
-				keyEquivalent: "a"
-			)
-		}
-
 		_ = addMenuItem(
 			menu: menu,
 			title: "Launch \(appName)",
@@ -134,8 +124,16 @@ class MenuBarItem {
 			keyEquivalent: "l"
 		)
 
-		// removed open new instance item because it's kinda pointless and will probably cause bugs
+        if app?.runningApplication != nil {
+            _ = addMenuItem(
+                menu: menu,
+                title: "Quit \(appName)",
+                action: #selector(quitApp),
+                keyEquivalent: "q"
+            )
+        }
 
+		// removed open new instance item because it's kinda pointless and will probably cause bugs
 		addAppOpeningMethodMenuItem(menu: menu)
 
 		menu.addItem(NSMenuItem.separator())

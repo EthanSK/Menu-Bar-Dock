@@ -46,6 +46,7 @@ enum Constants {
 		static let appOpeningMethods = "appOpeningMethods"
 		static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
 		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
+        static let preserveAppOrder = "preserveAppOrder"
 		static let regularAppsUrls = "regularAppsUrls"
 		static let sideToShowRunningApps = "sideToShowRunningApps"
 		static let hideDuplicateApps = "hideDuplicateApps"

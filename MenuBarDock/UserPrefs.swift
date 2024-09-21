@@ -18,6 +18,7 @@ enum UserPrefsDefaultValues {
 	static let appOpeningMethods: [String: AppOpeningMethod] = [:] // openableApp id is the key
 	static let hideActiveAppFromRunningApps = true
 	static let hideFinderFromRunningApps = false
+    static let preserveAppOrder = true
 	static let regularAppsUrls: [URL] = []
 	static let sideToShowRunningApps: SideToShowRunningApps = .right
 	static let hideDuplicateApps = true
@@ -34,6 +35,7 @@ class UserPrefs {
 	var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
 	var hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 	var hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
+    var preserveAppOrder = UserPrefsDefaultValues.preserveAppOrder
 	var regularAppsUrls = UserPrefsDefaultValues.regularAppsUrls
 	var sideToShowRunningApps = UserPrefsDefaultValues.sideToShowRunningApps
 	var hideDuplicateApps = UserPrefsDefaultValues.hideDuplicateApps
@@ -47,6 +49,7 @@ class UserPrefs {
 		defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
 		hideActiveAppFromRunningApps = UserPrefsDefaultValues.hideActiveAppFromRunningApps
 		hideFinderFromRunningApps = UserPrefsDefaultValues.hideFinderFromRunningApps
+        preserveAppOrder = UserPrefsDefaultValues.preserveAppOrder
 		// don't reset regularAppsUrls, it's not right
 		sideToShowRunningApps = UserPrefsDefaultValues.sideToShowRunningApps
 		hideDuplicateApps = UserPrefsDefaultValues.hideDuplicateApps
@@ -70,6 +73,7 @@ class UserPrefs {
 		})), forKey: Constants.UserPrefs.appOpeningMethods)
 		UserDefaults.standard.set(hideActiveAppFromRunningApps, forKey: Constants.UserPrefs.hideActiveAppFromRunningApps)
 		UserDefaults.standard.set(hideFinderFromRunningApps, forKey: Constants.UserPrefs.hideFinderFromRunningApps)
+        UserDefaults.standard.set(preserveAppOrder, forKey: Constants.UserPrefs.preserveAppOrder)
 		UserDefaults.standard.set(regularAppsUrls.map { $0.absoluteString }, forKey: Constants.UserPrefs.regularAppsUrls)
 		UserDefaults.standard.set(sideToShowRunningApps.rawValue, forKey: Constants.UserPrefs.sideToShowRunningApps)
 		UserDefaults.standard.set(hideDuplicateApps, forKey: Constants.UserPrefs.hideDuplicateApps)
@@ -112,6 +116,9 @@ class UserPrefs {
 		if let hideFinderFromRunningApps = UserDefaults.standard.object(forKey: Constants.UserPrefs.hideFinderFromRunningApps) as? Bool {
 			self.hideFinderFromRunningApps = hideFinderFromRunningApps
 		}
+        if let preserveAppOrder = UserDefaults.standard.object(forKey: Constants.UserPrefs.preserveAppOrder) as? Bool {
+            self.preserveAppOrder = preserveAppOrder
+        }
 
 		if let regularAppsUrlsStrs = UserDefaults.standard.object(forKey: Constants.UserPrefs.regularAppsUrls) as? [String] {
 			var res: [URL] = []

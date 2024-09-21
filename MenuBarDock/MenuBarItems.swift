@@ -12,7 +12,7 @@ protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
 	var statusItemWidth: CGFloat { get }
 	var appIconSize: CGFloat { get }
-
+    var preserveAppOrder: Bool { get }
 }
 
 protocol MenuBarItemsDelegate: AnyObject {
@@ -78,10 +78,12 @@ class MenuBarItems {
 	}
 
 	private func hideItem(item: MenuBarItem) {
-
 		item.statusItem.length = 0
+
 		if #available(OSX 10.12, *) {
-			// item.statusItem.isVisible = false // this prevents the item from remembering its position. Thanks Apple.
+            if userPrefsDataSource.preserveAppOrder == false {
+                item.statusItem.isVisible = false // this prevents the item from remembering its position. Thanks Apple.
+            }
 		}
 	}
 
