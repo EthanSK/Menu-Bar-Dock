@@ -15,6 +15,7 @@ enum Constants {
 		static let finderBundleId = "com.apple.finder"
 		static let regularAppsSectionTitle = "Regular Apps"
 		static let runningAppsSectionTitle = "Running Apps"
+        static let releasesURL = "https://github.com/EthanSK/Menu-Bar-Dock/releases"
 	}
 
 	enum UserDefaultsKeys {
@@ -33,23 +34,23 @@ enum Constants {
 			static let info = "InfoWindowController"
 			static let about = "AboutWindowController"
 		}
-
 	}
 
 	enum UserPrefs {
+        static let appIconSize = "appIconSize"
+        static let appOpeningMethods = "appOpeningMethods"
+        static let defaultAppOpeningMethod = "defaultAppOpeningMethod"
+        static let duplicateAppsPriority = "duplicateAppsPriority"
+        static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
+        static let hideDuplicateApps = "hideDuplicateApps"
+        static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
+        static let launchAtLogin = "launchAtLogin"
 		static let maxNumRunningApps = "maxNumRunningApps"
-		static let statusItemWidth = "statusItemWidth"
-		static let runningAppsSortingMethod = "runningAppsSortingMethod"
-		static let appIconSize = "appIconSize"
-		static let launchAtLogin = "launchAtLogin"
-		static let defaultAppOpeningMethod = "defaultAppOpeningMethod"
-		static let appOpeningMethods = "appOpeningMethods"
-		static let hideActiveAppFromRunningApps = "hideActiveAppFromRunningApps"
-		static let hideFinderFromRunningApps = "hideFinderFromRunningApps"
         static let preserveAppOrder = "preserveAppOrder"
-		static let regularAppsUrls = "regularAppsUrls"
-		static let sideToShowRunningApps = "sideToShowRunningApps"
-		static let hideDuplicateApps = "hideDuplicateApps"
-		static let duplicateAppsPriority = "duplicateAppsPriority"
+        static let regularAppsUrls = "regularAppsUrls"
+        static let rightClickByDefault = "rightClickByDefault"
+        static let runningAppsSortingMethod = "runningAppsSortingMethod"
+        static let sideToShowRunningApps = "sideToShowRunningApps"
+		static let statusItemWidth = "statusItemWidth"
 	}
 }

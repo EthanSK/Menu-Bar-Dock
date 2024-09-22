@@ -788,169 +788,20 @@
             <objects>
                 <viewController title="Menu Bar Dock Preferences" storyboardIdentifier="PreferencesViewController" showSeguePresentationStyle="single" id="XfG-lQ-9wD" customClass="PreferencesViewController" customModule="Menu_Bar_Dock" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="698" height="650"/>
+                        <rect key="frame" x="0.0" y="0.0" width="698" height="674"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <box horizontalHuggingPriority="750" verticalHuggingPriority="247" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="ICJ-qX-X5b">
-                                <rect key="frame" x="317" y="300" width="5" height="350"/>
+                                <rect key="frame" x="317" y="324" width="5" height="350"/>
                             </box>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Ofz-3u-EDf">
-                                <rect key="frame" x="0.0" y="297" width="698" height="5"/>
+                                <rect key="frame" x="0.0" y="321" width="698" height="5"/>
                             </box>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="NNd-uk-gpv" userLabel="Running Apps">
-                                <rect key="frame" x="0.0" y="300" width="320" height="350"/>
-                                <subviews>
-                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Gu-Jg-2zb">
-                                        <rect key="frame" x="18" y="202" width="121" height="16"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Sort Order:" id="4Dg-kx-QtC">
-                                            <font key="font" metaFont="system"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <textField toolTip="Preferences for the running apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4vg-Re-H09">
-                                        <rect key="frame" x="18" y="304" width="137" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Running Apps" id="1LF-XT-fRm">
-                                            <font key="font" textStyle="title1" name=".SFNS-Regular"/>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
-                                    <stackView toolTip="Choose a sort order for the running apps." distribution="equalSpacing" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="FTg-wZ-lzb" userLabel="Running Apps Sort Order">
-                                        <rect key="frame" x="20" y="124" width="147" height="70"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <subviews>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-TY-FqY">
-                                                <rect key="frame" x="-2" y="53" width="149" height="18"/>
-                                                <buttonCell key="cell" type="radio" title="Most recent on right" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Wd1-vv-DVf">
-                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="radioButtonPressed:" target="XfG-lQ-9wD" id="6GA-fg-KS6"/>
-                                                </connections>
-                                            </button>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dQT-5c-wdq">
-                                                <rect key="frame" x="-2" y="26" width="141" height="18"/>
-                                                <buttonCell key="cell" type="radio" title="Most recent on left" bezelStyle="regularSquare" imagePosition="left" inset="2" id="twN-7q-vhP">
-                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="radioButtonPressed:" target="XfG-lQ-9wD" id="AnR-in-MPh"/>
-                                                </connections>
-                                            </button>
-                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i5z-3c-gg7">
-                                                <rect key="frame" x="-2" y="-1" width="91" height="18"/>
-                                                <buttonCell key="cell" type="radio" title="Consistent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="eMN-EP-tpf">
-                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="radioButtonPressed:" target="XfG-lQ-9wD" id="GwK-Pt-QLV"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
-                                    <customView toolTip="Set a maximum number of running apps to show." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="20" y="240" width="250" height="45"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <subviews>
-                                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0BC-GN-0F8" userLabel="Slider">
-                                                <rect key="frame" x="-2" y="-4" width="254" height="28"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="n6V-ec-EVI"/>
-                                                <connections>
-                                                    <action selector="numberOfAppsSliderChanged:" target="XfG-lQ-9wD" id="F19-nY-NfR"/>
-                                                </connections>
-                                            </slider>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-s5-8Lf">
-                                                <rect key="frame" x="0.0" y="24" width="207" height="16"/>
-                                                <subviews>
-                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
-                                                        <rect key="frame" x="-2" y="0.0" width="189" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Max Number of Running Apps:" id="YAC-8U-teb">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
-                                                        <rect key="frame" x="188" y="0.0" width="21" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="bHQ-Vv-xd7">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                        </subviews>
-                                    </customView>
-                                    <button toolTip="Hide the currently active app from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
-                                        <rect key="frame" x="18" y="66" width="121" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="hideActiveAppFromRunningAppsPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
-                                        </connections>
-                                    </button>
-                                    <button toolTip="Hide Finder from showing in the running apps." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
-                                        <rect key="frame" x="190" y="66" width="96" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
-                                        </connections>
-                                    </button>
-                                    <button toolTip="Preserve the user-specified order of apps. Causes blank spaces when an app is closed." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJN-Jt-bgi">
-                                        <rect key="frame" x="18" y="40" width="142" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Preserve app order" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Qbo-Ea-oxo">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="preserveAppOrderPressed:" target="XfG-lQ-9wD" id="EpP-vo-3sx"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="oKf-oN-k5x"/>
-                                </constraints>
-                            </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="sTP-YU-EaH" userLabel="Regular Apps">
-                                <rect key="frame" x="320" y="300" width="378" height="350"/>
+                                <rect key="frame" x="320" y="324" width="378" height="350"/>
                                 <subviews>
-                                    <textField toolTip="Preferences for the regular, manually added apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
+                                    <textField toolTip="Preferences for the regular, manually added apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YIh-JD-KEW">
                                         <rect key="frame" x="18" y="304" width="132" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Regular Apps" id="NAo-pf-e29">
                                             <font key="font" textStyle="title1" name=".SFNS-Regular"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -1014,8 +865,8 @@
                                                                         </textField>
                                                                     </subviews>
                                                                     <constraints>
-                                                                        <constraint firstItem="gXR-Ux-upG" firstAttribute="centerY" secondItem="xTj-2p-KDm" secondAttribute="centerY" id="J98-IJ-pBI"/>
-                                                                        <constraint firstItem="gXR-Ux-upG" firstAttribute="leading" secondItem="ywB-hU-MmR" secondAttribute="trailing" constant="8" symbolic="YES" id="K9W-ae-XXX"/>
+                                                                        <constraint firstItem="gXR-Ux-upG" firstAttribute="leading" secondItem="ywB-hU-MmR" secondAttribute="trailing" constant="8" symbolic="YES" id="Jat-5j-lr6"/>
+                                                                        <constraint firstItem="gXR-Ux-upG" firstAttribute="centerY" secondItem="ywB-hU-MmR" secondAttribute="centerY" id="NcO-Bn-c4q"/>
                                                                     </constraints>
                                                                     <connections>
                                                                         <outlet property="imageView" destination="ywB-hU-MmR" id="FOs-wv-hYH"/>
@@ -1029,7 +880,7 @@
                                             </subviews>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="tLf-Qi-dXJ">
-                                            <rect key="frame" x="1" y="222" width="336" height="15"/>
+                                            <rect key="frame" x="1" y="246" width="336" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="LBC-Ii-G6l">
@@ -1047,85 +898,53 @@
                                     </textField>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="B9h-9o-XeT" secondAttribute="trailing" constant="20" symbolic="YES" id="B3E-hz-Jh8"/>
-                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="top" secondItem="sTP-YU-EaH" secondAttribute="top" constant="56" id="KZc-r7-xhq"/>
-                                    <constraint firstAttribute="bottom" secondItem="1uQ-SF-mEa" secondAttribute="bottom" constant="20" symbolic="YES" id="Ngt-84-0IO"/>
-                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="centerX" secondItem="sTP-YU-EaH" secondAttribute="centerX" id="a1i-Zj-uXq"/>
-                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="20" symbolic="YES" id="dkB-Zx-aHw"/>
-                                    <constraint firstItem="QcC-Z6-GIk" firstAttribute="leading" secondItem="1uQ-SF-mEa" secondAttribute="trailing" constant="11" id="fKL-GZ-cMS"/>
-                                    <constraint firstItem="1uQ-SF-mEa" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="21" id="m9V-Lf-UAD"/>
-                                    <constraint firstItem="QcC-Z6-GIk" firstAttribute="centerY" secondItem="1uQ-SF-mEa" secondAttribute="centerY" id="pD2-zM-lDQ"/>
-                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="centerY" secondItem="sTP-YU-EaH" secondAttribute="centerY" id="wSg-XX-FoD"/>
+                                    <constraint firstItem="1uQ-SF-mEa" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="21" id="90f-x2-rYg"/>
+                                    <constraint firstAttribute="trailing" secondItem="B9h-9o-XeT" secondAttribute="trailing" constant="20" symbolic="YES" id="IMv-6U-umG"/>
+                                    <constraint firstItem="QcC-Z6-GIk" firstAttribute="leading" secondItem="1uQ-SF-mEa" secondAttribute="trailing" constant="11" id="OdP-gc-TkE"/>
+                                    <constraint firstItem="YIh-JD-KEW" firstAttribute="top" secondItem="sTP-YU-EaH" secondAttribute="top" constant="20" symbolic="YES" id="ThV-VM-D2M"/>
+                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="top" secondItem="YIh-JD-KEW" secondAttribute="bottom" constant="10" id="YM7-dx-JkH"/>
+                                    <constraint firstAttribute="bottom" secondItem="1uQ-SF-mEa" secondAttribute="bottom" constant="20" symbolic="YES" id="bli-88-FTV"/>
+                                    <constraint firstItem="B9h-9o-XeT" firstAttribute="centerY" secondItem="sTP-YU-EaH" secondAttribute="centerY" id="iia-5s-hyu"/>
+                                    <constraint firstItem="1uQ-SF-mEa" firstAttribute="centerY" secondItem="QcC-Z6-GIk" secondAttribute="centerY" id="pcn-e5-xUf"/>
+                                    <constraint firstItem="YIh-JD-KEW" firstAttribute="leading" secondItem="B9h-9o-XeT" secondAttribute="leading" id="poX-iI-YyH"/>
+                                    <constraint firstItem="YIh-JD-KEW" firstAttribute="leading" secondItem="sTP-YU-EaH" secondAttribute="leading" constant="20" symbolic="YES" id="v63-v8-OZA"/>
                                 </constraints>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="xlE-X6-DKl" userLabel="General">
-                                <rect key="frame" x="0.0" y="0.0" width="698" height="300"/>
+                                <rect key="frame" x="0.0" y="0.0" width="698" height="324"/>
                                 <subviews>
-                                    <customView toolTip="Change the size of the app icons shown in the menu bar dock." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT6-Pq-nR1" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="318" y="199" width="250" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <subviews>
-                                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
-                                                <rect key="frame" x="-2" y="-6" width="254" height="28"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="250" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="HaG-y8-qib"/>
-                                                <connections>
-                                                    <action selector="appIconSizeSliderChange:" target="XfG-lQ-9wD" id="z4c-4b-s9c"/>
-                                                </connections>
-                                            </slider>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LE1-do-a8F">
-                                                <rect key="frame" x="0.0" y="24" width="109" height="16"/>
-                                                <subviews>
-                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
-                                                        <rect key="frame" x="-2" y="0.0" width="91" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="App Icon Size:" id="0DJ-rK-9Gp">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
-                                                        <rect key="frame" x="90" y="0.0" width="21" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="5JD-fF-Myh">
-                                                            <font key="font" metaFont="system"/>
-                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                </subviews>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                        </subviews>
-                                    </customView>
-                                    <textField toolTip="General app preferences." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JcA-ts-CKg">
-                                        <rect key="frame" x="18" y="254" width="79" height="26"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <textField toolTip="General app preferences." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JcA-ts-CKg">
+                                        <rect key="frame" x="18" y="278" width="79" height="26"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="General" id="fm1-GG-b1Z">
                                             <font key="font" textStyle="title1" name=".SFNS-Regular"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <customView toolTip="Change the width a menu bar item slot takes up." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z2q-pj-ZM8" userLabel="Max Num Runnig Apps">
-                                        <rect key="frame" x="20" y="199" width="250" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <button toolTip="View more information and tips on how to best use Menu Bar Dock." translatesAutoresizingMaskIntoConstraints="NO" id="gHM-s2-BR1">
+                                        <rect key="frame" x="650" y="272" width="28" height="32"/>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSInfo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="e4b-VV-uaE">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="28" id="wAY-gq-kEn"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="infoPressed:" target="XfG-lQ-9wD" id="VMg-ro-ynz"/>
+                                        </connections>
+                                    </button>
+                                    <customView toolTip="Change the width a menu bar item slot takes up." translatesAutoresizingMaskIntoConstraints="NO" id="z2q-pj-ZM8" userLabel="Item Slot Width">
+                                        <rect key="frame" x="20" y="223" width="202" height="40"/>
                                         <subviews>
-                                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-EK-2Yd" userLabel="Slider">
-                                                <rect key="frame" x="-2" y="-6" width="254" height="28"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="250" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="10" sliderType="linear" id="tPJ-Lp-gyE"/>
+                                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-EK-2Yd" userLabel="Slider">
+                                                <rect key="frame" x="-2" y="-6" width="206" height="28"/>
+                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" minValue="1" maxValue="150" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="tPJ-Lp-gyE"/>
                                                 <connections>
                                                     <action selector="statusItemWidthSliderChanged:" target="XfG-lQ-9wD" id="aQp-Aj-Fsd"/>
                                                 </connections>
                                             </slider>
-                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" fixedFrame="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdj-du-mJe">
+                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdj-du-mJe">
                                                 <rect key="frame" x="0.0" y="24" width="119" height="16"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8La-OF-owi" userLabel="Label">
@@ -1155,129 +974,128 @@
                                                 </customSpacing>
                                             </stackView>
                                         </subviews>
-                                    </customView>
-                                    <customView toolTip="Set which side to show the running apps relative to the regular apps in the menu bar dock." fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q33-fK-fox" userLabel="Show Running Apps on Left or Right">
-                                        <rect key="frame" x="20" y="157" width="396" height="22"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <subviews>
-                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-WO-QqF">
-                                                <rect key="frame" x="268" y="4" width="101" height="16"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" title="of Regular Apps" id="jaR-Vj-B9O">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="soD-jE-N1N">
-                                                <rect key="frame" x="-2" y="4" width="167" height="16"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Show Running Apps on the" id="f5W-qC-PWi">
-                                                    <font key="font" metaFont="system"/>
-                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ka3-Je-sNv">
-                                                <rect key="frame" x="169" y="-1" width="95" height="24"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="QTR-Pf-oAP">
-                                                    <font key="font" metaFont="system"/>
-                                                    <segments>
-                                                        <segment label="Left" width="43"/>
-                                                        <segment label="Right" width="43" selected="YES" tag="1"/>
-                                                    </segments>
-                                                </segmentedCell>
-                                                <connections>
-                                                    <action selector="showRunningAppsOnLeftOrRightSelected:" target="XfG-lQ-9wD" id="3Pa-M0-zHC"/>
-                                                </connections>
-                                            </segmentedControl>
-                                        </subviews>
-                                    </customView>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="c0Z-B8-2jI" userLabel="Bottom Row">
-                                        <rect key="frame" x="0.0" y="20" width="698" height="20"/>
-                                        <subviews>
-                                            <button toolTip="Launch Menu Bar Dock when you start up your computer. Highly recommended to keep on." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pfs-x9-j8G">
-                                                <rect key="frame" x="555" y="1" width="123" height="18"/>
-                                                <buttonCell key="cell" type="check" title="Launch at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jGJ-0Q-1Cd">
-                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="launchAtLoginPressed:" target="XfG-lQ-9wD" id="aDQ-CI-4sT"/>
-                                                </connections>
-                                            </button>
-                                            <button toolTip="Reset all preferences to their default values. This doesn't touch app opening methods or the regular apps list." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6S3-3j-iu9">
-                                                <rect key="frame" x="82" y="-7" width="215" height="32"/>
-                                                <buttonCell key="cell" type="push" title="Reset Preferences to Defaults" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XFl-jx-Cut">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="resetPreferencesToDefaultsPressed:" target="XfG-lQ-9wD" id="XaL-oF-JLD"/>
-                                                </connections>
-                                            </button>
-                                            <button toolTip="Open a window with some extra metadata about Menu Bar Dock." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zjk-bH-HaW">
-                                                <rect key="frame" x="13" y="-7" width="71" height="32"/>
-                                                <buttonCell key="cell" type="push" title="About" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pu8-cm-5YB">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="aboutPressed:" target="XfG-lQ-9wD" id="0wD-r9-vwv"/>
-                                                </connections>
-                                            </button>
-                                            <button toolTip="Reset all the individual app opening methods previously set if at all." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hKX-0W-McQ">
-                                                <rect key="frame" x="295" y="-7" width="208" height="32"/>
-                                                <buttonCell key="cell" type="push" title="Reset App Opening Methods" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nd2-fW-CMi">
-                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                    <font key="font" metaFont="system"/>
-                                                </buttonCell>
-                                                <connections>
-                                                    <action selector="resetAppOpeningMethodsPressed:" target="XfG-lQ-9wD" id="Gdk-KK-qlJ"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="pfs-x9-j8G" secondAttribute="trailing" constant="20" symbolic="YES" id="Q8S-vf-AR2"/>
-                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="leading" secondItem="c0Z-B8-2jI" secondAttribute="leading" constant="20" symbolic="YES" id="Qah-bw-ZG2"/>
-                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="TRG-nE-Wnh"/>
-                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="leading" secondItem="zjk-bH-HaW" secondAttribute="trailing" constant="12" symbolic="YES" id="iJj-Ja-FUj"/>
-                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="k9f-n7-zh8"/>
-                                            <constraint firstAttribute="height" constant="20" id="mrU-UC-zaJ"/>
-                                            <constraint firstItem="hKX-0W-McQ" firstAttribute="leading" secondItem="6S3-3j-iu9" secondAttribute="trailing" constant="12" symbolic="YES" id="rb2-hx-P4b"/>
-                                            <constraint firstItem="pfs-x9-j8G" firstAttribute="centerY" secondItem="c0Z-B8-2jI" secondAttribute="centerY" id="t5h-WY-dxB"/>
-                                            <constraint firstItem="hKX-0W-McQ" firstAttribute="centerY" secondItem="6S3-3j-iu9" secondAttribute="centerY" id="u3E-DB-SSi"/>
+                                            <constraint firstItem="gdj-du-mJe" firstAttribute="leading" secondItem="iKm-EK-2Yd" secondAttribute="leading" id="88X-Ha-bH6"/>
+                                            <constraint firstItem="gdj-du-mJe" firstAttribute="top" secondItem="z2q-pj-ZM8" secondAttribute="top" id="L1g-P3-pFq"/>
+                                            <constraint firstAttribute="trailing" secondItem="iKm-EK-2Yd" secondAttribute="trailing" id="Q5j-DK-fDx"/>
+                                            <constraint firstAttribute="bottom" secondItem="iKm-EK-2Yd" secondAttribute="bottom" id="W7H-8v-Vph"/>
+                                            <constraint firstItem="iKm-EK-2Yd" firstAttribute="top" secondItem="z2q-pj-ZM8" secondAttribute="top" constant="20" symbolic="YES" id="wZH-gw-Yiu"/>
+                                            <constraint firstItem="gdj-du-mJe" firstAttribute="leading" secondItem="z2q-pj-ZM8" secondAttribute="leading" id="xsH-aW-E6r"/>
                                         </constraints>
                                     </customView>
-                                    <button toolTip="Hide apps that are both in the regular apps list and currently running." verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qb0-sN-69c">
-                                        <rect key="frame" x="18" y="118" width="367" height="18"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="check" title="Hide apps duplicated in Running Apps and Regular Apps" bezelStyle="regularSquare" imagePosition="left" inset="2" id="mQQ-Jm-f1t">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="hideDuplicateAppsPressed:" target="XfG-lQ-9wD" id="u4L-4Q-rnT"/>
-                                        </connections>
-                                    </button>
-                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ns3-x1-lJK" userLabel="Duplicate apps priority">
-                                        <rect key="frame" x="476" y="115" width="202" height="48"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <string key="toolTip">Set which section the duplicate app appears in if there is the same app in both the running and regular section of the menu bar dock.</string>
+                                    <customView toolTip="Change the size of the app icons shown in the menu bar dock." translatesAutoresizingMaskIntoConstraints="NO" id="KT6-Pq-nR1" userLabel="App Icon Size">
+                                        <rect key="frame" x="20" y="167" width="202" height="40"/>
                                         <subviews>
-                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
-                                                <rect key="frame" x="-2" y="32" width="147" height="16"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5wD-wp-Crx" userLabel="Slider">
+                                                <rect key="frame" x="-2" y="-6" width="206" height="28"/>
+                                                <sliderCell key="cell" continuous="YES" alignment="left" minValue="1" maxValue="100" doubleValue="1" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="HaG-y8-qib"/>
+                                                <connections>
+                                                    <action selector="appIconSizeSliderChange:" target="XfG-lQ-9wD" id="z4c-4b-s9c"/>
+                                                </connections>
+                                            </slider>
+                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LE1-do-a8F">
+                                                <rect key="frame" x="0.0" y="24" width="109" height="16"/>
+                                                <subviews>
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="a3N-Ce-NrP" userLabel="Label">
+                                                        <rect key="frame" x="-2" y="0.0" width="91" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="App Icon Size:" id="0DJ-rK-9Gp">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ql-OD-51x" userLabel="Counter">
+                                                        <rect key="frame" x="90" y="0.0" width="21" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="5JD-fF-Myh">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="LE1-do-a8F" firstAttribute="top" secondItem="KT6-Pq-nR1" secondAttribute="top" id="EfI-BC-F2g"/>
+                                            <constraint firstAttribute="trailing" secondItem="5wD-wp-Crx" secondAttribute="trailing" id="N3a-tY-2Bm"/>
+                                            <constraint firstItem="LE1-do-a8F" firstAttribute="leading" secondItem="5wD-wp-Crx" secondAttribute="leading" id="aO2-cX-AIv"/>
+                                            <constraint firstItem="LE1-do-a8F" firstAttribute="leading" secondItem="KT6-Pq-nR1" secondAttribute="leading" id="eXj-No-0jd"/>
+                                            <constraint firstItem="5wD-wp-Crx" firstAttribute="top" secondItem="KT6-Pq-nR1" secondAttribute="top" constant="20" symbolic="YES" id="iO5-A9-tt1"/>
+                                            <constraint firstAttribute="bottom" secondItem="5wD-wp-Crx" secondAttribute="bottom" id="kF3-t3-y8v"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView toolTip="Set a maximum number of running apps to show." translatesAutoresizingMaskIntoConstraints="NO" id="AGS-Ma-zOq" userLabel="Max Running Apps">
+                                        <rect key="frame" x="20" y="83" width="202" height="69"/>
+                                        <subviews>
+                                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0BC-GN-0F8" userLabel="Slider">
+                                                <rect key="frame" x="-2" y="20" width="206" height="28"/>
+                                                <sliderCell key="cell" continuous="YES" state="on" alignment="left" maxValue="100" tickMarkPosition="below" numberOfTickMarks="5" sliderType="linear" id="n6V-ec-EVI"/>
+                                                <connections>
+                                                    <action selector="numberOfAppsSliderChanged:" target="XfG-lQ-9wD" id="F19-nY-NfR"/>
+                                                </connections>
+                                            </slider>
+                                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-s5-8Lf">
+                                                <rect key="frame" x="0.0" y="48" width="139" height="16"/>
+                                                <subviews>
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QPi-fn-FRn" userLabel="Label">
+                                                        <rect key="frame" x="-2" y="0.0" width="121" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Max Running Apps:" id="YAC-8U-teb">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="74E-kU-5tY" userLabel="Counter">
+                                                        <rect key="frame" x="120" y="0.0" width="21" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="69" id="bHQ-Vv-xd7">
+                                                            <font key="font" metaFont="system"/>
+                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                </subviews>
+                                                <visibilityPriorities>
+                                                    <integer value="1000"/>
+                                                    <integer value="1000"/>
+                                                </visibilityPriorities>
+                                                <customSpacing>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                    <real value="3.4028234663852886e+38"/>
+                                                </customSpacing>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="uBg-s5-8Lf" firstAttribute="top" secondItem="AGS-Ma-zOq" secondAttribute="top" constant="5" id="B2M-xu-5EN"/>
+                                            <constraint firstItem="uBg-s5-8Lf" firstAttribute="leading" secondItem="AGS-Ma-zOq" secondAttribute="leading" id="Bnw-Gu-BD8"/>
+                                            <constraint firstItem="0BC-GN-0F8" firstAttribute="top" secondItem="uBg-s5-8Lf" secondAttribute="bottom" constant="2" id="Eef-gE-N9y"/>
+                                            <constraint firstItem="uBg-s5-8Lf" firstAttribute="leading" secondItem="0BC-GN-0F8" secondAttribute="leading" id="Mhb-kj-HRk"/>
+                                            <constraint firstAttribute="trailing" secondItem="0BC-GN-0F8" secondAttribute="trailing" id="qEA-83-yCX"/>
+                                        </constraints>
+                                    </customView>
+                                    <box horizontalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="lDH-fo-oZL">
+                                        <rect key="frame" x="252" y="83" width="5" height="180"/>
+                                    </box>
+                                    <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s4b-iJ-HhL" userLabel="Duplicate Apps Priority">
+                                        <rect key="frame" x="282" y="143" width="353" height="38"/>
+                                        <subviews>
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FCH-Be-d5w">
+                                                <rect key="frame" x="-2" y="22" width="147" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Duplicate Apps Priority:" id="nsF-mJ-rf8">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L0Y-bR-owQ">
-                                                <rect key="frame" x="-2" y="-1" width="206" height="24"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L0Y-bR-owQ">
+                                                <rect key="frame" x="149" y="15" width="206" height="24"/>
                                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Y7Q-FC-W5d">
                                                     <font key="font" metaFont="system"/>
                                                     <segments>
@@ -1290,24 +1108,29 @@
                                                 </connections>
                                             </segmentedControl>
                                         </subviews>
-                                    </customView>
-                                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CxZ-o2-074" userLabel="App opening method">
-                                        <rect key="frame" x="20" y="73" width="244" height="20"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="CxZ-o2-074" userLabel="App opening method">
+                                        <rect key="frame" x="282" y="109" width="244" height="20"/>
                                         <string key="toolTip">The default way to open apps. We recommend you  set this to 'launch', and change individual apps' opening methods to 'activate' when needed (which can be done through the menu opened by right clicking an app in the menu bar dock).</string>
                                         <subviews>
-                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vi7-Sj-Yc1">
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vi7-Sj-Yc1">
                                                 <rect key="frame" x="-2" y="2" width="137" height="16"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="App Opening Method:" id="1Vb-2i-g1X">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
                                             </textField>
-                                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tgt-DJ-zg9" userLabel="defaultAppOpeningMethod">
+                                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tgt-DJ-zg9" userLabel="defaultAppOpeningMethod">
                                                 <rect key="frame" x="144" y="-4" width="104" height="25"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <popUpButtonCell key="cell" type="push" title="Launch" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="oaI-bl-443" id="gG9-Kv-3cF">
                                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                     <font key="font" metaFont="message"/>
@@ -1327,69 +1150,360 @@
                                                 </connections>
                                             </popUpButton>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstItem="vi7-Sj-Yc1" firstAttribute="centerY" secondItem="tgt-DJ-zg9" secondAttribute="centerY" id="82O-C3-irp"/>
+                                            <constraint firstItem="vi7-Sj-Yc1" firstAttribute="leading" secondItem="CxZ-o2-074" secondAttribute="leading" id="MwX-Gq-BtF"/>
+                                            <constraint firstItem="tgt-DJ-zg9" firstAttribute="leading" secondItem="vi7-Sj-Yc1" secondAttribute="trailing" constant="14" id="b0l-hf-hhN"/>
+                                            <constraint firstItem="tgt-DJ-zg9" firstAttribute="top" secondItem="CxZ-o2-074" secondAttribute="top" id="c3w-8U-sEp"/>
+                                            <constraint firstAttribute="trailing" secondItem="tgt-DJ-zg9" secondAttribute="trailing" id="eea-xB-2TB"/>
+                                        </constraints>
                                     </customView>
-                                    <button toolTip="View more information and tips on how to best use Menu Bar Dock." misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gHM-s2-BR1">
-                                        <rect key="frame" x="650" y="252" width="28" height="28"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSInfo" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="e4b-VV-uaE">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="c0Z-B8-2jI" userLabel="Bottom Row">
+                                        <rect key="frame" x="0.0" y="20" width="698" height="20"/>
+                                        <subviews>
+                                            <button toolTip="Launch Menu Bar Dock when you start up your computer. Highly recommended to keep on." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pfs-x9-j8G">
+                                                <rect key="frame" x="555" y="1" width="123" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Launch at Login" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="jGJ-0Q-1Cd">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="launchAtLoginPressed:" target="XfG-lQ-9wD" id="aDQ-CI-4sT"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Open a window with some extra metadata about Menu Bar Dock." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zjk-bH-HaW">
+                                                <rect key="frame" x="13" y="-7" width="71" height="32"/>
+                                                <buttonCell key="cell" type="push" title="About" bezelStyle="rounded" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="pu8-cm-5YB">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="aboutPressed:" target="XfG-lQ-9wD" id="0wD-r9-vwv"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Reset all preferences to their default values. This doesn't touch app opening methods or the regular apps list." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6S3-3j-iu9">
+                                                <rect key="frame" x="82" y="-7" width="145" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Reset Preferences" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XFl-jx-Cut">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="resetPreferencesToDefaultsPressed:" target="XfG-lQ-9wD" id="XaL-oF-JLD"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HfO-JM-w2w">
+                                                <rect key="frame" x="225" y="-7" width="148" height="32"/>
+                                                <buttonCell key="cell" type="push" title="Check for Updates" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8oL-np-Umy">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="checkForUpdates:" target="XfG-lQ-9wD" id="MFP-0V-ng3"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="baseline" secondItem="6S3-3j-iu9" secondAttribute="baseline" id="5FY-MU-bHr"/>
+                                            <constraint firstItem="HfO-JM-w2w" firstAttribute="leading" secondItem="6S3-3j-iu9" secondAttribute="trailing" constant="12" symbolic="YES" id="5et-W3-P5X"/>
+                                            <constraint firstItem="HfO-JM-w2w" firstAttribute="centerY" secondItem="pfs-x9-j8G" secondAttribute="centerY" id="Cvj-NZ-YHg"/>
+                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="baseline" secondItem="HfO-JM-w2w" secondAttribute="baseline" id="Of4-94-wpD"/>
+                                            <constraint firstAttribute="trailing" secondItem="pfs-x9-j8G" secondAttribute="trailing" constant="20" symbolic="YES" id="Oq4-K5-m58"/>
+                                            <constraint firstItem="6S3-3j-iu9" firstAttribute="leading" secondItem="zjk-bH-HaW" secondAttribute="trailing" constant="12" symbolic="YES" id="Zxr-5P-t4o"/>
+                                            <constraint firstAttribute="bottom" secondItem="zjk-bH-HaW" secondAttribute="bottom" id="aAz-uk-oVG"/>
+                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="top" secondItem="c0Z-B8-2jI" secondAttribute="top" id="eAb-xg-CTL"/>
+                                            <constraint firstItem="zjk-bH-HaW" firstAttribute="leading" secondItem="c0Z-B8-2jI" secondAttribute="leading" constant="20" symbolic="YES" id="ppa-CS-kYl"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView toolTip="Set which side to show the running apps relative to the regular apps in the menu bar dock." translatesAutoresizingMaskIntoConstraints="NO" id="q33-fK-fox" userLabel="Show Running Apps on Left or Right">
+                                        <rect key="frame" x="282" y="218" width="373" height="22"/>
+                                        <subviews>
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2vN-WO-QqF">
+                                                <rect key="frame" x="268" y="4" width="101" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="of Regular Apps" id="jaR-Vj-B9O">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ka3-Je-sNv">
+                                                <rect key="frame" x="169" y="-1" width="95" height="24"/>
+                                                <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="QTR-Pf-oAP">
+                                                    <font key="font" metaFont="system"/>
+                                                    <segments>
+                                                        <segment label="Left" width="43"/>
+                                                        <segment label="Right" width="43" selected="YES" tag="1"/>
+                                                    </segments>
+                                                </segmentedCell>
+                                                <connections>
+                                                    <action selector="showRunningAppsOnLeftOrRightSelected:" target="XfG-lQ-9wD" id="3Pa-M0-zHC"/>
+                                                </connections>
+                                            </segmentedControl>
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="soD-jE-N1N">
+                                                <rect key="frame" x="-2" y="6" width="167" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Show Running Apps on the" id="f5W-qC-PWi">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="Ka3-Je-sNv" firstAttribute="baseline" secondItem="2vN-WO-QqF" secondAttribute="baseline" id="9Iv-3w-3e3"/>
+                                            <constraint firstItem="soD-jE-N1N" firstAttribute="leading" secondItem="q33-fK-fox" secondAttribute="leading" id="9xw-aF-Azt"/>
+                                            <constraint firstAttribute="bottom" secondItem="Ka3-Je-sNv" secondAttribute="bottom" id="Kge-te-jvo"/>
+                                            <constraint firstItem="soD-jE-N1N" firstAttribute="top" secondItem="Ka3-Je-sNv" secondAttribute="top" id="L7P-d0-bSd"/>
+                                            <constraint firstItem="soD-jE-N1N" firstAttribute="top" secondItem="q33-fK-fox" secondAttribute="top" id="hCt-Kq-8FK"/>
+                                            <constraint firstItem="2vN-WO-QqF" firstAttribute="leading" secondItem="Ka3-Je-sNv" secondAttribute="trailing" constant="8" symbolic="YES" id="hf8-dC-IGO"/>
+                                            <constraint firstItem="Ka3-Je-sNv" firstAttribute="leading" secondItem="soD-jE-N1N" secondAttribute="trailing" constant="8" symbolic="YES" id="ksc-2C-tn2"/>
+                                        </constraints>
+                                    </customView>
+                                    <button toolTip="Reset all the individual app opening methods previously set if at all." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hKX-0W-McQ">
+                                        <rect key="frame" x="527" y="102" width="69" height="32"/>
+                                        <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nd2-fW-CMi">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="55" id="6y4-WJ-gs8"/>
+                                        </constraints>
                                         <connections>
-                                            <action selector="infoPressed:" target="XfG-lQ-9wD" id="VMg-ro-ynz"/>
+                                            <action selector="resetAppOpeningMethodsPressed:" target="XfG-lQ-9wD" id="Gdk-KK-qlJ"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="c0Z-B8-2jI" secondAttribute="trailing" id="9wo-CJ-Jw9"/>
-                                    <constraint firstAttribute="bottom" secondItem="c0Z-B8-2jI" secondAttribute="bottom" constant="20" symbolic="YES" id="SI5-Bx-Wh6"/>
-                                    <constraint firstAttribute="trailing" secondItem="gHM-s2-BR1" secondAttribute="trailing" constant="20" symbolic="YES" id="UYG-Dm-sr6"/>
-                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="Uem-CB-bx1"/>
-                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="UsI-H2-T9m"/>
-                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" id="XNX-90-qwi"/>
-                                    <constraint firstAttribute="height" constant="300" id="oUX-8Z-Vyn"/>
-                                    <constraint firstItem="gHM-s2-BR1" firstAttribute="top" secondItem="xlE-X6-DKl" secondAttribute="top" constant="20" symbolic="YES" id="zrm-jQ-I3k"/>
+                                    <constraint firstItem="AGS-Ma-zOq" firstAttribute="top" secondItem="KT6-Pq-nR1" secondAttribute="bottom" constant="15" id="01H-fG-0RD"/>
+                                    <constraint firstItem="s4b-iJ-HhL" firstAttribute="centerY" secondItem="xlE-X6-DKl" secondAttribute="centerY" id="5dB-4R-axB"/>
+                                    <constraint firstItem="JcA-ts-CKg" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" constant="20" symbolic="YES" id="5jx-Oq-1dJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="gHM-s2-BR1" secondAttribute="trailing" constant="20" symbolic="YES" id="7Dy-lD-4Zu"/>
+                                    <constraint firstAttribute="trailing" secondItem="c0Z-B8-2jI" secondAttribute="trailing" id="7fa-I9-9dl"/>
+                                    <constraint firstItem="AGS-Ma-zOq" firstAttribute="bottom" secondItem="lDH-fo-oZL" secondAttribute="bottom" id="8QS-Im-rov"/>
+                                    <constraint firstItem="hKX-0W-McQ" firstAttribute="leading" secondItem="CxZ-o2-074" secondAttribute="trailing" constant="8" symbolic="YES" id="9Dc-SZ-Nkq"/>
+                                    <constraint firstItem="s4b-iJ-HhL" firstAttribute="leading" secondItem="CxZ-o2-074" secondAttribute="leading" id="F1i-iA-beC"/>
+                                    <constraint firstItem="s4b-iJ-HhL" firstAttribute="top" secondItem="q33-fK-fox" secondAttribute="bottom" constant="37" id="G43-fT-6r3"/>
+                                    <constraint firstItem="JcA-ts-CKg" firstAttribute="top" secondItem="gHM-s2-BR1" secondAttribute="top" id="Gpq-GT-wZV"/>
+                                    <constraint firstItem="q33-fK-fox" firstAttribute="leading" secondItem="lDH-fo-oZL" secondAttribute="trailing" constant="27" id="Ihu-0l-TEz"/>
+                                    <constraint firstItem="KT6-Pq-nR1" firstAttribute="trailing" secondItem="AGS-Ma-zOq" secondAttribute="trailing" id="LkI-rH-Gwb"/>
+                                    <constraint firstItem="CxZ-o2-074" firstAttribute="bottom" secondItem="hKX-0W-McQ" secondAttribute="bottom" id="NC7-ef-8k1"/>
+                                    <constraint firstItem="CxZ-o2-074" firstAttribute="top" secondItem="s4b-iJ-HhL" secondAttribute="bottom" constant="14" id="OZN-Id-dUh"/>
+                                    <constraint firstItem="z2q-pj-ZM8" firstAttribute="top" secondItem="JcA-ts-CKg" secondAttribute="bottom" constant="15" id="OkT-CW-mNS"/>
+                                    <constraint firstAttribute="trailing" secondItem="hKX-0W-McQ" secondAttribute="trailing" constant="109" id="P84-SZ-NVF"/>
+                                    <constraint firstItem="z2q-pj-ZM8" firstAttribute="leading" secondItem="KT6-Pq-nR1" secondAttribute="leading" id="QEk-5H-osa"/>
+                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="top" secondItem="AGS-Ma-zOq" secondAttribute="bottom" constant="43" id="Wb8-Dt-ETD"/>
+                                    <constraint firstItem="JcA-ts-CKg" firstAttribute="top" secondItem="xlE-X6-DKl" secondAttribute="top" constant="20" symbolic="YES" id="ZOS-YD-fEJ"/>
+                                    <constraint firstItem="z2q-pj-ZM8" firstAttribute="top" secondItem="lDH-fo-oZL" secondAttribute="top" id="cVL-0u-XKb"/>
+                                    <constraint firstItem="z2q-pj-ZM8" firstAttribute="trailing" secondItem="KT6-Pq-nR1" secondAttribute="trailing" id="cgh-Cb-XZn"/>
+                                    <constraint firstItem="CxZ-o2-074" firstAttribute="top" secondItem="hKX-0W-McQ" secondAttribute="top" id="eAM-lI-5cK"/>
+                                    <constraint firstItem="KT6-Pq-nR1" firstAttribute="top" secondItem="z2q-pj-ZM8" secondAttribute="bottom" constant="16" id="g0k-MX-2HR"/>
+                                    <constraint firstItem="q33-fK-fox" firstAttribute="leading" secondItem="s4b-iJ-HhL" secondAttribute="leading" id="jk8-UV-fxe"/>
+                                    <constraint firstItem="lDH-fo-oZL" firstAttribute="leading" secondItem="z2q-pj-ZM8" secondAttribute="trailing" constant="32" id="kbU-Mm-cjR"/>
+                                    <constraint firstAttribute="trailing" secondItem="s4b-iJ-HhL" secondAttribute="trailing" constant="63" id="lrb-AW-8nM"/>
+                                    <constraint firstItem="JcA-ts-CKg" firstAttribute="leading" secondItem="z2q-pj-ZM8" secondAttribute="leading" id="mRn-j4-mR9"/>
+                                    <constraint firstItem="q33-fK-fox" firstAttribute="top" secondItem="gHM-s2-BR1" secondAttribute="bottom" constant="32" id="mYR-XU-OhI"/>
+                                    <constraint firstItem="KT6-Pq-nR1" firstAttribute="leading" secondItem="AGS-Ma-zOq" secondAttribute="leading" id="n1R-WB-huf"/>
+                                    <constraint firstAttribute="trailing" secondItem="q33-fK-fox" secondAttribute="trailing" constant="43" id="tAe-EU-tEl"/>
+                                    <constraint firstItem="c0Z-B8-2jI" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" id="wUg-UB-KC9"/>
+                                    <constraint firstAttribute="bottom" secondItem="c0Z-B8-2jI" secondAttribute="bottom" constant="20" symbolic="YES" id="zx6-Vv-Jto"/>
+                                </constraints>
+                            </customView>
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="NNd-uk-gpv" userLabel="Running Apps">
+                                <rect key="frame" x="0.0" y="324" width="320" height="350"/>
+                                <subviews>
+                                    <textField toolTip="Preferences for the running apps shown in the menu bar dock." focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4vg-Re-H09">
+                                        <rect key="frame" x="18" y="304" width="137" height="26"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Running Apps" id="1LF-XT-fRm">
+                                            <font key="font" textStyle="title1" name=".SFNS-Regular"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2wo-VW-oXf" userLabel="Sort Order">
+                                        <rect key="frame" x="20" y="206" width="147" height="88"/>
+                                        <subviews>
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Gu-Jg-2zb">
+                                                <rect key="frame" x="-2" y="72" width="72" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Sort Order:" id="4Dg-kx-QtC">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wqs-TY-FqY">
+                                                <rect key="frame" x="-2" y="47" width="149" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="Most recent on right" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Wd1-vv-DVf">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="runningAppsSortingMethodChanged:" target="XfG-lQ-9wD" id="6GA-fg-KS6"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dQT-5c-wdq">
+                                                <rect key="frame" x="-2" y="23" width="141" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="Most recent on left" bezelStyle="regularSquare" imagePosition="left" inset="2" id="twN-7q-vhP">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="runningAppsSortingMethodChanged:" target="XfG-lQ-9wD" id="AnR-in-MPh"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="i5z-3c-gg7">
+                                                <rect key="frame" x="-2" y="-1" width="91" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="Consistent" bezelStyle="regularSquare" imagePosition="left" inset="2" id="eMN-EP-tpf">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="runningAppsSortingMethodChanged:" target="XfG-lQ-9wD" id="GwK-Pt-QLV"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L17-xB-zuv" userLabel="Options">
+                                        <rect key="frame" x="20" y="20" width="258" height="136"/>
+                                        <subviews>
+                                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0Ka-Ja-IIs">
+                                                <rect key="frame" x="-2" y="120" width="56" height="16"/>
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Options:" id="yVD-xx-neq">
+                                                    <font key="font" metaFont="system"/>
+                                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                </textFieldCell>
+                                            </textField>
+                                            <button toolTip="Hide Finder from showing in the running apps." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jk5-LB-J8x">
+                                                <rect key="frame" x="-2" y="95" width="96" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Hide Finder" bezelStyle="regularSquare" imagePosition="left" inset="2" id="e5p-ZD-KnY">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="hideFinderFromRunningAppsPressed:" target="XfG-lQ-9wD" id="tCw-Cd-xWF"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Hide the currently active app from showing in the running apps." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="msg-1s-pvm">
+                                                <rect key="frame" x="-2" y="71" width="121" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Hide active app" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eCk-cw-0bP">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="hideActiveAppFromRunningAppsPressed:" target="XfG-lQ-9wD" id="U4P-LW-TH6"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Hide apps that are both in the regular apps list and currently running." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qb0-sN-69c">
+                                                <rect key="frame" x="-2" y="47" width="260" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Hide duplicate apps (Running/Regular)" bezelStyle="regularSquare" imagePosition="left" inset="2" id="mQQ-Jm-f1t">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="hideDuplicateAppsPressed:" target="XfG-lQ-9wD" id="u4L-4Q-rnT"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Preserve the user-specified order of apps. Causes blank spaces when an app is closed." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PJN-Jt-bgi">
+                                                <rect key="frame" x="-2" y="23" width="142" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Preserve app order" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Qbo-Ea-oxo">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="preserveAppOrderPressed:" target="XfG-lQ-9wD" id="EpP-vo-3sx"/>
+                                                </connections>
+                                            </button>
+                                            <button toolTip="Open the dropdown menu when left-clicking on a menu bar item, instead of opening the app." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kxy-Y0-Sfb">
+                                                <rect key="frame" x="-2" y="-1" width="156" height="18"/>
+                                                <buttonCell key="cell" type="check" title="Right-click by default" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Lb6-Do-5Ds">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="rightClickByDefaultPressed:" target="XfG-lQ-9wD" id="u5C-rq-krb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="4vg-Re-H09" firstAttribute="top" secondItem="NNd-uk-gpv" secondAttribute="top" constant="20" symbolic="YES" id="273-u1-tC8"/>
+                                    <constraint firstItem="4vg-Re-H09" firstAttribute="leading" secondItem="NNd-uk-gpv" secondAttribute="leading" constant="20" symbolic="YES" id="5kd-eO-Diq"/>
+                                    <constraint firstAttribute="bottom" secondItem="L17-xB-zuv" secondAttribute="bottom" constant="20" symbolic="YES" id="6tF-uj-sTa"/>
+                                    <constraint firstAttribute="trailing" secondItem="L17-xB-zuv" secondAttribute="trailing" constant="42" id="8sN-RZ-SBj"/>
+                                    <constraint firstItem="2wo-VW-oXf" firstAttribute="leading" secondItem="L17-xB-zuv" secondAttribute="leading" id="AP1-L0-eIL"/>
+                                    <constraint firstItem="2wo-VW-oXf" firstAttribute="top" secondItem="4vg-Re-H09" secondAttribute="bottom" constant="10" id="dNh-I9-lLq"/>
+                                    <constraint firstItem="L17-xB-zuv" firstAttribute="top" secondItem="2wo-VW-oXf" secondAttribute="bottom" constant="50" id="oY6-Ol-TSD"/>
+                                    <constraint firstItem="4vg-Re-H09" firstAttribute="leading" secondItem="2wo-VW-oXf" secondAttribute="leading" id="wiY-xR-4uq"/>
                                 </constraints>
                             </customView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="NNd-uk-gpv" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="77T-5k-fKW"/>
-                            <constraint firstItem="sTP-YU-EaH" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="E7t-C3-KPK"/>
-                            <constraint firstAttribute="bottom" secondItem="xlE-X6-DKl" secondAttribute="bottom" id="Ec2-EO-yWJ"/>
-                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="width" secondItem="xlE-X6-DKl" secondAttribute="width" id="FAe-nY-ubj"/>
-                            <constraint firstItem="xlE-X6-DKl" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="Fq1-6H-Mfg"/>
-                            <constraint firstItem="ICJ-qX-X5b" firstAttribute="trailing" secondItem="NNd-uk-gpv" secondAttribute="trailing" id="HJ4-Ys-h0E"/>
-                            <constraint firstAttribute="trailing" secondItem="xlE-X6-DKl" secondAttribute="trailing" id="RlI-AQ-Mzs"/>
-                            <constraint firstItem="sTP-YU-EaH" firstAttribute="leading" secondItem="NNd-uk-gpv" secondAttribute="trailing" id="Ybg-xE-cHG"/>
-                            <constraint firstItem="ICJ-qX-X5b" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="ZZk-IO-h3T"/>
-                            <constraint firstItem="xlE-X6-DKl" firstAttribute="top" secondItem="ICJ-qX-X5b" secondAttribute="bottom" id="gq2-ml-QkW"/>
-                            <constraint firstAttribute="trailing" secondItem="sTP-YU-EaH" secondAttribute="trailing" id="igo-1q-Ti4"/>
-                            <constraint firstItem="NNd-uk-gpv" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="kRh-4Q-eqJ"/>
-                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="centerX" secondItem="xlE-X6-DKl" secondAttribute="centerX" id="l5s-oY-uh5"/>
-                            <constraint firstItem="xlE-X6-DKl" firstAttribute="top" secondItem="NNd-uk-gpv" secondAttribute="bottom" id="mXn-V3-xTj"/>
-                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="top" secondItem="xlE-X6-DKl" secondAttribute="top" id="tGe-Gk-PfZ"/>
-                            <constraint firstItem="xlE-X6-DKl" firstAttribute="top" secondItem="sTP-YU-EaH" secondAttribute="bottom" id="zI5-km-hU3"/>
+                            <constraint firstItem="sTP-YU-EaH" firstAttribute="leading" secondItem="ICJ-qX-X5b" secondAttribute="trailing" id="5cH-LY-NYM"/>
+                            <constraint firstAttribute="trailing" secondItem="sTP-YU-EaH" secondAttribute="trailing" id="6P3-8B-g1i"/>
+                            <constraint firstItem="NNd-uk-gpv" firstAttribute="leading" secondItem="Ofz-3u-EDf" secondAttribute="leading" id="94l-vj-hAs"/>
+                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="leading" secondItem="xlE-X6-DKl" secondAttribute="leading" id="BP2-yi-kBM"/>
+                            <constraint firstItem="NNd-uk-gpv" firstAttribute="top" secondItem="ICJ-qX-X5b" secondAttribute="top" id="IJN-NU-ulS"/>
+                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="trailing" secondItem="xlE-X6-DKl" secondAttribute="trailing" id="JCF-6I-obM"/>
+                            <constraint firstItem="NNd-uk-gpv" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="NRp-JJ-3Zj"/>
+                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="top" secondItem="sTP-YU-EaH" secondAttribute="bottom" id="Nfj-e9-Ovy"/>
+                            <constraint firstAttribute="bottom" secondItem="xlE-X6-DKl" secondAttribute="bottom" id="PA0-Qg-ren"/>
+                            <constraint firstItem="ICJ-qX-X5b" firstAttribute="top" secondItem="sTP-YU-EaH" secondAttribute="top" id="UeQ-qU-aMi"/>
+                            <constraint firstItem="NNd-uk-gpv" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="VEl-Sv-Haz"/>
+                            <constraint firstItem="sTP-YU-EaH" firstAttribute="trailing" secondItem="Ofz-3u-EDf" secondAttribute="trailing" id="Wfb-G5-YRC"/>
+                            <constraint firstItem="NNd-uk-gpv" firstAttribute="bottom" secondItem="ICJ-qX-X5b" secondAttribute="bottom" id="gKx-Xs-skf"/>
+                            <constraint firstItem="ICJ-qX-X5b" firstAttribute="trailing" secondItem="NNd-uk-gpv" secondAttribute="trailing" id="uWW-gP-4n1"/>
+                            <constraint firstItem="ICJ-qX-X5b" firstAttribute="bottom" secondItem="sTP-YU-EaH" secondAttribute="bottom" id="vDV-Au-opV"/>
+                            <constraint firstItem="Ofz-3u-EDf" firstAttribute="top" secondItem="xlE-X6-DKl" secondAttribute="top" id="ypt-2T-z1V"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="appIconSizeCounterLabel" destination="7ql-OD-51x" id="7QS-AP-pSu"/>
                         <outlet property="appIconSizeSlider" destination="5wD-wp-Crx" id="Wv6-KK-rDv"/>
                         <outlet property="appOpeningMethodPopUp" destination="tgt-DJ-zg9" id="u9U-SQ-yca"/>
-                        <outlet property="appsTable" destination="bV7-Tv-c0G" id="InA-WD-nRH"/>
                         <outlet property="consistentSortOrderRadioButton" destination="i5z-3c-gg7" id="Po6-Aa-tPp"/>
                         <outlet property="duplicateAppsPriorityControl" destination="L0Y-bR-owQ" id="jqX-e7-MHm"/>
                         <outlet property="hideActiveAppFromRunningAppsButton" destination="msg-1s-pvm" id="5lc-Qw-JGL"/>
                         <outlet property="hideDuplicateAppsButton" destination="Qb0-sN-69c" id="kS8-F9-g1V"/>
                         <outlet property="hideFinderFromRunningAppsButton" destination="Jk5-LB-J8x" id="H9B-Kl-mhk"/>
+                        <outlet property="itemSlotWidthCounterLabel" destination="EKD-yl-6YO" id="O31-jk-k5j"/>
+                        <outlet property="itemSlotWidthSlider" destination="iKm-EK-2Yd" id="ZUH-pC-EAI"/>
                         <outlet property="launchAtLoginButton" destination="pfs-x9-j8G" id="xQM-Mz-wm5"/>
-                        <outlet property="maxNumRunningAppsCounterLabel" destination="74E-kU-5tY" id="Xg6-zq-MDx"/>
-                        <outlet property="maxNumRunningAppsSlider" destination="0BC-GN-0F8" id="XfP-NM-SR1"/>
+                        <outlet property="maxRunningAppsCounterLabel" destination="74E-kU-5tY" id="Xg6-zq-MDx"/>
+                        <outlet property="maxRunningAppsSlider" destination="0BC-GN-0F8" id="XfP-NM-SR1"/>
                         <outlet property="mostRecentLeftRadioButton" destination="dQT-5c-wdq" id="wl5-VQ-YSD"/>
                         <outlet property="mostRecentRightRadioButton" destination="Wqs-TY-FqY" id="vDf-O2-Mke"/>
                         <outlet property="preserveAppOrderButton" destination="PJN-Jt-bgi" id="kMI-6i-vEi"/>
                         <outlet property="regularAppsHintLabel" destination="QcC-Z6-GIk" id="iiB-R0-UW4"/>
+                        <outlet property="regularAppsTable" destination="bV7-Tv-c0G" id="InA-WD-nRH"/>
+                        <outlet property="rightClickByDefaultButton" destination="kxy-Y0-Sfb" id="Rdc-0v-wln"/>
                         <outlet property="sideToShowRunningAppsControl" destination="Ka3-Je-sNv" id="dhn-KB-nwW"/>
-                        <outlet property="statusItemWidthCounterLabel" destination="EKD-yl-6YO" id="O31-jk-k5j"/>
-                        <outlet property="statusItemWidthSlider" destination="iKm-EK-2Yd" id="ZUH-pC-EAI"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

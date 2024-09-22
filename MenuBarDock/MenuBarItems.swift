@@ -10,9 +10,10 @@ import Cocoa
 
 protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
-	var statusItemWidth: CGFloat { get }
+	var itemSlotWidth: CGFloat { get }
 	var appIconSize: CGFloat { get }
     var preserveAppOrder: Bool { get }
+    var rightClickByDefault: Bool { get }
 }
 
 protocol MenuBarItemsDelegate: AnyObject {
@@ -53,7 +54,7 @@ class MenuBarItems {
 			let offset = items.count - openableApps.apps.count
 			let item = items[index + offset]
 			showItem(item: item)
-			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.statusItemWidth)
+			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.itemSlotWidth)
 		}
 
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)
@@ -67,10 +68,10 @@ class MenuBarItems {
 	private func createEnoughStatusItems(openableApps: OpenableApps) {
 		let origItemCount = items.count
 		for index in 0...openableApps.apps.count where index >= origItemCount { // we loop to count not count - 1 so the sort order is always correct as it has sorted one item in advance. https://trello.com/c/Jz312bga
-			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDataSource.statusItemWidth)
+			let statusItem = NSStatusBar.system.statusItem(withLength: userPrefsDataSource.itemSlotWidth)
 			let item = MenuBarItem(
 				statusItem: statusItem,
-				dataSource: self
+                userPrefsDataSource: self
  			)
 			item.delegate = self
 			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
@@ -88,7 +89,7 @@ class MenuBarItems {
 	}
 
 	private func showItem(item: MenuBarItem) {
-		item.statusItem.length = userPrefsDataSource.statusItemWidth
+		item.statusItem.length = userPrefsDataSource.itemSlotWidth
 
 		if #available(OSX 10.12, *) {
 			item.statusItem.isVisible = true // Don't remove this, no harm, only has benefits
@@ -101,6 +102,10 @@ class MenuBarItems {
 }
 
 extension MenuBarItems: MenuBarItemDataSource {
+    var rightClickByDefault: Bool {
+        return userPrefsDataSource.rightClickByDefault
+    }
+
 	func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod? {
 		return userPrefsDataSource.appOpeningMethods[app.id]
 	}
