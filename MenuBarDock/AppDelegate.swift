@@ -12,7 +12,6 @@ import ServiceManagement
 @NSApplicationMain
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-
 	let popover = NSPopover()
 	var storyboard: NSStoryboard!
 	var preferencesWindow = NSWindow()
@@ -125,13 +124,13 @@ extension AppDelegate: AppTrackerDelegate {
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
-	func maxNumRunningAppsSliderEndedChanging(_ value: Int) {
-		userPrefs.maxNumRunningApps = value
+	func maxRunningAppsSliderDidChange(_ value: Int) {
+		userPrefs.maxRunningApps = value
 		userPrefsWasUpdated()
 	}
 
-	func statusItemWidthSliderDidChange(_ value: Double) {
-		userPrefs.statusItemWidth = CGFloat(value)
+	func itemSlotWidthSliderDidChange(_ value: Double) {
+		userPrefs.itemSlotWidth = CGFloat(value)
 		userPrefsWasUpdated()
 	}
 
@@ -184,6 +183,11 @@ extension AppDelegate: PreferencesViewControllerDelegate {
         userPrefsWasUpdated()
     }
 
+    func rightClickByDefaultDidChange(_ value: Bool) {
+        userPrefs.rightClickByDefault = value
+        userPrefsWasUpdated()
+    }
+
 	func appOpeningMethodDidChange(_ value: AppOpeningMethod) {
 		userPrefs.defaultAppOpeningMethod = value
 		userPrefsWasUpdated()
@@ -214,7 +218,7 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
-	func hideDuplicateAppsWasPressed(_ value: Bool) {
+	func hideDuplicateAppsDidChange(_ value: Bool) {
 		userPrefs.hideDuplicateApps = value
 		userPrefsWasUpdated()
 	}

@@ -11,9 +11,9 @@ import Cocoa
 protocol RunningAppsUserPrefsDataSource: AnyObject {
  	var hideFinderFromRunningApps: Bool { get }
 	var hideActiveAppFromRunningApps: Bool { get }
-	var maxNumRunningApps: Int { get }
+	var maxRunningApps: Int { get }
+    var regularAppsUrls: [URL] { get }
 	var runningAppsSortingMethod: RunningAppsSortingMethod { get }
-	var regularAppsUrls: [URL] { get }
 }
 
 class RunningApps {
@@ -24,11 +24,11 @@ class RunningApps {
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
 
 	public var limit: Int {
- 		if userPrefsDataSource.maxNumRunningApps == 0 && userPrefsDataSource.regularAppsUrls.count == 0 {
+ 		if userPrefsDataSource.maxRunningApps == 0 && userPrefsDataSource.regularAppsUrls.count == 0 {
 			// we need to show at least one app in the menu bar, or user won't be able to access preferences!
 			return 1
 		}
-		return userPrefsDataSource.maxNumRunningApps
+		return userPrefsDataSource.maxRunningApps
 	}
 
 	init(
@@ -62,6 +62,7 @@ class RunningApps {
 			apps = [] // for efficiency
 			return
 		}
+
 		let newApps = NSWorkspace.shared.runningApplications
 			.map { RunningApp(app: $0) }
 			.filter {canShowRunningApp(app: $0)}
