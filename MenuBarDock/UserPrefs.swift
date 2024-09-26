@@ -9,7 +9,7 @@
 import Cocoa
 
 enum UserPrefsDefaultValues {
-    static let appIconSize: CGFloat = 21
+    static let appIconSize: CGFloat = 40
     static let appOpeningMethods: [String: AppOpeningMethod] = [:] // openableApp id is the key
     static let defaultAppOpeningMethod = AppOpeningMethod.launch
     static let duplicateAppsPriority: DuplicateAppsPriority = .runningApps
