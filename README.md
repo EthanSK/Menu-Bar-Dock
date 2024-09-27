@@ -8,10 +8,14 @@
 
 ### Menu Bar Dock shows MacOS apps in the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
-### Download it [here](https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip)
-
-**It is highly recommended that you enable automatically hide and show the dock in system preferences**. Now you have
-freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps by
+<div style="text-align: center;">
+  <a href="https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip">
+    <img src="./assets/DownloadButton.png" alt="Download Menu Bar Dock">
+  </a>
+</div>
+<br />
+**It is highly recommended that you enable automatically hide and show the dock in system preferences**.
+Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps by
 clicking their icon in the menu bar at the top!
 
 ![Preferences example](./assets/menu-bar-dock-prefs.png)
@@ -52,6 +56,7 @@ The number of downloads for this app can be found by running
 a terminal.
 
 Support this project:
+
 <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
 ### Notes
