@@ -83,7 +83,7 @@ class MenuBarItems {
 
 		if #available(OSX 10.12, *) {
             if userPrefsDataSource.preserveAppOrder == false {
-                item.statusItem.isVisible = false // this prevents the item from remembering its position. Thanks Apple.
+                item.statusItem.isVisible = false // this prevents the item from remembering its position Thanks Apple.
             }
 		}
 	}

@@ -67,6 +67,11 @@ class MenuBarItem {
 
 	func reset() {
 		self.app = nil
+        if let button = statusItem.button {
+            for subview in button.subviews {
+                subview.removeFromSuperview()
+            }
+        }
 	}
 
 	private func initButton() {
