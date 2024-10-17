@@ -57,8 +57,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let launcherAppId = Constants.App.launcherBundleId
 		let runningApps = NSWorkspace.shared.runningApplications
 
-		SMLoginItemSetEnabled(launcherAppId as CFString, false) // needs to be set to false to actually create the loginitems.501.plist file, then we can set it to the legit value...weird
-		SMLoginItemSetEnabled(launcherAppId as CFString, userPrefs.launchAtLogin)
+        if #available(macOS 13.0, *) {
+            do {
+                let appService = SMAppService.loginItem(identifier: launcherAppId)
+                if userPrefs.launchAtLogin {
+                    try appService.register()
+                } else {
+                    try appService.unregister()
+                }
+            } catch {
+                print("Failed to register/unregister login item: \(error)")
+            }
+        } else {
+            SMLoginItemSetEnabled(launcherAppId as CFString, false) // needs to be set to false to actually create the loginitems.501.plist file, then we can set it to the legit value...weird
+            SMLoginItemSetEnabled(launcherAppId as CFString, userPrefs.launchAtLogin)
+        }
 
 		let isLauncherRunning = !runningApps.filter { $0.bundleIdentifier == launcherAppId }.isEmpty
 		if isLauncherRunning {
@@ -157,7 +170,21 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 	func launchAtLoginDidChange(_ value: Bool) {
 		userPrefs.launchAtLogin = value
 		let launcherAppId = Constants.App.launcherBundleId
-		SMLoginItemSetEnabled(launcherAppId as CFString, value)
+        if #available(macOS 13.0, *) {
+            do {
+                let appService = SMAppService.loginItem(identifier: launcherAppId)
+                if value {
+                    try appService.register()
+                } else {
+                    try appService.unregister()
+                }
+            } catch {
+                print("Failed to register/unregister login item: \(error)")
+            }
+        } else {
+            SMLoginItemSetEnabled(launcherAppId as CFString, value)
+
+        }
 		userPrefsWasUpdated()
 	}
 

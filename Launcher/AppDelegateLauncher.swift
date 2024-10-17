@@ -45,8 +45,24 @@ extension AppDelegateLauncher: NSApplicationDelegate {
 
 			let newPath = NSString.path(withComponents: components)
 
-			NSWorkspace.shared.launchApplication(newPath)
-		} else {
+            let url = URL(fileURLWithPath: newPath)
+
+            // Launch the main app
+            if #available(macOS 10.15, *) {
+                NSWorkspace.shared.openApplication(at: url, configuration: NSWorkspace.OpenConfiguration()) { (_, error) in
+                    if let error = error {
+                        print("Failed to launch app: \(error)")
+                    } else {
+                        print("Successfully launched app")
+                    }
+                    // Terminate the helper app
+                    self.terminate()
+                }
+            } else {
+                NSWorkspace.shared.launchApplication(newPath)
+                self.terminate()
+            }
+ 		} else {
 			self.terminate()
 		}
 	}
