@@ -1,3 +1,10 @@
+ <div style="text-align: center;">
+  <a href="https://www.aiwallpapergenerator.ai/">
+    <img src="./assets/AiWallpaperBadge.png" alt="Download AI Wallpaper Generator" width="1000">
+  </a>
+</div>
+<br />
+
 # [Menu Bar Dock](https://www.menubardock.com/)
 
  <p align="center">
