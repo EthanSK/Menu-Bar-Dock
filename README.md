@@ -1,5 +1,5 @@
  <div style="text-align: center;">
-  <a href="https://www.aiwallpapergenerator.ai/" target="_blank">
+  <a href="https://www.aiwallpapergenerator.ai/" target="_blank" rel="noopener noreferrer">
     <img src="./assets/AiWallpaperBadge.png" alt="Download AI Wallpaper Generator" width="1000">
   </a>
 </div>
