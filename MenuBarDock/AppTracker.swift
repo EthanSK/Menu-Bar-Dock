@@ -24,17 +24,27 @@ class AppTracker {
 
 	private func trackAppsBeingActivated() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if
-				let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication,
-				// macOS 14+ (Sonoma/Sequoia/26): `frontmostApplication` is no longer
-				// updated synchronously with this notification under the cooperative-
-				// activation model, so the old equality check silently dropped legit
-				// activations. Filter via activationPolicy instead — the visible-dock
-				// path already filters .regular at RunningApps.swift:74, so this
-				// preserves the original "skip background processes" intent without
-				// the timing race.
-				app.activationPolicy == .regular
-			{
+			guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
+				return
+			}
+			// Activation gate — filter out background-process activations that aren't
+			// "this app just came to the front". Pre-Sonoma the cleanest signal was
+			// `NSWorkspace.shared.frontmostApplication == app`, but on macOS 14+ the
+			// cooperative activation model means `frontmostApplication` isn't always
+			// updated synchronously with this notification — the equality check then
+			// silently drops legit foreground activations and the "most recent"
+			// sort appears frozen. On Sonoma+ we instead trust the notification's
+			// payload directly and filter by `activationPolicy == .regular`, which
+			// matches the same filter the visible-dock path uses
+			// (RunningApps.canShowRunningApp:74). On older OSes we keep the
+			// original guard since it was working there.
+			let isForegroundActivation: Bool
+			if #available(macOS 14.0, *) {
+				isForegroundActivation = (app.activationPolicy == .regular)
+			} else {
+				isForegroundActivation = (NSWorkspace.shared.frontmostApplication == app)
+			}
+			if isForegroundActivation {
 				self.delegate?.appWasActivated(runningApp: app)
 			}
 		}
