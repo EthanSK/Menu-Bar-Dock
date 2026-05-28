@@ -65,7 +65,7 @@ the Apple Developer account, not the repo.
 Public key already in `MenuBarDock/Info.plist`:
 
 ```text
-SUPublicEDKey = nnWPxTwKYaUTPjycwsl0jIBtiPNjokGcuZRA/El7W/Y=
+SUPublicEDKey = k3B1U0o3RBCyNKdtLsniY1f2HajvaVWSr/NLcZ499ZM=
 ```
 
 The corresponding private key is stored in the maintainer's macOS Keychain

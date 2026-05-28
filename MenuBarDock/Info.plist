@@ -55,7 +55,7 @@
 	<key>SUFeedURL</key>
 	<string>https://www.menubardock.com/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>nnWPxTwKYaUTPjycwsl0jIBtiPNjokGcuZRA/El7W/Y=</string>
+	<string>k3B1U0o3RBCyNKdtLsniY1f2HajvaVWSr/NLcZ499ZM=</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUScheduledCheckInterval</key>

@@ -433,17 +433,13 @@ jobs:
           GH_PAGES_DIR="$RUNNER_TEMP/gh-pages"
 
           # If gh-pages branch doesn't exist yet (first-ever Sparkle release
-          # on this repo), create it from an orphan commit so we can publish
-          # the appcast.xml. Subsequent releases append to the existing branch.
+          # on this repo), bootstrap it from HEAD so the existing GitHub Pages
+          # site files (README.md, CNAME, assets, _config.yml) keep serving
+          # alongside appcast.xml. Subsequent releases append to the existing
+          # branch without deleting unrelated site files.
           if ! git ls-remote --exit-code origin gh-pages >/dev/null 2>&1; then
-            echo "::notice::gh-pages branch does not exist yet — creating from orphan commit"
-            git worktree add --no-checkout "$GH_PAGES_DIR" HEAD
-            (
-              cd "$GH_PAGES_DIR"
-              git checkout --orphan gh-pages
-              git rm -rf . >/dev/null 2>&1 || true
-              git commit --allow-empty -m "Initialize gh-pages for appcast.xml"
-            )
+            echo "::notice::gh-pages branch does not exist yet — bootstrapping from HEAD"
+            git worktree add -B gh-pages "$GH_PAGES_DIR" HEAD
           else
             git fetch origin gh-pages:refs/remotes/origin/gh-pages
             git worktree add -B gh-pages "$GH_PAGES_DIR" origin/gh-pages

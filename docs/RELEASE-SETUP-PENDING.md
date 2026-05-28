@@ -14,7 +14,7 @@ The keypair was generated locally on the Mac Mini on 2026-05-28. The
 **public** key is already committed in `MenuBarDock/Info.plist`:
 
 ```text
-SUPublicEDKey = nnWPxTwKYaUTPjycwsl0jIBtiPNjokGcuZRA/El7W/Y=
+SUPublicEDKey = k3B1U0o3RBCyNKdtLsniY1f2HajvaVWSr/NLcZ499ZM=
 ```
 
 The **private** key sits in the maintainer's macOS Keychain under account
@@ -69,9 +69,9 @@ To export the Developer ID certificate from Keychain Access:
 ## 3. Enable GitHub Pages for the `gh-pages` branch
 
 The release workflow auto-creates the `gh-pages` branch on the first
-canonical-tag release (it falls back to an orphan commit if the branch
-doesn't exist yet). But you still need to flip GitHub Pages to serve from
-that branch:
+canonical-tag release by bootstrapping it from `master` so the existing
+landing page files stay available alongside `appcast.xml`. But you still
+need to flip GitHub Pages to serve from that branch:
 
 1. Go to https://github.com/EthanSK/Menu-Bar-Dock/settings/pages
 2. Source: **Deploy from a branch**
