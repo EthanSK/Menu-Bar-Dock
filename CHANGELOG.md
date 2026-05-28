@@ -8,6 +8,12 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.3] — 2026-05-28
+
+### Changed
+
+- No-op release to verify the Sparkle auto-update flow from v4.7.2.
+
 ## [4.7.0] — 2026-05-28
 
 ### Added
