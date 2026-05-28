@@ -101,11 +101,8 @@ way `www.menubardock.com` stays as the README-driven master-branch site and
 `AppDelegate.swift` has an `@objc func checkForUpdates(_:)` action that shows
 the Sparkle update UI on demand. The existing Preferences window "Check for
 Updates" button is wired through `PreferencesViewControllerDelegate` to that
-Sparkle action.
-
-Optional future polish: add a separate "Check for Updates..." item to the
-menu-bar-item context menu and wire its action to `checkForUpdates:` on the App
-Delegate's First Responder.
+Sparkle action. The menu-bar-item context menu also exposes "Check for
+Updates..." and calls the same Sparkle action.
 
 Sparkle's background scheduler still fires daily even if the user never presses
 the button.

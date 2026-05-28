@@ -15,6 +15,7 @@ protocol MenuBarItemDataSource: AnyObject {
 
 protocol MenuBarItemDelegate: AnyObject {
 	func didOpenPreferencesWindow()
+	func didCheckForUpdates()
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp)
 
 }
@@ -160,6 +161,13 @@ class MenuBarItem {
 
 		_ = addMenuItem(
 			menu: menu,
+			title: "Check for Updates...",
+			action: #selector(checkForUpdates),
+			keyEquivalent: ""
+		)
+
+		_ = addMenuItem(
+			menu: menu,
 			title: "Quit \(Constants.App.name)",
 			action: #selector(quitMenuBarDock),
 			keyEquivalent: ""
@@ -254,6 +262,10 @@ class MenuBarItem {
 
 	@objc private func openPreferencesWindow() {
 		delegate?.didOpenPreferencesWindow()
+	}
+
+	@objc private func checkForUpdates() {
+		delegate?.didCheckForUpdates()
 	}
 
 	@objc private func quitMenuBarDock(_ sender: Any?) {

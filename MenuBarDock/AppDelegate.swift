@@ -127,6 +127,10 @@ extension AppDelegate: MenuBarItemsDelegate {
 		openPreferencesWindow()
 	}
 
+	func didCheckForUpdates() {
+		checkForUpdates(nil)
+	}
+
 	func openPreferencesWindow() {
 		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.Identifiers.ViewControllers.preferences) as? PreferencesViewController {
 			viewController.userPrefsDataSource = userPrefs

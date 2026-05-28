@@ -18,6 +18,7 @@ protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 
 protocol MenuBarItemsDelegate: AnyObject {
 	func didOpenPreferencesWindow()
+	func didCheckForUpdates()
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp)
 }
 
@@ -114,6 +115,10 @@ extension MenuBarItems: MenuBarItemDataSource {
 extension MenuBarItems: MenuBarItemDelegate {
 	func didOpenPreferencesWindow() {
 		delegate?.didOpenPreferencesWindow()
+	}
+
+	func didCheckForUpdates() {
+		delegate?.didCheckForUpdates()
 	}
 
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp) {
