@@ -104,19 +104,31 @@ else
     echo "sign-release.sh: investigate the Pods integration before continuing."
 fi
 
-# 2. Embedded Launcher login-item helper — Menu Bar Dock ships
-#    "Menu Bar DockLauncher.app" inside Contents/Library/LoginItems/ so it can
-#    register itself with SMAppService / SMLoginItemSetEnabled at runtime. It
-#    has its own entitlements file (Launcher/Launcher.entitlements). Pre-13
-#    macOS uses the SMLoginItemSetEnabled path which requires the launcher to
-#    be signed with the same Team ID as the main app — re-signing here
-#    guarantees the team ID matches in CI.
-LAUNCHER_APP="$APP/Contents/Library/LoginItems/Menu Bar DockLauncher.app"
-if [[ -d "$LAUNCHER_APP" ]]; then
-    echo "sign-release.sh: signing embedded Launcher login-item helper..."
-    sign "$LAUNCHER_APP" "$LAUNCHER_ENTITLEMENTS"
+# 2. Embedded Launcher login-item helper — Menu Bar Dock ships a helper app
+#    inside Contents/Library/LoginItems/ so it can register itself with
+#    SMAppService / SMLoginItemSetEnabled at runtime. Xcode currently emits it
+#    as Launcher.app, while older project notes expected "Menu Bar
+#    DockLauncher.app", so sign every login-item app we find. The helper has
+#    its own entitlements file (Launcher/Launcher.entitlements). Pre-13 macOS
+#    uses the SMLoginItemSetEnabled path which requires the launcher to be
+#    signed with the same Team ID as the main app — re-signing here guarantees
+#    the team ID matches in CI.
+LOGIN_ITEMS_DIR="$APP/Contents/Library/LoginItems"
+if [[ -d "$LOGIN_ITEMS_DIR" ]]; then
+    shopt -s nullglob
+    LOGIN_ITEM_APPS=("$LOGIN_ITEMS_DIR"/*.app)
+    shopt -u nullglob
+
+    if [[ ${#LOGIN_ITEM_APPS[@]} -eq 0 ]]; then
+        echo "sign-release.sh: (LoginItems exists but contains no .app bundles — skipping)"
+    fi
+
+    for launcher_app in "${LOGIN_ITEM_APPS[@]}"; do
+        echo "sign-release.sh: signing embedded Launcher login-item helper: $launcher_app"
+        sign "$launcher_app" "$LAUNCHER_ENTITLEMENTS"
+    done
 else
-    echo "sign-release.sh: (no embedded Launcher.app — skipping)"
+    echo "sign-release.sh: (no LoginItems directory — skipping)"
 fi
 
 # 3. Outer .app last — applies the main-app entitlements. Outer-app signing
