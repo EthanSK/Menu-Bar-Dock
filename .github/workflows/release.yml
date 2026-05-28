@@ -320,11 +320,44 @@ jobs:
             exit 1
           fi
           ditto -c -k --keepParent "build/Export/$APP_NAME.app" "build/$APP_NAME-notary.zip"
+          NOTARY_RESULT="$RUNNER_TEMP/notary-submit.json"
           xcrun notarytool submit "build/$APP_NAME-notary.zip" \
             --apple-id "$APPLE_ID" \
             --team-id "$TEAM_ID" \
             --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --wait
+            --wait \
+            --output-format json > "$NOTARY_RESULT"
+
+          cat "$NOTARY_RESULT"
+          NOTARY_STATUS="$(python3 - "$NOTARY_RESULT" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="utf-8") as f:
+              payload = json.load(f)
+          print(payload.get("status", ""))
+          PY
+          )"
+          NOTARY_ID="$(python3 - "$NOTARY_RESULT" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1], encoding="utf-8") as f:
+              payload = json.load(f)
+          print(payload.get("id", ""))
+          PY
+          )"
+
+          if [ "$NOTARY_STATUS" != "Accepted" ]; then
+            echo "::error::Notarization status was ${NOTARY_STATUS:-unknown}, expected Accepted."
+            if [ -n "$NOTARY_ID" ]; then
+              xcrun notarytool log "$NOTARY_ID" \
+                --apple-id "$APPLE_ID" \
+                --team-id "$TEAM_ID" \
+                --password "$APPLE_APP_SPECIFIC_PASSWORD" || true
+            fi
+            exit 65
+          fi
 
       - name: Staple app
         # Apple can report a notarization as Accepted before the stapling

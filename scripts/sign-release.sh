@@ -104,32 +104,28 @@ else
     echo "sign-release.sh: investigate the Pods integration before continuing."
 fi
 
-# 2. Embedded Launcher login-item helper — Menu Bar Dock ships a helper app
-#    inside Contents/Library/LoginItems/ so it can register itself with
-#    SMAppService / SMLoginItemSetEnabled at runtime. Xcode currently emits it
-#    as Launcher.app, while older project notes expected "Menu Bar
-#    DockLauncher.app", so sign every login-item app we find. The helper has
-#    its own entitlements file (Launcher/Launcher.entitlements). Pre-13 macOS
-#    uses the SMLoginItemSetEnabled path which requires the launcher to be
-#    signed with the same Team ID as the main app — re-signing here guarantees
-#    the team ID matches in CI.
-LOGIN_ITEMS_DIR="$APP/Contents/Library/LoginItems"
-if [[ -d "$LOGIN_ITEMS_DIR" ]]; then
-    shopt -s nullglob
-    LOGIN_ITEM_APPS=("$LOGIN_ITEMS_DIR"/*.app)
-    shopt -u nullglob
+# 2. Embedded Launcher helper apps. The target embeds Launcher.app twice:
+#    - Contents/Library/LoginItems/Launcher.app is the login-item helper.
+#    - Contents/Resources/Launcher.app is also copied as a resource by the
+#      legacy project setup, and Apple's notarization service validates it too.
+#    Sign both copies with the launcher entitlements before sealing the outer
+#    app, otherwise notarization rejects the unsigned resource copy even though
+#    codesign --deep verification can pass locally.
+shopt -s nullglob
+LAUNCHER_APPS=(
+    "$APP"/Contents/Library/LoginItems/*.app
+    "$APP"/Contents/Resources/Launcher.app
+)
+shopt -u nullglob
 
-    if [[ ${#LOGIN_ITEM_APPS[@]} -eq 0 ]]; then
-        echo "sign-release.sh: (LoginItems exists but contains no .app bundles — skipping)"
-    fi
-
-    for launcher_app in "${LOGIN_ITEM_APPS[@]}"; do
-        echo "sign-release.sh: signing embedded Launcher login-item helper: $launcher_app"
-        sign "$launcher_app" "$LAUNCHER_ENTITLEMENTS"
-    done
-else
-    echo "sign-release.sh: (no LoginItems directory — skipping)"
+if [[ ${#LAUNCHER_APPS[@]} -eq 0 ]]; then
+    echo "sign-release.sh: (no embedded Launcher apps found — skipping)"
 fi
+
+for launcher_app in "${LAUNCHER_APPS[@]}"; do
+    echo "sign-release.sh: signing embedded Launcher helper: $launcher_app"
+    sign "$launcher_app" "$LAUNCHER_ENTITLEMENTS"
+done
 
 # 3. Outer .app last — applies the main-app entitlements. Outer-app signing
 #    is what seals the bundle, so this MUST run after every nested bundle
