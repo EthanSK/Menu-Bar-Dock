@@ -32,5 +32,35 @@
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<!--
+	  Sparkle auto-update configuration — added 2026-05-28 (Ethan voice 7174).
+
+	  SUFeedURL:  appcast.xml is served from the gh-pages branch via GitHub
+	              Pages at menubardock.com (CNAME). The release workflow
+	              regenerates it on every tag-driven release. If the custom
+	              domain ever lapses, fall back to
+	              https://ethansk.github.io/Menu-Bar-Dock/appcast.xml — both
+	              point at the same gh-pages branch.
+	  SUPublicEDKey: Ed25519 PUBLIC key (private half is stored in the
+	              maintainer's keychain under account "menu-bar-dock" and as
+	              the SPARKLE_ED25519_PRIVATE_KEY GitHub Actions secret).
+	              Replacing this key invalidates every installed copy's
+	              update path — do not rotate without a coordinated rollout.
+	  SUEnableAutomaticChecks + SUScheduledCheckInterval: daily background
+	              checks (86_400 seconds). Standard Sparkle defaults.
+	  SUAllowsAutomaticUpdates: true so users can opt-in to download +
+	              install in the background without a prompt; the in-app UI
+	              still lets them pick prompt-first.
+	-->
+	<key>SUFeedURL</key>
+	<string>https://www.menubardock.com/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>nnWPxTwKYaUTPjycwsl0jIBtiPNjokGcuZRA/El7W/Y=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
 </dict>
 </plist>

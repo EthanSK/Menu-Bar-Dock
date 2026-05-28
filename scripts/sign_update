@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# sign_update — Sparkle Ed25519 signing helper for Menu Bar Dock.
+#
+# Mirrors the macos-widgets-stats-from-website pattern. Prints ONLY the base64
+# Ed25519 signature to stdout so the GitHub Actions release workflow can pipe
+# it directly into the appcast.xml generator.
+#
+# Usage:
+#   scripts/sign_update <archive.zip> [base64-private-key]
+#
+# Resolution order for the Sparkle sign_update binary:
+#   1. $SPARKLE_SIGN_UPDATE_PATH (explicit override)
+#   2. build/sparkle/bin/sign_update — when CI downloads the Sparkle tarball
+#      to build/sparkle/ before this script runs.
+#   3. Pods/Sparkle/bin/sign_update — when CocoaPods has installed Sparkle
+#      locally (the typical developer-machine path).
+#   4. Homebrew Cask install paths — convenience for developers who installed
+#      Sparkle outside the project.
+#
+# Resolution order for the private key:
+#   - Second positional argument (preferred for CI — secret is piped in).
+#   - $SPARKLE_ED25519_PRIVATE_KEY env var (also CI).
+#   - Keychain account "menu-bar-dock" (developer machine, set by
+#     `Pods/Sparkle/bin/generate_keys --account menu-bar-dock`).
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ARCHIVE="${1:-}"
+PRIVATE_KEY="${2:-${SPARKLE_ED25519_PRIVATE_KEY:-}}"
+SPARKLE_VERSION="${SPARKLE_VERSION:-2.6.4}"
+# Account name in the developer's keychain. Matches the `--account` flag
+# passed to generate_keys when the key was originally created.
+KEYCHAIN_ACCOUNT="${SPARKLE_KEYCHAIN_ACCOUNT:-menu-bar-dock}"
+
+if [ -z "$ARCHIVE" ]; then
+  echo "usage: scripts/sign_update <archive.zip> [base64-private-key]" >&2
+  exit 64
+fi
+
+if [ ! -f "$ARCHIVE" ]; then
+  echo "sign_update: archive not found: $ARCHIVE" >&2
+  exit 66
+fi
+
+# Walk a fixed list of candidate paths to find the sign_update binary. The
+# Sparkle tarball extracts FLAT (bin/sign_update at the root of the unpacked
+# dir), NOT inside a Sparkle-<version>/ wrapper directory — verified against
+# 2.6.4 release artifacts. Wrapper-dir candidates stay for forwards-compat.
+find_sign_update() {
+  local candidates=(
+    "${SPARKLE_SIGN_UPDATE_PATH:-}"
+    "$ROOT/build/sparkle/bin/sign_update"
+    "$ROOT/build/sparkle/Sparkle-$SPARKLE_VERSION/bin/sign_update"
+    "$ROOT"/build/sparkle/Sparkle-*/bin/sign_update
+    "$ROOT/Pods/Sparkle/bin/sign_update"
+    /opt/homebrew/Caskroom/sparkle/*/bin/sign_update
+    /Applications/Sparkle*/bin/sign_update
+  )
+
+  local candidate
+  for candidate in "${candidates[@]}"; do
+    if [ -n "$candidate" ] && [ -x "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+SIGN_UPDATE="$(find_sign_update || true)"
+if [ -z "$SIGN_UPDATE" ]; then
+  echo "sign_update: Sparkle sign_update binary was not found." >&2
+  echo "Set SPARKLE_SIGN_UPDATE_PATH or download Sparkle tools into build/sparkle/." >&2
+  exit 69
+fi
+
+if [ -n "$PRIVATE_KEY" ]; then
+  # CI path — read the key from stdin so it never touches a file on disk.
+  printf '%s\n' "$PRIVATE_KEY" | "$SIGN_UPDATE" --ed-key-file - -p "$ARCHIVE"
+else
+  # Developer machine — pull the key from the macOS keychain by account name.
+  "$SIGN_UPDATE" --account "$KEYCHAIN_ACCOUNT" -p "$ARCHIVE"
+fi

@@ -15,11 +15,58 @@
 
 ### Menu Bar Dock shows MacOS apps in the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
+<!--
+  Download button — wired to GitHub's stable /releases/latest/download/ alias
+  so it always points at whatever the latest published release is. On the
+  GitHub Pages site (menubardock.com) the small script below also fetches the
+  GitHub Releases API and overlays the current version number so visitors can
+  see what they're about to download. The script is a progressive
+  enhancement — the button works fine as a plain `<a>` link when JS is off
+  (which is how github.com's README viewer renders it).
+
+  Legacy v4.6-and-earlier shipped as `Menu.Bar.Dock.app.zip` (dots). v4.7.0+
+  use `Menu-Bar-Dock-latest.zip` (URL-safe hyphens) per the new release
+  pipeline — see docs/release.md. We keep both fallbacks in the script
+  so a user on a stale Pages cache still gets a working download.
+-->
 <div style="text-align: center;">
-  <a href="https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu.Bar.Dock.app.zip">
+  <a id="hero-download-primary" href="https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu-Bar-Dock-latest.zip">
     <img src="./assets/DownloadButton.png" alt="Download Menu Bar Dock">
   </a>
+  <div id="hero-download-version" style="margin-top: 8px; font-size: 14px; opacity: 0.7;"></div>
 </div>
+<script>
+  // Progressive enhancement — overlays the current release version on the
+  // GitHub Pages site. github.com's README viewer ignores `<script>` tags so
+  // this is a no-op there (the static `<a>` href above is what users get).
+  (function () {
+    var versionEl = document.getElementById('hero-download-version');
+    var btnEl = document.getElementById('hero-download-primary');
+    if (!versionEl || !btnEl) { return; }
+    fetch('https://api.github.com/repos/EthanSK/Menu-Bar-Dock/releases/latest', {
+      headers: { Accept: 'application/vnd.github+json' },
+      cache: 'no-store',
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (release) {
+        if (!release || !release.tag_name) { return; }
+        // Strip leading "v" for display. Tag examples: "v4.7.0", "4.6", "4.5".
+        var displayVersion = String(release.tag_name).replace(/^v/i, '');
+        versionEl.textContent = 'Latest: v' + displayVersion;
+        // Prefer the versioned asset if present (the new pipeline always
+        // ships one), else stick with the stable -latest.zip alias.
+        if (Array.isArray(release.assets)) {
+          var versioned = release.assets.find(function (a) {
+            return /^Menu-Bar-Dock-v[\d.]+\.zip$/.test(a.name);
+          });
+          if (versioned && versioned.browser_download_url) {
+            btnEl.href = versioned.browser_download_url;
+          }
+        }
+      })
+      .catch(function () { /* offline / API rate-limited — keep static link */ });
+  })();
+</script>
 <br />
 **It is highly recommended that you enable automatically hide and show the dock in system preferences**.
 Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps by

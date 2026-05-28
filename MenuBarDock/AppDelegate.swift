@@ -8,6 +8,11 @@
 
 import Cocoa
 import ServiceManagement
+// Sparkle 2.x — drives in-app auto-update. The feed URL + EdDSA public key
+// are configured via Info.plist (SUFeedURL / SUPublicEDKey). See Info.plist
+// comments for the full release-pipeline rationale.
+// Added 2026-05-28 (Ethan voice 7174).
+import Sparkle
 
 @NSApplicationMain
 
@@ -25,9 +30,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var runningApps: RunningApps!
 	var regularApps: RegularApps!
 
+	// Sparkle's standard updater controller — must be a long-lived property so
+	// Sparkle's background scheduler stays alive for the whole app session.
+	// `startingUpdater: true` kicks off the first update check immediately on
+	// launch (subject to SUScheduledCheckInterval). With `updaterDelegate: nil`
+	// we accept Sparkle's defaults; future customization (e.g. ignoring
+	// specific versions, gating beta channels) would add a delegate here.
+	private lazy var sparkleUpdater: SPUStandardUpdaterController = {
+		return SPUStandardUpdaterController(
+			startingUpdater: true,
+			updaterDelegate: nil,
+			userDriverDelegate: nil
+		)
+	}()
+
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		initApp()
 		setupLaunchAtLogin()
+		// Touch the lazy var so Sparkle starts polling the appcast. Without
+		// this access the property never instantiates and no updates are
+		// checked. _ = is the canonical way to silence the unused-result
+		// warning while forcing evaluation.
+		_ = sparkleUpdater
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -81,6 +105,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	private func updateMenuBarItems() {
 		menuBarItems.update(openableApps: openableApps)
+	}
+
+	// Exposed so a future "Check for Updates…" menu item / preferences button
+	// can request an immediate user-driven update check (shows the Sparkle UI
+	// even if no update is available, so the user gets visible feedback).
+	// Sparkle's background scheduler still runs on its own cadence.
+	// Marked @objc so it's wirable from Interface Builder.
+	@objc func checkForUpdates(_ sender: Any?) {
+		sparkleUpdater.checkForUpdates(sender)
 	}
 }
 

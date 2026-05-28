@@ -1,0 +1,494 @@
+name: Release
+
+# Dual-trigger release: BOTH push-to-main/master AND v* tag-push fire a
+# release run. Matches Producer Player + macos-widgets-stats-from-website.
+#
+# Why both:
+#   - Tag-driven release (v<X.Y.Z>) → canonical user-facing release that
+#     populates appcast.xml. Existing installs auto-update.
+#   - Branch-driven release (any commit to master) → "rolling build" tagged
+#     v<X.Y.Z>-build.<run_number>. Useful as a testing artifact. Does NOT
+#     update appcast.xml so it doesn't ship to existing installs.
+#
+# The check-tag-race job below prevents a "branch push then tag push"
+# sequence from running both jobs and racing on the same gh-pages
+# appcast commit.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  # User-facing .app wrapper name — keep in sync with the PRODUCT_NAME build
+  # setting in Menu Bar Dock.xcodeproj. xcodebuild emits "Menu Bar Dock.app"
+  # at this exact path inside the .xcarchive.
+  APP_NAME: Menu Bar Dock
+  # ZIP filename uses URL-safe hyphens — spaces would percent-encode in the
+  # Sparkle enclosure URL and break some download clients.
+  LATEST_ZIP_FILENAME: Menu-Bar-Dock-latest.zip
+  # The exported .xcarchive's Products/Applications subdirectory.
+  EXPORTED_APP_FILENAME: Menu Bar Dock.app
+  # Sparkle CLI tool version. The release job downloads this tarball from
+  # the sparkle-project/Sparkle repo + uses bin/sign_update to sign the ZIP.
+  SPARKLE_VERSION: 2.6.4
+  # Fallback team ID — used if neither APPLE_TEAM_ID nor DEVELOPMENT_TEAM
+  # secrets are configured. Matches Ethan's Developer ID team.
+  DEVELOPMENT_TEAM_FALLBACK: T34G959ZG8
+
+jobs:
+  # Tag-race guard — see macos-widgets-stats-from-website/.github/workflows/release.yml
+  # for the full rationale. Summary: bump-version.sh's "push branch then push
+  # tag" sequence fires TWO workflow runs that race; the branch-push run
+  # detects the matching v* tag at the same SHA and exits success so the
+  # tag-push run is the sole publisher.
+  check-tag-race:
+    name: Skip if a tag push is racing this branch push
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.detect.outputs.should_skip }}
+    steps:
+      - name: Detect concurrent v* tag at same SHA
+        id: detect
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/')
+        uses: actions/github-script@v7
+        with:
+          # Poll up to ~30s for the tag to appear (tag-push usually lands a
+          # few seconds after the branch-push from the same `git push
+          # origin master --tags` sequence). If no matching tag appears,
+          # proceed — this is a legitimate non-release commit to master.
+          # context.sha is GitHub's own 40-char SHA — safe by construction.
+          script: |
+            const sha = context.sha;
+            const maxAttempts = 6;
+            const delayMs = 5000;
+            const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+            core.info(`Checking for v* tags pointing at ${sha} (up to ${maxAttempts} attempts)...`);
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              try {
+                const refs = await github.paginate(
+                  github.rest.git.listMatchingRefs,
+                  {
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: 'tags/v',
+                    per_page: 100,
+                  }
+                );
+                const matchingTag = refs.find(r => r.object && r.object.sha === sha);
+                if (matchingTag) {
+                  core.notice(
+                    `Skipping branch-push release run: tag ${matchingTag.ref} ` +
+                    `already points at ${sha} (attempt ${attempt}/${maxAttempts}). ` +
+                    `The tag-push run will publish.`
+                  );
+                  core.setOutput('should_skip', 'true');
+                  return;
+                }
+                if (attempt < maxAttempts) {
+                  core.info(`No v* tag at ${sha} yet (attempt ${attempt}/${maxAttempts}); waiting ${delayMs / 1000}s...`);
+                  await sleep(delayMs);
+                }
+              } catch (err) {
+                // Fail-soft — API hiccups must NOT block a legit release.
+                core.warning(`Tag-race check failed (${err.message}); proceeding with release.`);
+                core.setOutput('should_skip', 'false');
+                return;
+              }
+            }
+            core.info(`No v* tag at ${sha} after ${maxAttempts} attempts; proceeding with branch-push release.`);
+            core.setOutput('should_skip', 'false');
+
+  release:
+    name: Build, notarize, publish
+    needs: check-tag-race
+    if: needs.check-tag-race.outputs.should_skip != 'true'
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache CocoaPods
+        # `pod install` re-downloads Sparkle every run otherwise — the cache
+        # is keyed on Podfile.lock so it auto-invalidates on dep bumps.
+        uses: actions/cache@v4
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Validate checked-in release metadata
+        # Static gates: pbxproj version is semver, Info.plist has Sparkle
+        # keys, workflow references the right asset names, etc.
+        run: python3 scripts/validate_release_metadata.py --check-repo --check-version
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Show toolchain versions
+        run: |
+          sw_vers
+          xcodebuild -version
+          swift --version
+          pod --version
+
+      - name: Validate release secrets
+        # Hard-fail with a clear error message if any required secret is
+        # missing — better than letting xcodebuild crash later with an
+        # opaque "no identity matched" message.
+        env:
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+          SPARKLE_ED25519_PRIVATE_KEY: ${{ secrets.SPARKLE_ED25519_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          missing=()
+          for name in APPLE_CERTIFICATE_P12_BASE64 APPLE_CERTIFICATE_PASSWORD APPLE_ID APPLE_APP_SPECIFIC_PASSWORD SPARKLE_ED25519_PRIVATE_KEY; do
+            if [ -z "${!name:-}" ]; then
+              missing+=("$name")
+            fi
+          done
+
+          if [ ${#missing[@]} -ne 0 ]; then
+            printf '::error title=Missing release secret(s)::%s\n' "${missing[*]}"
+            echo '::error::Add the required GitHub Actions secrets documented in docs/release.md before running this workflow.'
+            exit 1
+          fi
+
+          if [ -z "${APPLE_TEAM_ID:-${DEVELOPMENT_TEAM:-}}" ]; then
+            echo "::notice title=Using checked-in Apple team fallback::APPLE_TEAM_ID/DEVELOPMENT_TEAM is not set, so the workflow will use $DEVELOPMENT_TEAM_FALLBACK."
+          fi
+
+      - name: Import Developer ID certificate
+        # Standard pattern — base64-decode the .p12, import into a temp
+        # keychain, set it as the default. Cleaned up in the final step.
+        id: import-cert
+        env:
+          APPLE_CERTIFICATE_P12_BASE64: ${{ secrets.APPLE_CERTIFICATE_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          CERT_PATH="$RUNNER_TEMP/developer-id.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/menu-bar-dock-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -hex 16)"
+
+          printf '%s' "$APPLE_CERTIFICATE_P12_BASE64" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" \
+            -P "$APPLE_CERTIFICATE_PASSWORD" \
+            -A -t cert -f pkcs12 \
+            -k "$KEYCHAIN_PATH"
+          security set-key-partition-list \
+            -S "apple-tool:,apple:,codesign:" \
+            -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          existing="$(security list-keychains -d user | tr -d '"' | xargs)"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $existing
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          rm -f "$CERT_PATH"
+          echo "CI_KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+
+      - name: Install CocoaPods dependencies
+        # `pod install` brings in Sparkle (per Podfile). --deployment fails
+        # if Podfile.lock disagrees with Podfile, enforcing pinned versions.
+        run: pod install --deployment
+
+      - name: Prepare release metadata
+        id: meta
+        # Sets RELEASE_TAG, RELEASE_VERSION, RELEASE_BUILD_NUMBER,
+        # ASSET_ZIP_FILENAME, RELEASE_NOTES_URL etc. into $GITHUB_ENV +
+        # $GITHUB_OUTPUT.
+        run: python3 scripts/prepare_release_metadata.py
+
+      - name: Build archive (ad-hoc signed)
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+        # Archive with ad-hoc signing — the Developer ID signature is applied
+        # by scripts/sign-release.sh in the next step, which deep-walks the
+        # .app and signs each nested bundle (Sparkle framework, Launcher
+        # login-item helper, outer .app) with the correct per-bundle
+        # entitlements.
+        #
+        # We use the .xcworkspace (not the .xcodeproj) because CocoaPods
+        # generates an Xcode workspace that wires the Pods/ project alongside
+        # the main project. Building the bare .xcodeproj would skip Sparkle.
+        run: |
+          set -euo pipefail
+          TEAM_ID="${APPLE_TEAM_ID:-${DEVELOPMENT_TEAM:-$DEVELOPMENT_TEAM_FALLBACK}}"
+          mkdir -p build
+          xcodebuild archive \
+            -workspace "Menu Bar Dock.xcworkspace" \
+            -scheme "Menu Bar Dock" \
+            -configuration Release \
+            -archivePath build/MenuBarDock.xcarchive \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="$TEAM_ID"
+
+      - name: Deep-sign archive with Developer ID
+        # Walk the archived .app inside-out and re-sign every nested bundle
+        # with the imported Developer ID Application identity. See script
+        # header for the full rationale.
+        run: ./scripts/sign-release.sh build/MenuBarDock.xcarchive
+
+      - name: Copy + verify .app for distribution
+        # Copy the deep-signed .app out of the archive into build/Export/.
+        # We deliberately do NOT use xcodebuild -exportArchive — it would
+        # redo signing with an ExportOptions.plist, and any mismatch between
+        # our post-archive deep-sign and xcodebuild's re-sign attempt
+        # produces a broken bundle. The .app inside the .xcarchive is
+        # already a complete, properly-signed product.
+        run: |
+          set -euo pipefail
+          mkdir -p build/Export
+          SOURCE="build/MenuBarDock.xcarchive/Products/Applications/$EXPORTED_APP_FILENAME"
+          DEST="build/Export/$APP_NAME.app"
+          if [ ! -d "$SOURCE" ]; then
+            echo "::error::Expected signed .app at $SOURCE; archive step did not produce it."
+            ls -la build/MenuBarDock.xcarchive/Products/Applications/ || true
+            exit 1
+          fi
+          # ditto preserves extended attributes + signatures across the copy.
+          ditto "$SOURCE" "$DEST"
+          # Re-verify signature on the destination path — the seal check
+          # has to pass on the final filesystem path, not the archive one.
+          /usr/bin/codesign --verify --deep --strict --verbose=2 "$DEST"
+
+      - name: Download Sparkle tools
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # Get bin/sign_update from the official Sparkle tarball. We don't
+        # rely on Pods/Sparkle/bin/sign_update because the deployment-mode
+        # pod install may not include the CLI bin/ directory consistently.
+        # Downloading the tarball gives a reliable bin/sign_update.
+        run: |
+          set -euxo pipefail
+          mkdir -p build/sparkle
+          curl -fLsS -o "build/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" \
+            "https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz"
+          tar -xf "build/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" -C build/sparkle
+          test -x "build/sparkle/bin/sign_update"
+
+      - name: Notarize exported app
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
+        # Submit a notary ZIP (separate from the release ZIP — we re-zip
+        # for the release after stapling). notarytool waits for Apple.
+        run: |
+          set -euo pipefail
+          # Resolve team ID with malformed-secret robustness — Apple team
+          # IDs are exactly 10 chars. Anything else is garbage.
+          resolve_team_id() {
+              local value="$1"
+              value="${value#"${value%%[![:space:]]*}"}"
+              value="${value%"${value##*[![:space:]]}"}"
+              if [ ${#value} -eq 10 ]; then
+                  printf '%s' "$value"
+                  return 0
+              fi
+              return 1
+          }
+          TEAM_ID="$(resolve_team_id "$APPLE_TEAM_ID" || \
+                      resolve_team_id "$DEVELOPMENT_TEAM" || \
+                      resolve_team_id "$DEVELOPMENT_TEAM_FALLBACK")"
+          if [ ${#TEAM_ID} -ne 10 ]; then
+            echo "::error::Resolved TEAM_ID is not exactly 10 chars (${#TEAM_ID}). Check APPLE_TEAM_ID secret."
+            exit 1
+          fi
+          ditto -c -k --keepParent "build/Export/$APP_NAME.app" "build/$APP_NAME-notary.zip"
+          xcrun notarytool submit "build/$APP_NAME-notary.zip" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$TEAM_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --wait
+
+      - name: Staple app
+        # Apple can report a notarization as Accepted before the stapling
+        # ticket propagates through CloudKit. Retry with bounded backoff.
+        run: |
+          set -euo pipefail
+          for attempt in {1..10}; do
+            if xcrun stapler staple "build/Export/$APP_NAME.app"; then
+              break
+            fi
+            if [ "$attempt" -eq 10 ]; then
+              echo "::error::Stapling failed after $attempt attempts."
+              exit 65
+            fi
+            sleep_seconds=$((attempt * 15))
+            echo "Stapling ticket not visible yet; retrying in ${sleep_seconds}s (attempt ${attempt}/10)."
+            sleep "$sleep_seconds"
+          done
+          xcrun stapler validate "build/Export/$APP_NAME.app"
+
+      - name: Create release ZIPs
+        id: package
+        # Two ZIPs:
+        #   - $ASSET_ZIP_FILENAME (versioned) — referenced by the Sparkle
+        #     appcast enclosure URL. Each release ships at a UNIQUE name so
+        #     the appcast URL points at THIS release's bytes, not later ones.
+        #   - $LATEST_ZIP_FILENAME (alias) — stable name for the README's
+        #     download button. GitHub's /releases/latest/download/<name>
+        #     redirect rewrites to whichever release is currently latest.
+        run: |
+          set -euo pipefail
+          ZIP_PATH="build/$ASSET_ZIP_FILENAME"
+          LATEST_ZIP_PATH="build/$LATEST_ZIP_FILENAME"
+          ditto -c -k --keepParent "build/Export/$APP_NAME.app" "$ZIP_PATH"
+          cp "$ZIP_PATH" "$LATEST_ZIP_PATH"
+          echo "zip_path=$ZIP_PATH" >> "$GITHUB_OUTPUT"
+          echo "zip_filename=$(basename "$ZIP_PATH")" >> "$GITHUB_OUTPUT"
+          echo "zip_size=$(stat -f%z "$ZIP_PATH")" >> "$GITHUB_OUTPUT"
+          echo "latest_zip_path=$LATEST_ZIP_PATH" >> "$GITHUB_OUTPUT"
+
+      - name: Sign ZIP with Sparkle
+        id: sparkle
+        env:
+          SPARKLE_ED25519_PRIVATE_KEY: ${{ secrets.SPARKLE_ED25519_PRIVATE_KEY }}
+          ZIP_PATH_TO_SIGN: ${{ steps.package.outputs.zip_path }}
+        # Pipe the EdDSA private key into our sign_update wrapper, which
+        # writes it to /dev/stdin of Sparkle's sign_update CLI. The wrapper
+        # prints ONLY the base64 signature, which we capture for the appcast.
+        run: |
+          set -euo pipefail
+          ED_SIGNATURE="$(./scripts/sign_update "$ZIP_PATH_TO_SIGN" "$SPARKLE_ED25519_PRIVATE_KEY")"
+          if [ -z "$ED_SIGNATURE" ]; then
+            echo "::error::Sparkle sign_update returned an empty signature"
+            exit 1
+          fi
+          echo "ed_signature=$ED_SIGNATURE" >> "$GITHUB_OUTPUT"
+
+      - name: Compose release body
+        run: |
+          set -euo pipefail
+          {
+            echo "## $RELEASE_TITLE"
+            echo ""
+            echo "Signed and notarized macOS release for commit \`$GITHUB_SHA\`."
+            echo ""
+            echo "### Downloads"
+            echo ""
+            echo "- Stable latest ZIP: \`$LATEST_ZIP_URL\`"
+            echo "- Versioned ZIP: \`$VERSIONED_ZIP_URL\`"
+            echo ""
+            echo "Existing installs update automatically via Sparkle from:"
+            echo "\`https://www.menubardock.com/appcast.xml\`"
+            echo ""
+            echo "Workflow run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo ""
+            echo "Release channel: \`$RELEASE_CHANNEL\`"
+          } > build/release-notes.md
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.RELEASE_TAG }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.meta.outputs.RELEASE_TITLE }}
+          body_path: build/release-notes.md
+          files: |
+            ${{ steps.package.outputs.zip_path }}
+            ${{ steps.package.outputs.latest_zip_path }}
+          prerelease: false
+          make_latest: true
+
+      - name: Update gh-pages appcast
+        # Gate on RELEASE_CHANNEL == 'tag' (canonical v<X.Y.Z> tag-driven
+        # releases only). Branch-push runs and build-suffix tags still
+        # produce a GitHub Release (testing artifact) but do NOT update
+        # the appcast — that keeps end-user Sparkle clients on the canonical
+        # release stream. Same rationale as Stats Widget's release.yml.
+        if: env.RELEASE_CHANNEL == 'tag'
+        env:
+          ED_SIGNATURE: ${{ steps.sparkle.outputs.ed_signature }}
+          ZIP_FILENAME: ${{ steps.package.outputs.zip_filename }}
+          ZIP_SIZE: ${{ steps.package.outputs.zip_size }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          GH_PAGES_DIR="$RUNNER_TEMP/gh-pages"
+
+          # If gh-pages branch doesn't exist yet (first-ever Sparkle release
+          # on this repo), create it from an orphan commit so we can publish
+          # the appcast.xml. Subsequent releases append to the existing branch.
+          if ! git ls-remote --exit-code origin gh-pages >/dev/null 2>&1; then
+            echo "::notice::gh-pages branch does not exist yet — creating from orphan commit"
+            git worktree add --no-checkout "$GH_PAGES_DIR" HEAD
+            (
+              cd "$GH_PAGES_DIR"
+              git checkout --orphan gh-pages
+              git rm -rf . >/dev/null 2>&1 || true
+              git commit --allow-empty -m "Initialize gh-pages for appcast.xml"
+            )
+          else
+            git fetch origin gh-pages:refs/remotes/origin/gh-pages
+            git worktree add -B gh-pages "$GH_PAGES_DIR" origin/gh-pages
+          fi
+
+          APPCAST_PATH="$GH_PAGES_DIR/appcast.xml" \
+          VERSION="$RELEASE_VERSION" \
+          DISPLAY_VERSION="$RELEASE_DISPLAY_VERSION" \
+          BUILD_NUMBER="$RELEASE_BUILD_NUMBER" \
+          RELEASE_TAG="$RELEASE_TAG" \
+          ZIP_FILENAME="$ZIP_FILENAME" \
+          ZIP_SIZE="$ZIP_SIZE" \
+          ED_SIGNATURE="$ED_SIGNATURE" \
+          REPO="$REPO" \
+          RELEASE_NOTES_URL="$RELEASE_NOTES_URL" \
+            python3 scripts/update_appcast.py
+
+          python3 scripts/validate_release_metadata.py \
+            --repo-root . \
+            --appcast "$GH_PAGES_DIR/appcast.xml" \
+            --check-appcast \
+            --require-appcast-item
+
+          echo "GH_PAGES_DIR=$GH_PAGES_DIR" >> "$GITHUB_ENV"
+          git -C "$GH_PAGES_DIR" diff -- appcast.xml || true
+
+      - name: Commit appcast to gh-pages
+        if: env.RELEASE_CHANNEL == 'tag'
+        run: |
+          set -euo pipefail
+          git -C "$GH_PAGES_DIR" config user.name "github-actions[bot]"
+          git -C "$GH_PAGES_DIR" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$GH_PAGES_DIR" add appcast.xml
+
+          if git -C "$GH_PAGES_DIR" diff --cached --quiet; then
+            echo "No appcast changes to commit"
+            exit 0
+          fi
+
+          git -C "$GH_PAGES_DIR" commit -m "chore: update appcast for ${RELEASE_TAG}"
+          git -C "$GH_PAGES_DIR" push origin HEAD:gh-pages
+
+      - name: Clean up keychain
+        if: always()
+        run: |
+          if [ -n "${CI_KEYCHAIN_PATH:-}" ]; then
+            security delete-keychain "$CI_KEYCHAIN_PATH" || true
+          fi
