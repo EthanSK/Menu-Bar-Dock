@@ -53,14 +53,21 @@
         // Strip leading "v" for display. Tag examples: "v4.7.0", "4.6", "4.5".
         var displayVersion = String(release.tag_name).replace(/^v/i, '');
         versionEl.textContent = 'Latest: v' + displayVersion;
-        // Prefer the versioned asset if present (the new pipeline always
-        // ships one), else stick with the stable -latest.zip alias.
+        // Prefer the versioned asset if present, then the stable latest alias,
+        // then the old v4.6-and-earlier asset name.
         if (Array.isArray(release.assets)) {
           var versioned = release.assets.find(function (a) {
             return /^Menu-Bar-Dock-v[\d.]+\.zip$/.test(a.name);
           });
-          if (versioned && versioned.browser_download_url) {
-            btnEl.href = versioned.browser_download_url;
+          var latestAlias = release.assets.find(function (a) {
+            return a.name === 'Menu-Bar-Dock-latest.zip';
+          });
+          var legacy = release.assets.find(function (a) {
+            return a.name === 'Menu.Bar.Dock.app.zip';
+          });
+          var asset = versioned || latestAlias || legacy;
+          if (asset && asset.browser_download_url) {
+            btnEl.href = asset.browser_download_url;
           }
         }
       })
