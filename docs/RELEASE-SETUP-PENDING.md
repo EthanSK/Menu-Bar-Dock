@@ -96,18 +96,19 @@ way `www.menubardock.com` stays as the README-driven master-branch site and
 
 ---
 
-## 4. (Optional) Wire a "Check for Updates…" menu item in Interface Builder
+## 4. Confirm the "Check for Updates…" UI uses Sparkle
 
-`AppDelegate.swift` now has an `@objc func checkForUpdates(_:)` action that
-shows the Sparkle update UI on demand. To make it user-accessible, open
-`MenuBarDock/Base.lproj/Main.storyboard` in Interface Builder and:
+`AppDelegate.swift` has an `@objc func checkForUpdates(_:)` action that shows
+the Sparkle update UI on demand. The existing Preferences window "Check for
+Updates" button is wired through `PreferencesViewControllerDelegate` to that
+Sparkle action.
 
-1. Add an `NSMenuItem` "Check for Updates…" to the preferences popover or
-   menu-bar-item context menu
-2. Wire its action to `checkForUpdates:` on the App Delegate's First Responder
+Optional future polish: add a separate "Check for Updates..." item to the
+menu-bar-item context menu and wire its action to `checkForUpdates:` on the App
+Delegate's First Responder.
 
-This is a nice-to-have — Sparkle's background scheduler still fires daily
-without this menu item, so users will be offered updates either way.
+Sparkle's background scheduler still fires daily even if the user never presses
+the button.
 
 ---
 

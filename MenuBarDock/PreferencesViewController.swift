@@ -37,6 +37,7 @@ protocol PreferencesViewControllerDelegate: AnyObject {
     func aboutWasPressed()
     func resetPreferencesToDefaultsWasPressed()
     func resetAppOpeningMethodsWasPressed()
+    func checkForUpdatesWasPressed(_ sender: Any?)
     func launchAtLoginDidChange(_ value: Bool)
 }
 
@@ -355,9 +356,7 @@ class PreferencesViewController: NSViewController { // this should do nothing
 	}
 
     @IBAction func checkForUpdates(_ sender: NSButton) {
-        if let url = URL(string: Constants.App.releasesURL) {
-            NSWorkspace.shared.open(url)
-        }
+        delegate?.checkForUpdatesWasPressed(sender)
     }
 
 	private func removeSelectedApps() {

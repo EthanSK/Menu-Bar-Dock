@@ -200,6 +200,10 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
+    func checkForUpdatesWasPressed(_ sender: Any?) {
+        checkForUpdates(sender)
+    }
+
 	func launchAtLoginDidChange(_ value: Bool) {
 		userPrefs.launchAtLogin = value
 		let launcherAppId = Constants.App.launcherBundleId
