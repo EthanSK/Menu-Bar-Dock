@@ -63,10 +63,19 @@ class RunningApps {
 			return
 		}
 
+		// Apps with no known ordering info must land on the OLDEST / least-recent
+		// side so they (a) never steal the newest-app slot and (b) are the first
+		// to be dropped by the limit (bug fix, voice 4442). Which physical array
+		// end that is depends on the truncation direction used in limitNumApps():
+		//   - .mostRecentOnRight uses suffix(limit) (keeps the END), and the
+		//     array is least->most recent, so oldest == array START.
+		//   - .mostRecentOnLeft uses prefix(limit) (keeps the FRONT), and
+		//     correctedOrdering() is reversed to most->least recent, so oldest
+		//     == array END.
 		let newApps = NSWorkspace.shared.runningApplications
 			.map { RunningApp(app: $0) }
 			.filter {canShowRunningApp(app: $0)}
-			.reorder(by: correctedOrdering())
+			.reorder(by: correctedOrdering(), unorderedGoTo: unorderedPlacement())
 		apps = Array(limitNumApps(apps: newApps))
 	}
 
@@ -84,6 +93,20 @@ class RunningApps {
 			return ordering.reversed()
 		case .consistent:
 			return ordering.sorted {$0 < $1} // fixed alphabetical ordering
+		}
+	}
+
+	// Mirrors the truncation direction in limitNumApps() so un-ordered apps are
+	// pushed to whichever array end is BOTH the least-recent side and the side
+	// that gets truncated first. See the comment block in populateApps().
+	private func unorderedPlacement() -> UnorderedPlacement {
+		switch userPrefsDataSource.runningAppsSortingMethod {
+		case .mostRecentOnRight:
+			return .start // suffix(limit) keeps the end; oldest is the start
+		case .mostRecentOnLeft:
+			return .end   // prefix(limit) keeps the front; oldest is the end
+		case .consistent:
+			return .start // alphabetical; truncates with suffix, so match .mostRecentOnRight
 		}
 	}
 

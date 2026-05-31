@@ -8,6 +8,16 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.4] — 2026-05-31
+
+### Fixed
+
+- Apps with no known ordering info are now placed on the least-recent ("end of
+  the dock") side instead of stealing the newest-app slot. Previously an
+  un-ordered app could land in the spot reserved for the app you just launched,
+  and could even evict a genuinely-ordered app when the running-apps limit
+  kicked in. (voice 4442)
+
 ## [4.7.3] — 2026-05-28
 
 ### Changed
