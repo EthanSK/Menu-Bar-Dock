@@ -21,6 +21,20 @@ class RunningApps {
 
 	private var ordering: [String] = [] // array of ids least to most recently activated
 
+	// The app that most recently activated, captured from the activation notification
+	// payload (via handleAppActivation, which AppTracker feeds with the authoritative
+	// NSRunningApplication from the notification). We use THIS for the "hide active app"
+	// filter instead of reading NSWorkspace.shared.frontmostApplication live during
+	// populateApps(). On macOS 14+ (cooperative activation) frontmostApplication isn't
+	// updated synchronously with the activation notification, so a live read during
+	// populateApps() — which runs FROM that very notification — could return the stale
+	// previous frontmost app and hide the wrong app (or fail to hide the active one).
+	// Tracking the payload here removes that race.
+	// Limitation: this is only set once an activation has been observed since launch.
+	// Before the first activation it is nil and we fall back to frontmostApplication
+	// (best effort for the very first populateApps() at init time).
+	private var lastActivatedApp: NSRunningApplication?
+
 	weak var userPrefsDataSource: RunningAppsUserPrefsDataSource!
 
 	public var limit: Int {
@@ -45,6 +59,7 @@ class RunningApps {
 	}
 
 	func handleAppActivation(runningApp: NSRunningApplication) {
+		self.lastActivatedApp = runningApp // authoritative "currently active app" from the activation notification — used by the hide-active-app filter to avoid a racy frontmostApplication read
 		let runningApp = RunningApp(app: runningApp) // to get id
 		self.ordering.removeAll(where: { $0 == runningApp.id })
 		self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
@@ -82,7 +97,17 @@ class RunningApps {
 	private func canShowRunningApp(app: RunningApp) -> Bool {
 		if app.app.activationPolicy != .regular {return false}
 		if app.app.bundleIdentifier == Constants.App.finderBundleId && userPrefsDataSource.hideFinderFromRunningApps {return false}
-		if userPrefsDataSource.hideActiveAppFromRunningApps == false {return true} else {return app.app != NSWorkspace.shared.frontmostApplication}
+		if userPrefsDataSource.hideActiveAppFromRunningApps == false {return true}
+		// Hide-active-app path (DEFAULT on). Compare against lastActivatedApp (captured
+		// from the activation-notification payload) rather than reading
+		// NSWorkspace.shared.frontmostApplication live here. populateApps() typically
+		// runs synchronously off the activation notification, and on macOS 14+
+		// cooperative activation frontmostApplication may not yet reflect the app that
+		// just activated — a live read could hide the wrong app. Fall back to
+		// frontmostApplication only before the first activation has been observed
+		// (lastActivatedApp == nil), e.g. the initial populateApps() at launch.
+		let activeApp = lastActivatedApp ?? NSWorkspace.shared.frontmostApplication
+		return app.app != activeApp
 	}
 
 	private func correctedOrdering() -> [String] {

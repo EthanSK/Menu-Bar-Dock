@@ -8,6 +8,23 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.5] — 2026-05-31
+
+### Fixed
+
+- Recency ordering ("most recent" app sort) no longer freezes on macOS 14+
+  (Sonoma / Sequoia). The app-activation gate was reading
+  `NSWorkspace.shared.frontmostApplication`, which under macOS 14's cooperative
+  activation isn't updated synchronously with the activation notification — so
+  legitimate foreground activations were silently dropped. We now trust the
+  activation notification's payload directly (it's authoritative, no race), and
+  use `activationPolicy == .regular` only as a cheap skip rather than as a
+  (incorrect) foreground test.
+- "Hide active app from running apps" (the default) now compares against the
+  last-activated app tracked from the activation notification instead of a live
+  `frontmostApplication` read, fixing the same staleness so the correct app is
+  hidden on macOS 14+.
+
 ## [4.7.4] — 2026-05-31
 
 ### Fixed

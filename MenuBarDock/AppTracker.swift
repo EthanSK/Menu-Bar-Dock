@@ -27,24 +27,28 @@ class AppTracker {
 			guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
 				return
 			}
-			// Activation gate — filter out background-process activations that aren't
-			// "this app just came to the front". Pre-Sonoma the cleanest signal was
-			// `NSWorkspace.shared.frontmostApplication == app`, but on macOS 14+ the
-			// cooperative activation model means `frontmostApplication` isn't always
-			// updated synchronously with this notification — the equality check then
-			// silently drops legit foreground activations and the "most recent"
-			// sort appears frozen. On Sonoma+ we instead trust the notification's
-			// payload directly and filter by `activationPolicy == .regular`, which
-			// matches the same filter the visible-dock path uses
-			// (RunningApps.canShowRunningApp:74). On older OSes we keep the
-			// original guard since it was working there.
-			let isForegroundActivation: Bool
-			if #available(macOS 14.0, *) {
-				isForegroundActivation = (app.activationPolicy == .regular)
-			} else {
-				isForegroundActivation = (NSWorkspace.shared.frontmostApplication == app)
-			}
-			if isForegroundActivation {
+			// The notification payload (NSWorkspace.applicationUserInfoKey) IS the app
+			// that just activated — it's authoritative and carries no race. We must
+			// TRUST it directly.
+			//
+			// HISTORY / why we no longer read frontmostApplication here:
+			// The old gate compared `NSWorkspace.shared.frontmostApplication == app`.
+			// On macOS 14+ (Sonoma) the "cooperative activation" model means
+			// `frontmostApplication` is NOT updated synchronously when THIS
+			// notification fires — so the equality check intermittently returned
+			// false for genuine foreground activations, the activation got dropped,
+			// and the menu-bar "most recent" sort appeared frozen. That racy read is
+			// removed on ALL macOS versions now (pre-14 was relying on the same racy
+			// global read; trusting the payload is strictly more correct there too).
+			//
+			// `activationPolicy == .regular` is NOT a foreground test. activationPolicy
+			// is a STATIC per-app capability (.regular / .accessory / .prohibited) —
+			// many apps are .regular simultaneously, so it cannot tell us which app is
+			// in front. We keep it ONLY as a cheap skip: apps that aren't .regular will
+			// never be displayed in the dock anyway (RunningApps.canShowRunningApp
+			// filters .regular again), so there's no point churning the recency
+			// ordering for them. Applied uniformly — no macOS-version split.
+			if app.activationPolicy == .regular {
 				self.delegate?.appWasActivated(runningApp: app)
 			}
 		}
