@@ -161,8 +161,11 @@ final class DebugLog {
 				// Append mode via file handle. Wrapped in do/catch so a transient
 				// IO error can't take down the app.
 				let handle = try FileHandle(forWritingTo: url)
-				defer { try? handle.close() }
-				try handle.seekToEnd()
+				defer { handle.closeFile() }
+				// seekToEndOfFile() (not seekToEnd()) — the latter needs macOS
+				// 10.15.4 but our deployment target is 10.15, so it fails to build.
+				// closeFile() likewise is the broadly-available counterpart of close().
+				handle.seekToEndOfFile()
 				handle.write(data)
 			} else {
 				// First write: create the file (directory was ensured at init).
@@ -199,7 +202,9 @@ final class DebugLog {
 				return date >= cutoff // keep only if within the retention window
 			}
 			let rebuilt = kept.joined(separator: "\n")
-			try rebuilt.write(to: url, options: .atomic)
+			// Write via Data (Data has write(to:options:); String.write does not
+			// accept Data.WritingOptions). .atomic avoids a torn file on crash.
+			try Data(rebuilt.utf8).write(to: url, options: .atomic)
 		} catch {
 			// Swallow — a failed prune just means the file keeps a bit more; the
 			// size cap below is the backstop.
@@ -227,7 +232,8 @@ final class DebugLog {
 			if dropCount > 0 {
 				lines.removeFirst(dropCount)
 				let rebuilt = lines.joined(separator: "\n")
-				try rebuilt.write(to: url, options: .atomic)
+				// Write via Data (see note in pruneOldLinesLocked).
+				try Data(rebuilt.utf8).write(to: url, options: .atomic)
 			}
 		} catch {
 			// Swallow — never crash on a maintenance failure.
