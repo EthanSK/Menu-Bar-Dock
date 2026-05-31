@@ -8,6 +8,19 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.7] — 2026-05-31
+
+### Fixed
+
+- "Check for Updates…" now brings the app to the foreground on the FIRST
+  click. Because Menu Bar Dock is a menu-bar accessory (LSUIElement) app it is
+  never auto-activated by macOS, so Sparkle's update window used to open behind
+  the frontmost app — the first click appeared to do nothing and a second click
+  was needed to surface it. We now explicitly activate the app right before
+  invoking Sparkle's update check (`NSApp.activate()` on macOS 14+, the legacy
+  `activate(ignoringOtherApps:)` on older systems). Fixes the two-click bug
+  from both the menu-bar dropdown and the Preferences button.
+
 ## [4.7.6] — 2026-05-31
 
 ### Added

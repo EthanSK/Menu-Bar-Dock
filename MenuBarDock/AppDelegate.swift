@@ -113,6 +113,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	// Sparkle's background scheduler still runs on its own cadence.
 	// Marked @objc so it's wirable from Interface Builder.
 	@objc func checkForUpdates(_ sender: Any?) {
+		// LSUIElement TWO-CLICK FIX (Ethan voice, 2026-05-31):
+		// Menu Bar Dock is an LSUIElement (menu-bar accessory) app — it has no
+		// Dock tile and, crucially, macOS never auto-activates it to the
+		// foreground. Sparkle's "check for updates" window inherits the
+		// activation state of the app that requests it, so when this accessory
+		// app (which is NOT frontmost) calls checkForUpdates, Sparkle's window
+		// opens BEHIND the currently-active app. The user sees "nothing happen"
+		// on the first click; a second click finally surfaces it because by then
+		// some focus shuffle has occurred. The standard fix for this exact symptom
+		// is to explicitly bring our app to the front RIGHT BEFORE asking Sparkle
+		// to show its UI, so the update window appears front-and-centre on the
+		// first click.
+		//
+		// WHY the #available split: NSApplication.activate(ignoringOtherApps:)
+		// was deprecated in macOS 14 (Sonoma) when Apple changed to the
+		// cooperative-activation model. On 14+ the parameter-less NSApp.activate()
+		// is the supported call (it requests activation cooperatively); on older
+		// systems we keep the legacy ignoringOtherApps: true to force the window
+		// forward. Splitting on availability avoids both the deprecation warning
+		// on 14+ and a missing-API problem on older targets.
+		DebugLog.shared.log("check-for-updates invoked, activating app (LSUIElement front-bring before Sparkle UI)")
+		if #available(macOS 14.0, *) {
+			NSApp.activate()
+		} else {
+			NSApp.activate(ignoringOtherApps: true)
+		}
 		sparkleUpdater.checkForUpdates(sender)
 	}
 }
