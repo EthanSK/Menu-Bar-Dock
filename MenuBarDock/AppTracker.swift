@@ -25,8 +25,24 @@ class AppTracker {
 	private func trackAppsBeingActivated() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
 			guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
+				DebugLog.shared.log("[activate] notification with NO app payload (ignored)")
 				return
 			}
+			// Log EVERY activation BEFORE the .regular gate so the debug trace
+			// captures accessory/LSUIElement activations too. This is exactly the
+			// residual edge from the v4.7.5 post-mortem: when a non-.regular app
+			// activates we drop it here and never update lastActivatedApp/ordering,
+			// so the hide-active-app filter can go stale. Having these lines in the
+			// log lets us confirm-from-data whether that edge is what Ethan is
+			// hitting before changing core ingestion logic.
+			let policyStr: String
+			switch app.activationPolicy {
+			case .regular: policyStr = "regular"
+			case .accessory: policyStr = "accessory"
+			case .prohibited: policyStr = "prohibited"
+			@unknown default: policyStr = "unknown"
+			}
+			DebugLog.shared.log("[activate] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?") policy=\(policyStr) \(app.activationPolicy == .regular ? "-> INGESTED" : "-> SKIPPED (not .regular: ordering + lastActivatedApp NOT updated)")")
 			// The notification payload (NSWorkspace.applicationUserInfoKey) IS the app
 			// that just activated — it's authoritative and carries no race. We must
 			// TRUST it directly.
@@ -57,6 +73,7 @@ class AppTracker {
 	private func trackAppsBeingQuit() {
 		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
 			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
+				DebugLog.shared.log("[quit] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?")")
 				self.delegate?.appWasQuit(runningApp: app)
 			}
 		}

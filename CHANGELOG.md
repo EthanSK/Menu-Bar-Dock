@@ -8,6 +8,30 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.6] — 2026-05-31
+
+### Added
+
+- Lightweight on-device debug logging to diagnose hard-to-reproduce
+  activation / recency-ordering issues. Writes a timestamped trace to
+  `~/Library/Logs/Menu Bar Dock/debug.log` capturing every app activation
+  (including accessory / LSUIElement apps that are intentionally skipped), the
+  `ordering` array before/after each change, the final shown apps with the
+  limit + sorting method, and the reason any app is excluded (not-regular /
+  hide-finder / hide-active-app). Retention is ~24h with a 4 MB size cap
+  (oldest lines trimmed first); all IO is off the main thread and crash-safe.
+  On by default; disable with
+  `defaults write com.ethansk.MenuBarDock MenuBarDockDebugLogging -bool NO`.
+
+### Notes
+
+- Re-verified the v4.7.5 activation/ordering fix: it is correct for the main
+  recency-sort case and the un-ordered-app placement. One residual edge
+  remains (accessory / LSUIElement app activations don't update the
+  "last active app", so the hide-active-app filter can transiently hide the
+  wrong app). The logging above is intentionally shipped first to capture a
+  real reproduction before any change to core activation-ingestion logic.
+
 ## [4.7.5] — 2026-05-31
 
 ### Fixed
