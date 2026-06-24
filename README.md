@@ -15,18 +15,12 @@
 
 ### Menu Bar Dock shows MacOS apps in the menu bar. With a click of the app icon, you can open the app straight from the menu bar.
 
-<!--
-  Download button — wired to GitHub's stable /releases/latest/download/ alias
-  so it always points at whatever the latest published release is. Keep this
-  README-safe: GitHub's renderer strips or exposes scripts weirdly, so the
-  button stays as plain HTML with no inline JavaScript.
--->
-<div style="text-align: center;">
+<p align="center">
   <a href="https://github.com/EthanSK/Menu-Bar-Dock/releases/latest/download/Menu-Bar-Dock-latest.zip">
     <img src="./assets/DownloadButton.png" alt="Download Menu Bar Dock">
   </a>
-</div>
-<br />
+</p>
+
 **It is highly recommended that you enable automatically hide and show the dock in system preferences**.
 Now you have freed up all that space at the bottom of the screen where the dock used to always be showing, and you can open apps by
 clicking their icon in the menu bar at the top!
