@@ -732,9 +732,9 @@
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y7s-17-oDz">
-                                <rect key="frame" x="362" y="20" width="70" height="16"/>
+                                <rect key="frame" x="322" y="20" width="110" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Version 69" id="5Y0-e7-w1D">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Version 4.7.8" id="5Y0-e7-w1D">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

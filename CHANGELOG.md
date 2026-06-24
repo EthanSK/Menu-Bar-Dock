@@ -8,6 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.8] — 2026-06-24
+
+### Fixed
+
+- Fixed the About window version label so three-part semver versions such as
+  `4.7.8` display fully instead of clipping down to `4.7`.
+
 ## [4.7.7] — 2026-05-31
 
 ### Fixed

@@ -11,6 +11,7 @@ import Cocoa
 class AboutViewController: NSViewController {
 
 	@IBOutlet weak var versionLabel: NSTextField!
+	private let minimumVersionLabelWidth: CGFloat = 110
 
 	override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,5 +38,18 @@ class AboutViewController: NSViewController {
 	private func setVersionLabel() {
 		guard let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else { return }
 		versionLabel.stringValue = "Version \(version)"
+		// The storyboard frame was sized for the old placeholder text
+		// ("Version 69"). Semver labels such as "Version 4.7.0" are just wide
+		// enough to clip the patch component, making the About window look like
+		// it is still on the older two-part versioning scheme.
+		let rightEdge = versionLabel.frame.maxX
+		versionLabel.sizeToFit()
+		let targetWidth = max(minimumVersionLabelWidth, ceil(versionLabel.frame.width))
+		versionLabel.frame = NSRect(
+			x: rightEdge - targetWidth,
+			y: versionLabel.frame.origin.y,
+			width: targetWidth,
+			height: versionLabel.frame.height
+		)
 	}
 }
