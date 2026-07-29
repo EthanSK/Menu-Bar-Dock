@@ -24,6 +24,16 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-07-29T22:52:00Z
+**Trigger:** GitHub Actions release run 30497459199 failed at `pod install --deployment`
+**Symptom:** The v4.7.9 tag workflow stopped before build/sign/notarization because CocoaPods reported `New Lockfile: 1.17.0` and `Old Lockfile: 1.16.2`.
+**Root cause:** GitHub's current macOS runner upgraded its preinstalled CocoaPods generator to 1.17.0. Deployment mode treats the generator version recorded at the end of `Podfile.lock` as lockfile state, even when every pod version and checksum is unchanged.
+**Fix:** Regenerated the lock metadata with a task-local CocoaPods 1.17.0 install; the only tracked change was `COCOAPODS: 1.16.2` to `1.17.0`.
+**Commit:** v4.7.9 release repair commit
+**Guard:** CocoaPods 1.17.0 `pod install --deployment` completes with `Verifying no changes`, and `Podfile.lock` exactly matches `Pods/Manifest.lock`.
+---
+
+---
 **Date:** 2026-07-29T22:47:00Z
 **Trigger:** Ethan: `Quit <app>` is the most common menu action and belongs at the top
 **Symptom:** A running app's menu opened with Hide/Unhide first while Quit was several rows lower, making the primary action slower to reach.
