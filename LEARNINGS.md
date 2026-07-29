@@ -24,6 +24,16 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-07-29T22:47:00Z
+**Trigger:** Ethan: `Quit <app>` is the most common menu action and belongs at the top
+**Symptom:** A running app's menu opened with Hide/Unhide first while Quit was several rows lower, making the primary action slower to reach.
+**Root cause:** Commit 9b4b871 reordered the menu in response to issue #15's generic macOS convention, overriding the product owner's actual high-frequency workflow. No test protected the original quit-first priority.
+**Fix:** `MenuBarItem.makeDropdownMenu()` now inserts `Quit <app>` before Hide/Unhide and Activate for running apps. Menu construction was separated from display so its order is directly testable.
+**Commit:** v4.7.9 release commit
+**Guard:** `testRunningAppDropdown_putsQuitActionFirst` asserts the first title and `q` shortcut, plus Hide as the following action.
+---
+
+---
 **Date:** 2026-05-31T20:00:00Z
 **Trigger:** Ethan voice: post-mortem on how the WRONG activation-policy fix got made (forensic, no code changes)
 **Symptom:** Two commits (b64a85f 2026-05-23 16:02, 63fbce0 2026-05-23 17:04) "fixed" the frozen recency-sort by gating activation on `activationPolicy == .regular`, using a static capability enum as a foreground test. Misdiagnosis; corrected in a8674de (v4.7.5, 2026-05-31).
@@ -62,4 +72,3 @@ Each entry looks like:
 **Commit:** ee2965e
 **Guard:** Unit tests in MenuBarDockTests.swift cover ordered baseline, .start placement, .end placement, multi-unordered clustering, all-unordered stable order; thorough comments at reorder(by:) + populateApps()
 ---
-

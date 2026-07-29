@@ -11,6 +11,14 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
+    private final class MenuBarItemDataSourceStub: MenuBarItemDataSource {
+        let rightClickByDefault = false
+
+        func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod? {
+            nil
+        }
+    }
+
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -29,6 +37,30 @@ class MenuBarDockTests: XCTestCase {
         self.measure {
             // Put the code you want to measure the time of here.
         }
+    }
+
+    func testRunningAppDropdown_putsQuitActionFirst() {
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        defer { NSStatusBar.system.removeStatusItem(statusItem) }
+
+        let dataSource = MenuBarItemDataSourceStub()
+        let menuBarItem = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
+        let app = OpenableApp(
+            bundleId: "com.example.TestApp",
+            icon: NSImage(size: NSSize(width: 16, height: 16)),
+            bundleUrl: URL(fileURLWithPath: "/Applications/Test App.app"),
+            name: "Test App",
+            id: "test-app",
+            appOpeningMethod: nil,
+            runningApplication: NSRunningApplication.current
+        )
+        menuBarItem.update(for: app, appIconSize: 16, slotWidth: 20)
+
+        let menu = menuBarItem.makeDropdownMenu()
+
+        XCTAssertEqual(menu?.items.first?.title, "Quit Test App")
+        XCTAssertEqual(menu?.items.first?.keyEquivalent, "q")
+        XCTAssertEqual(menu?.items.dropFirst().first?.title, "Hide Test App")
     }
 
     // MARK: - reorder(by:unorderedGoTo:) — un-ordered placement (bug fix, voice 4442)

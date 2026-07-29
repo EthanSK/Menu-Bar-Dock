@@ -103,10 +103,22 @@ class MenuBarItem {
 	func showDropdownMenu() {
 		statusItem.button?.appearance = NSAppearance(named: NSAppearance.current.name)
 
+		guard let menu = makeDropdownMenu() else { return }
+		statusItem.popUpMenu(menu)
+	}
+
+	func makeDropdownMenu() -> NSMenu? {
 		let menu = NSMenu()
-		guard let appName = app?.name else { return }
+		guard let appName = app?.name else { return nil }
 
         if let runningApplication = app?.runningApplication {
+            _ = addMenuItem(
+                menu: menu,
+                title: "Quit \(appName)",
+                action: #selector(quitApp),
+                keyEquivalent: "q"
+            )
+
             // only makes sense to hide and show, and activate a running app, not just any app
             _ = addMenuItem(
                 menu: menu,
@@ -136,16 +148,6 @@ class MenuBarItem {
 			action: #selector(launchApp),
 			keyEquivalent: "l"
 		)
-
-        if app?.runningApplication != nil {
-            _ = addMenuItem(
-                menu: menu,
-                title: "Quit \(appName)",
-                action: #selector(quitApp),
-                keyEquivalent: "q"
-            )
-        }
-
 		// removed open new instance item because it's kinda pointless and will probably cause bugs
 		addAppOpeningMethodMenuItem(menu: menu)
 
@@ -173,7 +175,7 @@ class MenuBarItem {
 			keyEquivalent: ""
 		)
 
-		statusItem.popUpMenu(menu)
+		return menu
 	}
 
 	private func addAppOpeningMethodMenuItem(menu: NSMenu) {

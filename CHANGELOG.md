@@ -8,6 +8,15 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.7.9] — 2026-07-29
+
+### Changed
+
+- Restored `Quit <app>` as the first action in each running app's menu. The
+  less frequently used Hide/Unhide and Activate actions now follow it. This
+  reverses the menu reordering associated with issue #15 and restores the
+  app's original quit-first workflow.
+
 ## [4.7.8] — 2026-06-24
 
 ### Fixed
