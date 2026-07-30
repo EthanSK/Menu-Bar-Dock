@@ -24,6 +24,16 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-07-30T12:05:00Z
+**Trigger:** Menu Bar Dock 4.7.9 was published, but the installed updater still reported 4.7.8
+**Symptom:** The canonical release workflow was green and `origin/gh-pages:appcast.xml` contained 4.7.9, while `https://www.menubardock.com/appcast.xml` still served 4.7.8. The Pages deployment run remained `waiting` overnight with no runner assigned.
+**Root cause:** The release workflow treated committing `appcast.xml` to `gh-pages` as completion. GitHub's separate legacy Pages deployment can stall after that commit, leaving Sparkle clients on the previous public feed even though the GitHub Release exists.
+**Fix:** Cancelled only the stale Pages run and requested a fresh build through the Pages API. The replacement run completed successfully and the public feed began serving 4.7.9/build 36. Added a separate `Verify public Sparkle feed` release job that checks the exact public version, build, ZIP filename, and byte length for up to 15 minutes.
+**Commit:** post-v4.7.9 release-completion guard
+**Guard:** A canonical release workflow cannot finish successfully until the public Sparkle URL serves the exact release metadata; `docs/release.md` records the bounded stale-run recovery procedure.
+---
+
+---
 **Date:** 2026-07-29T22:52:00Z
 **Trigger:** GitHub Actions release run 30497459199 failed at `pod install --deployment`
 **Symptom:** The v4.7.9 tag workflow stopped before build/sign/notarization because CocoaPods reported `New Lockfile: 1.17.0` and `Old Lockfile: 1.16.2`.

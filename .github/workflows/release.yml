@@ -110,6 +110,12 @@ jobs:
     needs: check-tag-race
     if: needs.check-tag-race.outputs.should_skip != 'true'
     runs-on: macos-latest
+    outputs:
+      release_channel: ${{ steps.meta.outputs.RELEASE_CHANNEL }}
+      release_version: ${{ steps.meta.outputs.RELEASE_VERSION }}
+      release_build_number: ${{ steps.meta.outputs.RELEASE_BUILD_NUMBER }}
+      zip_filename: ${{ steps.package.outputs.zip_filename }}
+      zip_size: ${{ steps.package.outputs.zip_size }}
 
     steps:
       - name: Checkout
@@ -521,3 +527,53 @@ jobs:
           if [ -n "${CI_KEYCHAIN_PATH:-}" ]; then
             security delete-keychain "$CI_KEYCHAIN_PATH" || true
           fi
+
+  verify-public-appcast:
+    name: Verify public Sparkle feed
+    needs: release
+    if: needs.release.outputs.release_channel == 'tag'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for public appcast to serve this release
+        env:
+          RELEASE_VERSION: ${{ needs.release.outputs.release_version }}
+          RELEASE_BUILD_NUMBER: ${{ needs.release.outputs.release_build_number }}
+          ZIP_FILENAME: ${{ needs.release.outputs.zip_filename }}
+          ZIP_SIZE: ${{ needs.release.outputs.zip_size }}
+        run: |
+          set -euo pipefail
+          appcast_url="https://www.menubardock.com/appcast.xml"
+          appcast_path="$RUNNER_TEMP/public-appcast.xml"
+          max_attempts=90
+
+          for attempt in $(seq 1 "$max_attempts"); do
+            cache_buster="${GITHUB_RUN_ATTEMPT}-${attempt}-$(date +%s)"
+            echo "Checking public Sparkle feed (attempt ${attempt}/${max_attempts})..."
+
+            if curl -fLsS \
+                -H 'Cache-Control: no-cache' \
+                -o "$appcast_path" \
+                "${appcast_url}?release=${RELEASE_BUILD_NUMBER}&verify=${cache_buster}" && \
+              python3 scripts/validate_release_metadata.py \
+                --appcast "$appcast_path" \
+                --check-appcast \
+                --require-appcast-item \
+                --expected-version "$RELEASE_VERSION" \
+                --expected-build "$RELEASE_BUILD_NUMBER" \
+                --expected-zip-filename "$ZIP_FILENAME" \
+                --expected-zip-size "$ZIP_SIZE"; then
+              echo "Public Sparkle feed serves ${RELEASE_VERSION} (build ${RELEASE_BUILD_NUMBER})."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt "$max_attempts" ]; then
+              sleep 10
+            fi
+          done
+
+          echo "::error title=Public Sparkle feed is stale::The GitHub Release and gh-pages source were published, but ${appcast_url} did not serve ${RELEASE_VERSION} (build ${RELEASE_BUILD_NUMBER}) within 15 minutes. Inspect the Pages deployment before calling the release complete."
+          exit 1

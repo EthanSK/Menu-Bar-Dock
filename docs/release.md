@@ -94,7 +94,10 @@ base64 -i DeveloperIDApplication.p12 | pbcopy
 ## Validation gates
 
 The workflow runs `scripts/validate_release_metadata.py` before building and
-after appcast generation. It fails if:
+after appcast generation. A separate Ubuntu job then waits for the public
+Sparkle URL to serve the exact released version, build, ZIP filename, and byte
+length. The workflow is not complete while GitHub Pages still serves an older
+feed. Validation fails if:
 
 - release config points at the wrong repo slug
 - the GitHub Release is not marked `make_latest: true`
@@ -103,6 +106,7 @@ after appcast generation. It fails if:
 - appcast enclosure lengths are zero/missing
 - appcast/site URLs point at the wrong GitHub Pages or GitHub repo paths
 - pbxproj versions drift from semver
+- the public appcast does not serve the new release within 15 minutes
 
 Run the static gate locally:
 
@@ -147,7 +151,9 @@ python3 scripts/validate_release_metadata.py --check-repo --check-version
 
 6. Confirm:
    - The new GitHub Release contains both ZIP assets.
-   - `gh-pages` branch's `appcast.xml` was updated by the workflow.
+   - The `Verify public Sparkle feed` job passed. A green release build alone
+     is insufficient: `https://www.menubardock.com/appcast.xml` must serve the
+     new version and build, not merely exist on the `gh-pages` branch.
    - An existing install of Menu Bar Dock offers the update (open the app
      and let it run for a moment — the Sparkle check fires at launch).
 
@@ -178,3 +184,19 @@ Verify by checking the public key in both places matches exactly.
 **"App is damaged and can't be opened" Gatekeeper error after manual download**
 The notarization stapling step failed silently. Re-run the workflow; the
 stapler retry loop handles most transient propagation lags.
+
+**The GitHub Release exists, but Check for Updates still reports the previous version**
+Compare the public appcast with the `gh-pages` source. If the source contains
+the new version but the public URL is stale, inspect the repository's `pages
+build and deployment` run. A run that remains `waiting` with no runner is a
+stuck Pages deployment, not successful propagation. Cancel that exact stale
+run and request a fresh Pages build without republishing or moving the release
+tag:
+
+```bash
+gh run cancel <stale-pages-run-id>
+gh api --method POST repos/EthanSK/Menu-Bar-Dock/pages/builds
+```
+
+Wait for the replacement Pages run to succeed, then verify the public appcast
+itself before telling users the release is available through Sparkle.

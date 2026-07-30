@@ -96,6 +96,7 @@ def check_repo(root: Path) -> None:
         "softprops/action-gh-release@v2",
         "scripts/validate_release_metadata.py",
         "scripts/prepare_release_metadata.py",
+        "Verify public Sparkle feed",
     ]
     for snippet in required_snippets:
         if snippet not in workflow:
@@ -165,7 +166,14 @@ def check_signature(signature: str) -> None:
         fail("appcast enclosure Sparkle Ed25519 signature does not look like base64 output")
 
 
-def check_appcast(path: Path, require_item: bool) -> None:
+def check_appcast(
+    path: Path,
+    require_item: bool,
+    expected_version: str | None = None,
+    expected_build: str | None = None,
+    expected_zip_filename: str | None = None,
+    expected_zip_size: str | None = None,
+) -> None:
     """Walk appcast.xml and verify every <item> looks legit."""
     raw = read_text(path)
     assert_no_old_tokens(path, raw)
@@ -196,6 +204,56 @@ def check_appcast(path: Path, require_item: bool) -> None:
     items = channel.findall("item")
     if require_item and not items:
         fail("appcast has no release items")
+
+    expected_values = [
+        expected_version,
+        expected_build,
+        expected_zip_filename,
+        expected_zip_size,
+    ]
+    if any(value is not None for value in expected_values):
+        if not all(value is not None for value in expected_values):
+            fail("all --expected-* appcast values must be provided together")
+        if not items:
+            fail("appcast has no release item to compare with --expected-* values")
+
+        assert expected_version is not None
+        assert expected_build is not None
+        assert expected_zip_filename is not None
+        assert expected_zip_size is not None
+
+        newest = items[0]
+        newest_enclosure = newest.find("enclosure")
+        if newest_enclosure is None:
+            fail("newest appcast item is missing enclosure")
+
+        newest_version = (newest.findtext(f"{SPARKLE}shortVersionString") or "").strip()
+        newest_build = (newest.findtext(f"{SPARKLE}version") or "").strip()
+        enclosure_version = newest_enclosure.get(f"{SPARKLE}shortVersionString", "")
+        enclosure_build = newest_enclosure.get(f"{SPARKLE}version", "")
+        enclosure_url = newest_enclosure.get("url", "")
+        enclosure_size = newest_enclosure.get("length", "")
+
+        if newest_version != expected_version or enclosure_version != expected_version:
+            fail(
+                "newest appcast version is "
+                f"{newest_version!r}/{enclosure_version!r}, expected {expected_version!r}"
+            )
+        if newest_build != expected_build or enclosure_build != expected_build:
+            fail(
+                "newest appcast build is "
+                f"{newest_build!r}/{enclosure_build!r}, expected {expected_build!r}"
+            )
+        if not enclosure_url.endswith(f"/{expected_zip_filename}"):
+            fail(
+                f"newest appcast ZIP URL is {enclosure_url!r}, "
+                f"expected filename {expected_zip_filename!r}"
+            )
+        if enclosure_size != expected_zip_size:
+            fail(
+                f"newest appcast ZIP size is {enclosure_size!r}, "
+                f"expected {expected_zip_size!r}"
+            )
 
     for item in items:
         title = (item.findtext("title") or "").strip()
@@ -236,6 +294,10 @@ def main() -> int:
     parser.add_argument("--check-version", action="store_true")
     parser.add_argument("--check-appcast", action="store_true")
     parser.add_argument("--require-appcast-item", action="store_true")
+    parser.add_argument("--expected-version")
+    parser.add_argument("--expected-build")
+    parser.add_argument("--expected-zip-filename")
+    parser.add_argument("--expected-zip-size")
     args = parser.parse_args()
 
     # Default: run repo + version checks (matches Stats Widget convention).
@@ -255,7 +317,14 @@ def main() -> int:
                 if args.site_dir is None:
                     fail("--appcast or --site-dir is required with --check-appcast")
                 appcast = args.site_dir / "appcast.xml"
-            check_appcast(appcast.resolve(), args.require_appcast_item)
+            check_appcast(
+                appcast.resolve(),
+                args.require_appcast_item,
+                args.expected_version,
+                args.expected_build,
+                args.expected_zip_filename,
+                args.expected_zip_size,
+            )
     except ValidationError as exc:
         print(f"validate_release_metadata.py: {exc}", file=sys.stderr)
         return 1
