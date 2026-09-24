@@ -84,3 +84,5 @@ Support this project:
 - The plist with the user prefs is _usually_ found in the file at
   `/Users/ethansarif-kattan/Library/Preferences/com.ethansk.MenuBarDock.plist`. Use
   `defaults delete com.ethansk.MenuBarDock` in terminal to delete it properly.
+
+<footer class="site-footer"><a href="https://ethansk.github.io/ethan-setup/">Ethan’s setup</a></footer>
