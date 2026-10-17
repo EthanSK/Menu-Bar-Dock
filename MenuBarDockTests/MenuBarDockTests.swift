@@ -13,6 +13,7 @@ class MenuBarDockTests: XCTestCase {
 
     private final class MenuBarItemDataSourceStub: MenuBarItemDataSource {
         let rightClickByDefault = false
+        let groupSpacing: CGFloat = 48
 
         func appOpeningMethod(for app: OpenableApp) -> AppOpeningMethod? {
             nil
@@ -40,11 +41,8 @@ class MenuBarDockTests: XCTestCase {
     }
 
     func testRunningAppDropdown_putsQuitActionFirst() {
-        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        defer { NSStatusBar.system.removeStatusItem(statusItem) }
-
         let dataSource = MenuBarItemDataSourceStub()
-        let menuBarItem = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
+        let menuBarItem = MenuBarItem(userPrefsDataSource: dataSource)
         let app = OpenableApp(
             bundleId: "com.example.TestApp",
             icon: NSImage(size: NSSize(width: 16, height: 16)),

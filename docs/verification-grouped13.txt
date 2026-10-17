@@ -1,0 +1,198 @@
+Menu Bar Dock grouped.13 — system icon fidelity validation
+
+Optimized arm64 release build: PASS
+Ad-hoc signature, codesign --verify --strict: PASS
+10 packaged PNG slots: expected dimensions and opaque RGB8 PASS
+ICNS container structure and 1024 px representation: PASS
+Native ImageIO decode: 16, 32, 64, 128, 256, 512, 1024 px PASS
+CFBundleIconFile=GroupedAppIcon; inherited CFBundleIconName removed: PASS
+NSWorkspace icon resolution on the new app: PASS
+Own 128 px icon preview visually inspected; transparent corners/light tile/dark anchor: PASS
+No desktop viewing, capture or application launch performed.
+Actual system-icon comparison against the approved PNG: PASS
+Ring interior: 1,254 samples, 0 anomalously bright; mean luminance error 0.0054643.
+Previous grouped.12: 295 anomalously bright; mean luminance error 0.1678435.
+All ICNS PNG payloads are byte-identical to their source files; complete opaque family PASS.
+No Finder custom icon/resource-fork workaround used; strict signature remains valid.
+
+Selected by explicit attachment: concept 4 (Light), pointed graphite anchor with shallow relief on pale gray.
+Attachment preserved byte-for-byte; SHA-256: 76ddd58f1a8d13a109b9224f026497c5cb66838869d8c7928dfaa5be41e88975
+Crop external canvas only: 1254 px source -> (78,79,1098,1098). No redraw or distortion.
+Packaged 128 px asset fill: 128 px width, 124 px height. System icon preview: 104x104 px, including normal IconServices inset.
+Bundle version: 4.8.0-grouped.13, build 41. Four previews and prompts preserved.
+
+Runtime Swift sources match grouped.9 byte for byte. Its 143 native behavioral
+checks are retained below as historical evidence, not rerun for this icon-only update.
+
+Menu Bar Dock grouped.9 — validation
+
+Swift arm64 optimized release build: PASS
+Ad-hoc signature, codesign --verify --strict: PASS
+Native offscreen checks with real AppDelegate: PASS
+No user screen capture or viewing performed; test windows remained invisible.
+Resources: previous grouped.8 build; original /Applications app no longer installed.
+
+PASS: folders with Unicode, spaces and dots are supported
+PASS: application packages are not folders
+PASS: ordinary files cannot be pinned as folders
+PASS: missing folders are rejected
+PASS: folder/app order and URLs survive preference reload
+PASS: group spacing survives preference reload
+PASS: pinned folder and Finder both load
+PASS: folder names retain their extension
+PASS: folders do not inherit Finder's running state
+PASS: pinned Finder has its own running indicator
+PASS: folder menu opens the folder
+PASS: folder menu omits process-only operations
+PASS: running app menu keeps Quit first
+PASS: stopped app has no running indicator
+PASS: empty dock retains a preferences action
+PASS: 45 narrow/wide, empty and overflow layouts remain within budget
+PASS: startup unhides the dock despite a hidden legacy Item-0
+PASS: group reuses one status item across content changes
+PASS: group reuses one status item across content changes
+PASS: group reuses one status item across content changes
+PASS: group reuses one status item across content changes
+PASS: group position has a stable autosave identity
+PASS: overflow keeps folder actions accessible
+PASS: migration excludes upstream hidden-item flags
+PASS: migration excludes updater state
+PASS: migration retains pins and leaves local login disabled
+PASS: upgrade repairs visibility without overwriting edited pins
+PASS: upgrade removes previously imported legacy visibility
+PASS: upgrade preserves the group position
+PASS: upgrade restores the original icon size after the old 20 pt cap
+PASS: later local icon-size adjustments are retained
+PASS: larger icon sizes survive preference reload
+PASS: icon orientation matches native NSImageView in the actual button coordinates
+PASS: menu-bar artwork is not reduced to the slot height
+PASS: running indicator is a small dot to the left of the icon
+PASS: running indicator draws neither a side bar nor a top dot
+PASS: stopped applications do not draw the left dot
+PASS: Preferences exposes the saved group margin as a visible slider
+PASS: margin controls fit between existing settings without overlap
+PASS: margin slider shows rounded point values
+PASS: Preferences allows the original larger icon sizes
+PASS: negative running-app limit is repaired instead of crashing
+PASS: non-finite and out-of-range dimensions load safely
+PASS: malformed and duplicate pinned URLs are filtered
+PASS: ordinary updates reuse pinned objects and their artwork
+PASS: pin reordering preserves cached artwork
+PASS: a shared snapshot clears stopped pinned apps
+PASS: custom icons are decoded once and reused
+PASS: changing a custom icon invalidates its decoded cache
+PASS: resetting a custom icon removes its cache
+PASS: damaged custom icons fall back safely
+PASS: content refresh and reorder reuse the same native buttons
+PASS: appearance-only settings preserve native buttons
+PASS: intentional duplicate entries retain separate click targets
+PASS: removed buttons do not accumulate in the cache
+PASS: multiple dragged rows preserve their order when moved down
+PASS: multiple dragged rows preserve their order when moved up
+PASS: invalid drag indexes and destinations are rejected safely
+PASS: slider keyboard and accessibility actions commit every setting without a mouse event
+PASS: accessory activation reaches the active-app state tracker
+PASS: notification observers do not retain the tracker
+PASS: tracker observers are removed on deinitialization
+PASS: the active regular app is hidden
+PASS: activating an accessory app restores the previously hidden regular app
+PASS: zero running-app limit stays zero even without pinned entries
+PASS: a negative datasource limit cannot crash array truncation
+PASS: unchanged preferences perform no UserDefaults writes
+PASS: changing the margin writes only that preference
+PASS: disabled local diagnostics avoid message formatting and disk work
+PASS: unavailable pinned folders do not create invalid models
+PASS: cache invalidation recovers folders after a volume becomes available
+PASS: instance badge remains visible at the bottom with oversized artwork
+PASS: context-menu margin changes immediately synchronize the existing Preferences controls
+PASS: appearance sliders avoid process queries and app-model rebuilds
+PASS: a burst of app events shares one deferred process snapshot (reads: 1)
+PASS: an uninitialized duplicate delegate never overwrites preferences on exit
+PASS: optimized ordering preserves unknown-item order at the least-recent end
+PASS: optimized reverse ordering leaves newest apps at the front
+PASS: duplicate ordering keys cannot trap dictionary construction
+PASS: 36 icon/slot/height combinations keep the scaled left dot separate and within bounds
+PASS: 810 group layouts with automatically widened slots remain within the menu budget
+PASS: indicator diameter and small gap scale with the icon size
+PASS: real menu buttons automatically reserve space beside enlarged artwork
+PASS: starting an application does not shift the icon to make room for its dot
+PASS: popup anchor is below the physical button in screen coordinates
+PASS: hover sprite preserves native icon orientation and Retina geometry
+PASS: hover uses one enter/exit tracking area without continuous mouse-move events
+PASS: hover moves the visual sprite down while hiding its stationary copy
+PASS: animation changes neither click geometry nor the popup anchor
+PASS: the original button remains clickable while its visual copy is animated
+PASS: overlay covers both animation endpoints without clipping or showing test windows (frame: (120.0, 201.0, 32.0, 39.0), source: (120.0, 210.0, 32.0, 30.0), visible: false)
+PASS: hover runs a short Core Animation layer translation
+PASS: opening a context menu immediately restores stable original artwork
+PASS: menu tracking suppresses hover animation
+PASS: Reduce Motion keeps the original icon stationary
+PASS: a cancelled old animation cannot dismiss a newer hover
+PASS: hover cancellation restores the button and releases the sprite
+PASS: 1.5 mm movement accounts for display size and logical scaling
+PASS: missing display metadata has a safe approximate 1.5 mm fallback
+PASS: app updates cannot move buttons or resize the group during menu tracking
+PASS: nested menu tracking preserves the frozen group
+PASS: closing the last menu applies the most recent deferred content
+PASS: removing a hovered button releases both its tracking state and overlay ownership
+PASS: a right-click opens one menu, cancels hover and cannot bubble to a second group menu
+PASS: overlay stays aligned even when the source occupies the actual menu-bar screen band
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 12.0, button height 22.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 12.0, height 22.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 12.0, button height 30.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 12.0, height 30.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 25.4, button height 22.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 25.4, height 22.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 25.4, button height 30.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 25.4, height 30.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 40.0, button height 22.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 40.0, height 22.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 40.0, button height 30.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 40.0, height 30.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 64.0, button height 22.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 64.0, height 22.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 64.0, button height 30.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 64.0, height 30.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 100.0, button height 22.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 100.0, height 22.0
+PASS: full hover artwork keeps top/bottom pixels and scale at icon 100.0, button height 30.0
+PASS: expanded overlay contains full artwork at both endpoints for icon 100.0, height 30.0
+PASS: existing installations keep hover and background enabled when new keys are absent
+PASS: hover can be disabled independently and survives reload
+PASS: both appearance toggles can be disabled and survive reload
+PASS: reset restores appearance defaults without removing pinned folders
+PASS: Preferences reflects enabled hover and group background
+PASS: new settings and action buttons fit in the expanded Preferences window (root: (0.0, 0.0, 698.0, 738.0), controls: ["(0.0, 24.0, 164.0, 16.0) fit=(164.0, 16.0) ambiguous=false root=(20.0, 36.0, 164.0, 16.0)", "(0.0, 0.0, 170.0, 16.0) fit=(170.0, 16.0) ambiguous=false root=(20.0, 12.0, 170.0, 16.0)", "(0.0, 0.0, 96.0, 24.0) fit=(96.0, 24.0) ambiguous=false root=(582.0, 20.0, 96.0, 24.0)"])
+PASS: appearance toggles and action buttons do not overlap
+PASS: native buttons forward both toggles and the restart action once
+PASS: live icon starts hover before its animation is disabled
+PASS: disabling hover immediately cancels the active sprite and restores stationary icons
+PASS: disabled hover cannot create a visual overlay
+PASS: hiding the background keeps the group, buttons and models without querying processes
+PASS: both appearance options can be enabled again without restart
+PASS: reopening Preferences synchronizes both checkbox states
+PASS: restart saves current settings and passes the exact application path as an argument
+PASS: repeated restart clicks schedule only one helper and one termination
+PASS: a helper launch failure leaves the app alive, reports the error and permits retry
+PASS: real relaunch helper waits for the old PID and preserves spaces, quotes and shell metacharacters
+143 checks passed
+
+Appearance: independent persisted hover/background switches, defaults and reset;
+current hover cancellation, native checkbox/button actions and Preferences layout.
+Changes reuse existing buttons and models without querying running processes.
+Restart: settings saved before helper launch; one request on repeated clicks;
+failed helper launch leaves the app running and allows retry. The actual helper
+waits for a disposable old PID and invokes a fake opener with an exact unusual
+app path, preserving spaces, quotes and shell metacharacters. No user app restarted.
+
+Hover: 0.18 s translation, approximately 1.5 mm, full artwork at backing scale,
+Reduce Motion, menu stability and both endpoints remain covered by earlier checks.
+
+A proposed fresh-identity status-item reposition action FAILED its native position
+check (own temporary status items only) and was REMOVED from the final code.
+Restart App does not guarantee a leftmost position. macOS retains ordering control;
+manual command-drag remains available. No private ordering API or continuous cursor polling added.
+
+Actual full-application restart and desktop interaction remain for user QA.
+Energy use of hover animation was not measured. Full Xcode/XCTest unavailable.
+Performance CSVs and audit-RU.md describe grouped.5 before the hover effect.

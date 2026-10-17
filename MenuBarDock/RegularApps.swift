@@ -1,76 +1,64 @@
-//
-//  RegularApps.swift
-//  Menu Bar Dock
-//
-//  Created by Ethan Sarif-Kattan on 12/04/2021.
-//  Copyright © 2021 Ethan Sarif-Kattan. All rights reserved.
-//
-
 import Cocoa
 
 protocol RegularAppsUserPrefsDataSource: AnyObject {
-	var regularAppsUrls: [URL] { get }
+    var regularAppsUrls: [URL] { get }
 }
 
-class RegularApps { // regular apps are just apps that use user added manually
-	public var apps: [RegularApp]  = [] // order is correct
+final class RegularApps {
+    private(set) var apps: [RegularApp] = []
+    weak var userPrefsDataSource: RegularAppsUserPrefsDataSource!
+    private var loadedURLs: [URL]?
 
-	weak var userPrefsDataSource: RegularAppsUserPrefsDataSource!
+    init(userPrefsDataSource: RegularAppsUserPrefsDataSource) {
+        self.userPrefsDataSource = userPrefsDataSource
+        update()
+    }
 
-	init(
-		userPrefsDataSource: RegularAppsUserPrefsDataSource
-	) {
-		self.userPrefsDataSource = userPrefsDataSource
-		populateApps()
-	}
+    func invalidateCache() {
+        loadedURLs = nil
+        apps = []
+    }
 
-	func update() {
-		populateApps()
-	}
+    func update(runningApplications: [NSRunningApplication]? = nil) {
+        let urls = userPrefsDataSource.regularAppsUrls
+        if loadedURLs != urls {
+            // Cache only the current pinned list. Ordinary app switches must
+            // not reread folder metadata or reload their artwork from disk.
+            var existing: [URL: RegularApp] = [:]
+            for app in apps { existing[app.url] = app }
+            apps = urls.compactMap { existing[$0] ?? regularApp(for: $0) }
+            loadedURLs = urls
+        }
+        let running = (runningApplications ?? NSWorkspace.shared.runningApplications).filter { !$0.isTerminated }
+        let byURL = Dictionary(grouping: running, by: { $0.bundleURL?.absoluteString ?? "" })
+        for app in apps where !app.isFolder {
+            let candidates = byURL[app.id] ?? []
+            // Keep the activated instance while it is alive. Rebinding every
+            // refresh to the first instance would undo per-instance activation.
+            if !candidates.contains(where: { $0.processIdentifier == app.runningApp?.processIdentifier }) {
+                app.runningApp = candidates.first
+            }
+        }
+    }
 
-	func handleAppActivation(runningApp: NSRunningApplication) {
-		correspondingRegularApp(for: runningApp)?.runningApp = runningApp
-		// we DON'T want to update here, because it doesn't make sense to update regular apps based on app activations, otherwise they would be RunningApp()s!
-	}
+    func handleAppActivation(runningApp: NSRunningApplication) {
+        correspondingRegularApp(for: runningApp)?.runningApp = runningApp
+    }
 
-	/// Keeps the pinned entry bound to a remaining instance when its current process exits.
-	func handleAppQuit(runningApp: NSRunningApplication) {
-		guard let regularApp = correspondingRegularApp(for: runningApp), regularApp.runningApp?.processIdentifier == runningApp.processIdentifier else { return }
-		regularApp.runningApp = NSWorkspace.shared.runningApplications.first { $0.processIdentifier != runningApp.processIdentifier && !$0.isTerminated && RunningApp(app: $0).id == regularApp.id } // Quitting one instance must not mark the whole app as stopped when another instance remains.
-	}
+    func handleAppQuit(runningApp: NSRunningApplication) {
+        guard let app = correspondingRegularApp(for: runningApp),
+              app.runningApp?.processIdentifier == runningApp.processIdentifier else { return }
+        app.runningApp = nil // The next shared snapshot binds a remaining instance.
+    }
 
-	private func correspondingRegularApp(for runningApp: NSRunningApplication) -> RegularApp? {
-		return apps.first { $0.id == RunningApp(app: runningApp).id} // we just use RunningApp() just to get the id...kinda hacky
-	}
+    private func correspondingRegularApp(for runningApp: NSRunningApplication) -> RegularApp? {
+        apps.first { !$0.isFolder && $0.id == runningApp.bundleURL?.absoluteString }
+    }
 
-	private func populateApps() {
-		apps = []
-		for url in userPrefsDataSource.regularAppsUrls {
-			if let app = regularApp(for: url) {
-				apps.append(app)
-			}
-		}
-		addRunningApps()
-	}
-
-	private func regularApp(for url: URL) -> RegularApp? {
-		guard let bundle = Bundle(url: url) else { return nil }
-
-		let icon = NSWorkspace.shared.icon(forFile: url.path)
-
-		let app = RegularApp(
-			bundle: bundle,
-			icon: icon,
-			name: bundle.name
-		)
-
-		return app
-	}
-
-	private func addRunningApps() {
-		let runningApps = NSWorkspace.shared.runningApplications
-		for app in apps {
-			app.runningApp = runningApps.first {RunningApp(app: $0).id == app.id} // we instantiate RunningApp just to get id. kinda hacky, but oh well.
-		}
-	}
+    private func regularApp(for url: URL) -> RegularApp? {
+        if RegularApp.isPinnableFolder(url) { return RegularApp(folderURL: url) }
+        guard url.isFileURL, url.pathExtension.lowercased() == "app",
+              let bundle = Bundle(url: url) else { return nil }
+        return RegularApp(bundle: bundle, icon: NSWorkspace.shared.icon(forFile: url.path), name: bundle.name)
+    }
 }

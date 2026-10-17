@@ -9,6 +9,7 @@
 import Cocoa
 
 extension PreferencesViewController: NSTableViewDataSource {
+    static let pinnedRowPasteboardType = NSPasteboard.PasteboardType("local.menubardock.pinned-row")
 	func numberOfRows(in tableView: NSTableView) -> Int {
 		userPrefsDataSource.regularAppsUrls.count
 	}
@@ -22,8 +23,10 @@ extension PreferencesViewController: NSTableViewDelegate {
 	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 		var cellIdentifier: String = ""
 
-		let url = userPrefsDataSource.regularAppsUrls[row]
-		let bundle = Bundle(url: url)
+		guard userPrefsDataSource.regularAppsUrls.indices.contains(row) else { return nil }
+        let url = userPrefsDataSource.regularAppsUrls[row]
+		let bundle = url.pathExtension.lowercased() == "app" ? Bundle(url: url) : nil
+        let itemName = bundle?.name ?? FileManager.default.displayName(atPath: url.path)
 
 		let icon = userPrefsDataSource.iconOverride(forAppAt: url) ?? NSWorkspace.shared.icon(forFile: url.path)
 
@@ -33,7 +36,7 @@ extension PreferencesViewController: NSTableViewDelegate {
             button.menu?.autoenablesItems = false
             button.addItem(withTitle: "⋯")
             (button.cell as? NSPopUpButtonCell)?.arrowPosition = .noArrow
-            button.setAccessibilityLabel("Icon options for \(bundle?.name ?? url.deletingPathExtension().lastPathComponent)")
+            button.setAccessibilityLabel("Icon options for \(itemName)")
             button.toolTip = "Icon options"
             let configure = NSMenuItem(title: "Configure icon…", action: #selector(configureAppIcon), keyEquivalent: "")
             configure.target = self
@@ -52,56 +55,44 @@ extension PreferencesViewController: NSTableViewDelegate {
 		}
 
 		if let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: cellIdentifier), owner: nil) as? NSTableCellView {
-			cell.textField?.stringValue = bundle?.name ?? "NOT FOUND"
+			cell.textField?.stringValue = itemName
+            cell.toolTip = url.path
 			cell.imageView?.image = icon
 			return cell
 		}
 		return nil
 	}
 
-	// drag and drop copied from https://stackoverflow.com/questions/2121907/drag-drop-reorder-rows-on-nstableview
+    func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
+        guard userPrefsDataSource.regularAppsUrls.indices.contains(row) else { return nil }
+        let item = NSPasteboardItem()
+        item.setString(String(row), forType: Self.pinnedRowPasteboardType)
+        return item
+    }
 
-	func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
-		let pasteboard = NSPasteboardItem()
-		pasteboard.setString("\(row)", forType: .string)
-		return pasteboard
-	}
+    func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo,
+                   proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+        guard info.draggingSource as? NSTableView === tableView,
+              row >= 0, row <= userPrefsDataSource.regularAppsUrls.count else { return [] }
+        tableView.setDropRow(row, dropOperation: .above)
+        return .move
+    }
 
-	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
-		return .move
-	}
+    func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo,
+                   row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
+        guard info.draggingSource as? NSTableView === tableView else { return false }
+        var indexes = IndexSet()
+        for item in info.draggingPasteboard.pasteboardItems ?? [] {
+            guard let text = item.string(forType: Self.pinnedRowPasteboardType),
+                  let index = Int(text), userPrefsDataSource.regularAppsUrls.indices.contains(index) else { return false }
+            indexes.insert(index)
+        }
+        guard let urls = userPrefsDataSource.regularAppsUrls.movingElements(at: indexes, to: row) else { return false }
+        delegate?.regularAppsUrlsWereReordered(urls)
+        updateTable()
+        return true
+    }
 
-	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
-
-		var oldIndexes = [Int]()
-		 info.enumerateDraggingItems(options: [], for: tableView, classes: [NSPasteboardItem.self], searchOptions: [:]) { dragItem, _, _ in
-			if let str = (dragItem.item as? NSPasteboardItem)?.string(forType: .string), let index = Int(str) {
-				 oldIndexes.append(index)
-			 }
-		 }
-
-		 var oldIndexOffset = 0
-		 var newIndexOffset = 0
-
-		tableView.beginUpdates()
- 		for oldIndex in oldIndexes {
-			if oldIndex < row {
-				let old = oldIndex + oldIndexOffset
-				let new = row - 1
-				tableView.moveRow(at: oldIndex + oldIndexOffset, to: row - 1)
-				delegate?.regularAppUrlWasMoved(oldIndex: old, newIndex: new)
-				oldIndexOffset -= 1
-			} else {
-				let old = oldIndex
-				let new = row + newIndexOffset
-				tableView.moveRow(at: oldIndex, to: row + newIndexOffset)
-				delegate?.regularAppUrlWasMoved(oldIndex: old, newIndex: new)
-				newIndexOffset += 1
-			}
-		}
-		tableView.endUpdates()
-		return true
-	}
 }
 
 extension PreferencesViewController {
@@ -110,7 +101,7 @@ extension PreferencesViewController {
         guard let url = sender.representedObject as? URL, let window = view.window else { return }
         let alert = NSAlert()
         alert.messageText = "Configure icon"
-        alert.informativeText = "\(Bundle(url: url)?.name ?? url.deletingPathExtension().lastPathComponent) — shown in Menu Bar Dock"
+        alert.informativeText = "\(FileManager.default.displayName(atPath: url.path)) — shown in Menu Bar Dock"
         let saveButton = alert.addButton(withTitle: "Save")
         saveButton.isEnabled = false
         alert.addButton(withTitle: "Cancel")
@@ -185,7 +176,8 @@ private class AppIconConfigurationView: NSView {
 
     /// Makes a bounded PNG copy while preserving transparency and aspect ratio.
     private func iconData(from image: NSImage) -> Data? {
-        guard image.size.width > 0, image.size.height > 0,
+        guard image.size.width.isFinite, image.size.height.isFinite,
+              image.size.width > 0, image.size.height > 0,
               let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 256, pixelsHigh: 256, bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0),
               let context = NSGraphicsContext(bitmapImageRep: bitmap) else { return nil }
         NSGraphicsContext.saveGraphicsState()

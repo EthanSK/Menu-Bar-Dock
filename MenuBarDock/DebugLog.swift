@@ -40,7 +40,8 @@
 //
 //  ENABLE / DISABLE
 //  ----------------
-//  Logging is ON by default (Ethan wants to capture repros without fiddling).
+//  Upstream logging defaults to ON. LOCAL_BUILD defaults to OFF to avoid
+//  routine disk activity; an explicit MenuBarDockDebugLogging flag enables it.
 //  It can be turned off by setting the UserDefaults key
 //  `MenuBarDockDebugLogging` to NO (e.g. via:
 //    defaults write com.ethansk.MenuBarDock MenuBarDockDebugLogging -bool NO
@@ -104,10 +105,13 @@ final class DebugLog {
 			self.logFileURL = nil
 		}
 
-		// Read the enable flag. Key absent => enabled (default ON). Only an
-		// explicit `false` disables logging.
+		// Cache the explicit flag; otherwise use the build default.
 		if UserDefaults.standard.object(forKey: DebugLog.enabledDefaultsKey) == nil {
-			self.isEnabled = true
+			#if LOCAL_BUILD
+            self.isEnabled = false // Release customization: opt in for diagnostics.
+            #else
+            self.isEnabled = true
+            #endif
 		} else {
 			self.isEnabled = UserDefaults.standard.bool(forKey: DebugLog.enabledDefaultsKey)
 		}
@@ -127,15 +131,14 @@ final class DebugLog {
 	// MARK: - Public API
 
 	// Fire-and-forget log of one line. Safe to call from any thread.
-	// `message` should be a single human-readable line; we prepend a timestamp.
-	func log(_ message: String) {
+	// The autoclosure avoids formatting messages while diagnostics are disabled.
+	func log(_ message: @autoclosure () -> String) {
 		guard isEnabled, let url = logFileURL else { return }
-		let ts = isoFormatter.string(from: Date())
-		// Build the full line on the calling thread (cheap), append on ioQueue.
-		let line = "\(ts) \(message)"
+		let text = message()
 		ioQueue.async { [weak self] in
 			guard let self = self else { return }
-			self.appendRawLocked(line, url: url)
+			let ts = self.isoFormatter.string(from: Date())
+            self.appendRawLocked("\(ts) \(text)", url: url)
 			self.enforceSizeCapLocked(url: url)
 		}
 	}
@@ -226,7 +229,7 @@ final class DebugLog {
 			var running = UInt64(contents.utf8.count)
 			var dropCount = 0
 			while running > trimToBytes && dropCount < lines.count {
-				running -= UInt64(lines[dropCount].utf8.count + 1) // +1 for the newline
+				running -= min(running, UInt64(lines[dropCount].utf8.count + 1)) // +1 for the newline
 				dropCount += 1
 			}
 			if dropCount > 0 {

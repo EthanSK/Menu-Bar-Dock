@@ -39,13 +39,13 @@ class OpenableApps {
 		populateApps()
 	}
 
-	func update(runningApps: RunningApps, regularApps: RegularApps) {
+	func update(runningApps: RunningApps, regularApps: RegularApps, runningApplications: [NSRunningApplication]? = nil) {
 		self.runningApps = runningApps
 		self.regularApps = regularApps
-		populateApps()
+		populateApps(runningApplications: runningApplications)
 	}
 
-	private func populateApps() {
+	private func populateApps(runningApplications snapshot: [NSRunningApplication]? = nil) {
 		apps = []
 
 		// running and regular apps are already ordered internally
@@ -57,17 +57,21 @@ class OpenableApps {
 			populateAppsWithRegularApps()
 			populateAppsWithRunningApps()
 		}
-		let runningApplications = NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }
+        let runningApplications = (snapshot ?? NSWorkspace.shared.runningApplications).filter { !$0.isTerminated }
+        let instancesByURL = Dictionary(grouping: runningApplications, by: { $0.bundleURL?.absoluteString ?? "" }).mapValues { instances in
+            instances.sorted {
+                let lhs = $0.launchDate ?? .distantPast
+                let rhs = $1.launchDate ?? .distantPast
+                return lhs == rhs ? $0.processIdentifier < $1.processIdentifier : lhs < rhs
+            }
+        }
 		for app in apps { // Apply overrides after combining both sections so duplicate priority cannot bring back the original icon.
 			if let icon = userPrefsDataSource.iconOverride(forAppAt: app.bundleUrl) {
 				app.icon = icon
 			}
-			if let bundleId = app.bundleId, let runningApplication = app.runningApplication {
-				let instances = runningApplications.filter { $0.bundleIdentifier == bundleId }.sorted { lhs, rhs in // Number the full running set by launch time, so activation and hidden entries cannot swap badges; PIDs can wrap around.
-					let lhsLaunchDate = lhs.launchDate ?? .distantPast // macOS can omit a launch date; place unknown dates first and use PID to give them a deterministic order.
-					let rhsLaunchDate = rhs.launchDate ?? .distantPast
-					return lhsLaunchDate == rhsLaunchDate ? lhs.processIdentifier < rhs.processIdentifier : lhsLaunchDate < rhsLaunchDate
-				}
+            if !app.isFolder, let runningApplication = app.runningApplication {
+                // Separate installations sharing a bundle ID are different apps.
+                let instances = instancesByURL[app.id] ?? []
 				if instances.count > 1, let index = instances.firstIndex(where: { $0.processIdentifier == runningApplication.processIdentifier }) {
 					app.instanceNumber = index + 1
 				}

@@ -9,13 +9,15 @@
 import Cocoa
 
 class RegularApp {
-	public var bundle: Bundle
+	public let url: URL
+	public let bundle: Bundle?
+	public let isFolder: Bool
 	public var icon: NSImage
 	public var name: String
 	public var runningApp: NSRunningApplication? // once we open a regular app, it will be running, and so we want to show options for running apps in the dropdown menu such as 'quit'
 
 	var id: String {
-		bundle.bundleURL.absoluteString
+		url.absoluteString
 	}
 
 	init(
@@ -24,8 +26,25 @@ class RegularApp {
 		name: String
 	) {
 		self.bundle = bundle
+		self.url = bundle.bundleURL
+		self.isFolder = false
 		self.icon = icon
 		self.name = name
 	}
+
+    init(folderURL: URL) {
+        url = folderURL
+        bundle = nil
+        isFolder = true
+        icon = NSWorkspace.shared.icon(forFile: folderURL.path)
+        name = FileManager.default.displayName(atPath: folderURL.path)
+    }
+
+    /// App bundles are directories too. Keep their launch behavior distinct from folders.
+    static func isPinnableFolder(_ url: URL) -> Bool {
+        guard url.isFileURL,
+              let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isPackageKey]) else { return false }
+        return values.isDirectory == true && values.isPackage != true && url.pathExtension.lowercased() != "app"
+    }
 
 }
