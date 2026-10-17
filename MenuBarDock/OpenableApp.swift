@@ -132,7 +132,10 @@ class OpenableApp {
 	}
 
 	private func openApp() {
-		if appOpeningMethod == .activate, runningApplication != nil {
+		// A numbered entry represents one process. Reopening its shared bundle URL
+		// lets macOS choose another instance, even when this entry has a live one.
+		if (instanceNumber != nil || appOpeningMethod == .activate),
+			let runningApp = runningApplication, !runningApp.isTerminated {
 			activateApp()
 		} else {
 			launchApp()

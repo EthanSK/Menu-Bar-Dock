@@ -24,6 +24,16 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-10-17T11:34:00Z
+**Trigger:** Ethan: clicking numbered app instances 1 and 2 always opens the same instance.
+**Symptom:** The badges distinguish running processes, but normal clicks still reopen the shared application bundle when the opening method is Launch.
+**Root cause:** OpenableApp.openApp only selected the stored NSRunningApplication for the Activate preference. Launch reopened the bundle URL through NSWorkspace, allowing macOS to select a different process.
+**Fix:** A numbered entry with a live running application uses the existing process-specific activation path regardless of its Launch preference. Unnumbered entries retain their opening preference, and the explicit Launch menu action remains available.
+**Guard:** Two regression tests check that numbered entries with Launch and nil preferences activate their own process; all 10 unit tests passed. Full Swift typechecking for macOS 10.15 and release metadata checks passed. A universal signed 4.8.1 (38) build was installed and verified at /Applications/Menu Bar Dock.app with the original app icon and user preferences preserved. Ethan physically confirmed that the fix works and authorized release on 2026-10-17. Agent-side menu-bar automation could not verify those clicks: Computer Use cannot bind this windowless app's status items, and the disposable GUI test controller's background actions did not transfer foreground focus. All test processes/windows were removed; do not call that GUI attempt a passing focus test.
+**Installation note:** Replace a complete app bundle rather than merging with ditto. Xcode 27's compiled nib files conflicted with the installed build's nib directories during a merge. Staging and signature-verifying a fresh bundle before renaming it into place resolved the installation; the signed 4.8.0 rollback copy was preserved.
+---
+
+---
 **Date:** 2026-09-30T01:30:20Z
 **Trigger:** Ethan: distinguish multiple app instances with numbered red badges and show manual screenshots.
 **Symptom:** Separate app processes shared indistinguishable icons. PID-based numbering also put a newly launched process before the oldest one during the test.

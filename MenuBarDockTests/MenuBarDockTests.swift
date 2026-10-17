@@ -11,6 +11,47 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
+    private class RecordingRunningApplication: NSRunningApplication, @unchecked Sendable {
+        var activationCount = 0
+
+        override var isTerminated: Bool { false }
+
+        override func activate(options: NSApplication.ActivationOptions = []) -> Bool {
+            activationCount += 1
+            return true
+        }
+    }
+
+    private func numberedApp(_ number: Int, process: NSRunningApplication, method: AppOpeningMethod?) -> OpenableApp {
+        let url = URL(fileURLWithPath: "/nonexistent/MenuBarDockInstanceTest.app")
+        let app = OpenableApp(bundleId: "com.ethansk.MenuBarDockInstanceTest", icon: NSImage(), bundleUrl: url,
+                              name: "Instance Test", id: url.absoluteString, appOpeningMethod: method,
+                              runningApplication: process)
+        app.instanceNumber = number
+        return app
+    }
+
+    func testOpen_numberedInstancesActivateTheirOwnProcessWithLaunchDefault() {
+        let firstProcess = RecordingRunningApplication()
+        let secondProcess = RecordingRunningApplication()
+        let first = numberedApp(1, process: firstProcess, method: .launch)
+        let second = numberedApp(2, process: secondProcess, method: .launch)
+
+        first.open()
+        XCTAssertEqual(firstProcess.activationCount, 1)
+        XCTAssertEqual(secondProcess.activationCount, 0)
+
+        second.open()
+        XCTAssertEqual(firstProcess.activationCount, 1)
+        XCTAssertEqual(secondProcess.activationCount, 1)
+    }
+
+    func testOpen_numberedInstanceWithoutOpeningOverrideActivatesItsProcess() {
+        let process = RecordingRunningApplication()
+        numberedApp(2, process: process, method: nil).open()
+        XCTAssertEqual(process.activationCount, 1)
+    }
+
     private final class MenuBarItemDataSourceStub: MenuBarItemDataSource {
         let rightClickByDefault = false
 

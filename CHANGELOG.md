@@ -8,6 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.1] — 2026-10-17
+
+### Fixed
+
+- Clicking a numbered app icon activates that exact running instance, including
+  when the app opening method is set to Launch.
+
 ## [4.8.0] — 2026-09-30
 
 ### Added
