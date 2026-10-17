@@ -24,6 +24,15 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-10-17T12:04:00Z
+**Trigger:** Publish the physically accepted numbered-instance fix as 4.8.1.
+**Symptom:** Apple notarization returned HTTP 403, "A required agreement is missing or has expired," including the first retry after the account holder confirmed acceptance.
+**Root cause:** Apple's account agreement gate blocked submission before binary analysis. The existing developer account page still showed the old June agreement; a fresh navigation later showed the October 13 agreement accepted on October 17. The precise propagation interval was not measured.
+**Fix:** Reran the same canonical tag workflow without changing the release tag or bypassing notarization. Attempt 3 of run 39030171922 accepted the app and published 4.8.1/build 38. The public feed gate passed. Downloaded both release ZIPs and confirmed identical bytes, valid Developer ID signing, a stapled notarization ticket, Gatekeeper acceptance, and the Sparkle Ed25519 signature. A Sparkle probe using the preserved 4.8.0 host found 4.8.1/build 38. Installed the published bundle, verified its running path, and confirmed no preference keys changed.
+**Guard:** Reload the account page after a legal-agreement handoff before inferring which agreement is pending. Treat acceptance as account-holder work and retry the existing release run; completion still requires notarization and the actual public appcast. A separate Paid Apps agreement update remained available and was not needed for this release.
+---
+
+---
 **Date:** 2026-10-17T11:34:00Z
 **Trigger:** Ethan: clicking numbered app instances 1 and 2 always opens the same instance.
 **Symptom:** The badges distinguish running processes, but normal clicks still reopen the shared application bundle when the opening method is Launch.
