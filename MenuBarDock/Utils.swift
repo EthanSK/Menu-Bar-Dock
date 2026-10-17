@@ -9,7 +9,7 @@
 import Foundation
 
 protocol Reorderable {
-	associatedtype OrderElement: Equatable
+	associatedtype OrderElement: Hashable
 	var orderElement: OrderElement { get }
 }
 
@@ -53,9 +53,11 @@ extension Array where Element: Reorderable {
 	// Either way the un-ordered app ends up on the least-recent side and is the
 	// first to be dropped — never occupying the freshly-launched app's slot.
 	func reorder(by preferredOrder: [Element.OrderElement], unorderedGoTo: UnorderedPlacement = .start) -> [Element] {
-		sorted {
-			let firstIdx = preferredOrder.firstIndex(of: $0.orderElement)
-			let secondIdx = preferredOrder.firstIndex(of: $1.orderElement)
+        var positions: [Element.OrderElement: Int] = [:]
+        for (index, key) in preferredOrder.enumerated() where positions[key] == nil { positions[key] = index }
+		return sorted {
+			let firstIdx = positions[$0.orderElement]
+			let secondIdx = positions[$1.orderElement]
 
 			switch (firstIdx, secondIdx) {
 			case let (first?, second?):
@@ -78,6 +80,16 @@ extension Array where Element: Reorderable {
 }
 
 extension Array {
+    /// A table drop destination refers to the original array, before removal.
+    func movingElements(at indexes: IndexSet, to destination: Int) -> [Element]? {
+        guard !indexes.isEmpty, destination >= 0, destination <= count,
+              indexes.allSatisfy({ indices.contains($0) }) else { return nil }
+        let moving = indexes.map { self[$0] }
+        var remaining = enumerated().filter { !indexes.contains($0.offset) }.map(\.element)
+        let insertion = destination - indexes.filter { $0 < destination }.count
+        remaining.insert(contentsOf: moving, at: insertion)
+        return remaining
+    }
 	mutating func remove(at set: IndexSet) {
 		var arr = Swift.Array(self.enumerated())
 		arr.removeAll {set.contains($0.offset)}

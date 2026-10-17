@@ -22,7 +22,7 @@ class RunningApp {
 // needs to be orderable so we can cut off the first N apps correctly depending on the max num running apps
 extension RunningApp: Reorderable {
 	var orderElement: OrderElement { // so we can order using another array of bundleIds
-		id
+        "\(id)|\(app.processIdentifier)"
 	}
 
 	typealias OrderElement = String

@@ -1,0 +1,38 @@
+{
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "selected": 4,
+  "variants": [
+    {
+      "number": 1,
+      "name": "Контур",
+      "file": "01-outline.png",
+      "prompt": "Use case: logo-brand. Asset type: one standalone macOS application icon concept for Menu Bar Dock, square composition, one centered anchor. The reference image is ONLY to identify the anchor symbol: circular eye, crossbar, central shank, two upward flukes. Completely discard its turquoise and purple colors and heavy outline. The user rejected a bright glossy candy-colored 3D result and wants a more serious, restrained professional utility icon. Refine the anchor geometry for excellent small-size legibility, balanced optical weight, crisp deliberate curves and generous breathing room. Rounded-square macOS tile occupying 84 percent of the square canvas; anchor occupies about 58 percent of canvas. Straight-on symmetric composition. Transparent outside the tile. No neon, purple, cyan, rainbow, colorful gradient, glossy plastic, puffy inflatable shapes, glow, sparkles, ornamental nautical ropes, extra symbols, letters, labels, text or watermarks. Deliver the icon alone, not a poster, not a board, not a screenshot. Direction 1: precise outline. Warm off-white matte tile (#F2F1EE), graphite charcoal line anchor (#292D31). Elegant disciplined geometric monoline design, medium-bold uniform stroke, gently squared rounded line endings. The eye is a clear circle and the flukes are drawn as clean open strokes, not arrowheads. Flat two-tone design with no shading, no shadow inside the icon. A compact and quiet technical drawing aesthetic, unmistakably an anchor.",
+      "image": "01-outline.png"
+    },
+    {
+      "number": 2,
+      "name": "Графит",
+      "file": "02-graphite.png",
+      "prompt": "Use case: logo-brand. Asset type: one standalone macOS application icon concept for Menu Bar Dock, square composition, one centered anchor. The reference image is ONLY to identify the anchor symbol: circular eye, crossbar, central shank, two upward flukes. Completely discard its turquoise and purple colors and heavy outline. The user rejected a bright glossy candy-colored 3D result and wants a more serious, restrained professional utility icon. Refine the anchor geometry for excellent small-size legibility, balanced optical weight, crisp deliberate curves and generous breathing room. Rounded-square macOS tile occupying 84 percent of the square canvas; anchor occupies about 58 percent of canvas. Straight-on symmetric composition. Transparent outside the tile. No neon, purple, cyan, rainbow, colorful gradient, glossy plastic, puffy inflatable shapes, glow, sparkles, ornamental nautical ropes, extra symbols, letters, labels, text or watermarks. Deliver the icon alone, not a poster, not a board, not a screenshot. Direction 2: graphite. Very dark neutral charcoal matte tile (#2B2D30), solid light silver-gray anchor (#D8DBDD). An understated macOS professional utility icon. Firm clean anchor silhouette with a generous open eye, small straight crossbar and precise softly chamfered flukes. Almost flat, only an extremely subtle material edge and shallow contact shadow; no reflections, no brushed grain, no shiny metallic highlights. Neutral grays only, zero color accents.",
+      "image": "02-graphite.png"
+    },
+    {
+      "number": 3,
+      "name": "Тёмно-синий",
+      "file": "03-navy.png",
+      "prompt": "Use case: logo-brand. Asset type: one standalone macOS application icon concept for Menu Bar Dock, square composition, one centered anchor. The reference image is ONLY to identify the anchor symbol: circular eye, crossbar, central shank, two upward flukes. Completely discard its turquoise and purple colors and heavy outline. The user rejected a bright glossy candy-colored 3D result and wants a more serious, restrained professional utility icon. Refine the anchor geometry for excellent small-size legibility, balanced optical weight, crisp deliberate curves and generous breathing room. Rounded-square macOS tile occupying 84 percent of the square canvas; anchor occupies about 58 percent of canvas. Straight-on symmetric composition. Transparent outside the tile. No neon, purple, cyan, rainbow, colorful gradient, glossy plastic, puffy inflatable shapes, glow, sparkles, ornamental nautical ropes, extra symbols, letters, labels, text or watermarks. Deliver the icon alone, not a poster, not a board, not a screenshot. Direction 3: navy instrument. Deep low-saturation midnight navy matte tile (#243344), flat ivory anchor (#E7E7DF). Use a strong spare geometric anchor, round eye, carefully proportioned shank and angular but refined flukes. Confident more architectural geometry than the reference, precise edges softened only slightly. Two flat colors, no gradient or 3D effect. Conservative maritime identity without retro decoration.",
+      "image": "03-navy.png"
+    },
+    {
+      "number": 4,
+      "name": "Светлый",
+      "file": "04-light.png",
+      "prompt": "Use case: logo-brand. Asset type: one standalone macOS application icon concept for Menu Bar Dock, square composition, one centered anchor. The reference image is ONLY to identify the anchor symbol: circular eye, crossbar, central shank, two upward flukes. Completely discard its turquoise and purple colors and heavy outline. The user rejected a bright glossy candy-colored 3D result and wants a more serious, restrained professional utility icon. Refine the anchor geometry for excellent small-size legibility, balanced optical weight, crisp deliberate curves and generous breathing room. Rounded-square macOS tile occupying 84 percent of the square canvas; anchor occupies about 58 percent of canvas. Straight-on symmetric composition. Transparent outside the tile. No neon, purple, cyan, rainbow, colorful gradient, glossy plastic, puffy inflatable shapes, glow, sparkles, ornamental nautical ropes, extra symbols, letters, labels, text or watermarks. Deliver the icon alone, not a poster, not a board, not a screenshot. Direction 4: light stone. Pale cool light-gray tile (#E5E7E8) with a solid slate-dark anchor (#424A51). Sculpt the anchor as a crisp nearly flat inset emblem, very shallow debossed edge visible only as a subtle small shadow, no soft puffy shape or polished 3D. A strong calm modern macOS icon. Rounded geometry with balanced stem and smooth curved bottom arms, compact ring, restrained flukes with short sturdy tips. Extremely low-contrast tile shading, no color accents, no gradients across the anchor.",
+      "image": "04-light.png"
+    }
+  ],
+  "selection_note": "User explicitly confirmed the attached Light variant with pointed flukes; the earlier variant-1 interpretation was incorrect.",
+  "layout": "Attached 1254x1254 source copied exactly. Only external canvas cropped to (78,79,1098,1098), preserving the artwork without redraw or distortion. Tile fills 100% width and about 98% height at its centerlines.",
+  "packaging": "grouped.13: opaque RGB backing for app-icon slots prevents observed automatic glass artifacts; original source and transparent preview remain unchanged. PNG payloads stored verbatim in ICNS."
+}

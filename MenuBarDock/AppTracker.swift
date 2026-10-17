@@ -1,92 +1,51 @@
-//
-//  AppTracker.swift
-//  Menu Bar Dock
-//
-//  Created by Ethan Sarif-Kattan on 15/04/2021.
-//  Copyright © 2021 Ethan Sarif-Kattan. All rights reserved.
-//
-
 import Cocoa
 
 protocol AppTrackerDelegate: AnyObject {
-	func appWasActivated(runningApp: NSRunningApplication)
-	func appWasLaunched(runningApp: NSRunningApplication)
-	func appWasQuit(runningApp: NSRunningApplication)
+    func appWasActivated(runningApp: NSRunningApplication)
+    func appWasLaunched(runningApp: NSRunningApplication)
+    func appWasQuit(runningApp: NSRunningApplication)
+    func volumesDidChange()
 }
 
-// tracks app activations, launches and quits
-class AppTracker {
-	public weak var delegate: AppTrackerDelegate?
+extension AppTrackerDelegate {
+    func volumesDidChange() {}
+}
 
-	init() {
-		trackAppsBeingActivated()
-		trackAppsBeingLaunched()
-		trackAppsBeingQuit()
-	}
+/// Event-driven tracking: no timer or periodic process polling.
+final class AppTracker {
+    weak var delegate: AppTrackerDelegate?
+    private let center: NotificationCenter
+    private var observers: [NSObjectProtocol] = []
 
-    /// Refreshes instance badges when an app starts without taking focus.
-    private func trackAppsBeingLaunched() {
-        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main) { notification in
-            if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication, app.activationPolicy == .regular {
-                self.delegate?.appWasLaunched(runningApp: app) // Background launches do not send activation notifications, but must update the numbered instance set.
-            }
+    init(center: NotificationCenter = NSWorkspace.shared.notificationCenter) {
+        self.center = center
+        observe(NSWorkspace.didActivateApplicationNotification) { tracker, app in
+            // Accessory apps can become frontmost too. Forward every activation
+            // so hide-active-app never keeps the previous regular app hidden.
+            tracker.delegate?.appWasActivated(runningApp: app)
+        }
+        observe(NSWorkspace.didLaunchApplicationNotification) { tracker, app in
+            tracker.delegate?.appWasLaunched(runningApp: app)
+        }
+        observe(NSWorkspace.didTerminateApplicationNotification) { tracker, app in
+            tracker.delegate?.appWasQuit(runningApp: app)
+        }
+        for name in [NSWorkspace.didMountNotification, NSWorkspace.didUnmountNotification,
+                     NSWorkspace.didRenameVolumeNotification] {
+            observers.append(center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                self?.delegate?.volumesDidChange()
+            })
         }
     }
 
-	private func trackAppsBeingActivated() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { (notification) in
-			guard let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else {
-				DebugLog.shared.log("[activate] notification with NO app payload (ignored)")
-				return
-			}
-			// Log EVERY activation BEFORE the .regular gate so the debug trace
-			// captures accessory/LSUIElement activations too. This is exactly the
-			// residual edge from the v4.7.5 post-mortem: when a non-.regular app
-			// activates we drop it here and never update lastActivatedApp/ordering,
-			// so the hide-active-app filter can go stale. Having these lines in the
-			// log lets us confirm-from-data whether that edge is what Ethan is
-			// hitting before changing core ingestion logic.
-			let policyStr: String
-			switch app.activationPolicy {
-			case .regular: policyStr = "regular"
-			case .accessory: policyStr = "accessory"
-			case .prohibited: policyStr = "prohibited"
-			@unknown default: policyStr = "unknown"
-			}
-			DebugLog.shared.log("[activate] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?") policy=\(policyStr) \(app.activationPolicy == .regular ? "-> INGESTED" : "-> SKIPPED (not .regular: ordering + lastActivatedApp NOT updated)")")
-			// The notification payload (NSWorkspace.applicationUserInfoKey) IS the app
-			// that just activated — it's authoritative and carries no race. We must
-			// TRUST it directly.
-			//
-			// HISTORY / why we no longer read frontmostApplication here:
-			// The old gate compared `NSWorkspace.shared.frontmostApplication == app`.
-			// On macOS 14+ (Sonoma) the "cooperative activation" model means
-			// `frontmostApplication` is NOT updated synchronously when THIS
-			// notification fires — so the equality check intermittently returned
-			// false for genuine foreground activations, the activation got dropped,
-			// and the menu-bar "most recent" sort appeared frozen. That racy read is
-			// removed on ALL macOS versions now (pre-14 was relying on the same racy
-			// global read; trusting the payload is strictly more correct there too).
-			//
-			// `activationPolicy == .regular` is NOT a foreground test. activationPolicy
-			// is a STATIC per-app capability (.regular / .accessory / .prohibited) —
-			// many apps are .regular simultaneously, so it cannot tell us which app is
-			// in front. We keep it ONLY as a cheap skip: apps that aren't .regular will
-			// never be displayed in the dock anyway (RunningApps.canShowRunningApp
-			// filters .regular again), so there's no point churning the recency
-			// ordering for them. Applied uniformly — no macOS-version split.
-			if app.activationPolicy == .regular {
-				self.delegate?.appWasActivated(runningApp: app)
-			}
-		}
-	}
+    deinit { observers.forEach { center.removeObserver($0) } }
 
-	private func trackAppsBeingQuit() {
-		NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main) { (notification) in
-			if let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication {
-				DebugLog.shared.log("[quit] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?")")
-				self.delegate?.appWasQuit(runningApp: app)
-			}
-		}
-	}
+    private func observe(_ name: Notification.Name,
+                         action: @escaping (AppTracker, NSRunningApplication) -> Void) {
+        observers.append(center.addObserver(forName: name, object: nil, queue: .main) { [weak self] notification in
+            guard let self = self,
+                  let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication else { return }
+            action(self, app)
+        })
+    }
 }

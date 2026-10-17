@@ -37,6 +37,9 @@ enum Constants {
 	}
 
 	enum UserPrefs {
+        static let hoverAnimationsEnabled = "hoverAnimationsEnabled"
+        static let groupBackgroundEnabled = "groupBackgroundEnabled"
+        static let groupSpacing = "groupSpacing"
         static let appIconOverrides = "appIconOverrides"
         static let appIconSize = "appIconSize"
         static let appOpeningMethods = "appOpeningMethods"
@@ -53,5 +56,15 @@ enum Constants {
         static let runningAppsSortingMethod = "runningAppsSortingMethod"
         static let sideToShowRunningApps = "sideToShowRunningApps"
 		static let statusItemWidth = "statusItemWidth"
+
+        // Import only application preferences, never AppKit visibility/position
+        // keys belonging to the upstream app's independent status items.
+        static let migrationKeys = [
+            appIconOverrides, appIconSize, appOpeningMethods, defaultAppOpeningMethod,
+            duplicateAppsPriority, hideActiveAppFromRunningApps, hideDuplicateApps,
+            hideFinderFromRunningApps, launchAtLogin, maxNumRunningApps,
+            preserveAppOrder, regularAppsUrls, rightClickByDefault,
+            runningAppsSortingMethod, sideToShowRunningApps, statusItemWidth
+        ]
 	}
 }

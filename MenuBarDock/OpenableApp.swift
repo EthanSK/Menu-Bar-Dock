@@ -18,6 +18,8 @@ class OpenableApp {
 	public var bundleUrl: URL
 	public var runningApplication: NSRunningApplication?
 	public var instanceNumber: Int?
+    public var isFolder = false
+    public var isRunning: Bool { !isFolder && runningApplication.map { !$0.isTerminated } == true }
 
 	init(
 		bundleId: String?,
@@ -42,14 +44,15 @@ class OpenableApp {
 		appOpeningMethod: AppOpeningMethod
 	) {
 		self.init(
-			bundleId: regularApp.bundle.bundleIdentifier,
+			bundleId: regularApp.bundle?.bundleIdentifier,
 			icon: regularApp.icon,
-			bundleUrl: regularApp.bundle.bundleURL,
+			bundleUrl: regularApp.url,
 			name: regularApp.name,
 			id: regularApp.id,
 			appOpeningMethod: appOpeningMethod,
 			runningApplication: regularApp.runningApp
 		)
+        isFolder = regularApp.isFolder
 	}
 
 	convenience init(
@@ -80,6 +83,10 @@ class OpenableApp {
  	}
 
 	func open() {
+        if isFolder {
+            openFolder()
+            return
+        }
 		showOpeningAppWarningIfNeeded()
 		if bundleId == Constants.App.finderBundleId {
 			openFinder()
@@ -111,8 +118,23 @@ class OpenableApp {
 	}
 
 	func launch() {
+        if isFolder {
+            openFolder()
+            return
+        }
 		launchApp()
 	}
+
+    private func openFolder() {
+        guard NSWorkspace.shared.open(bundleUrl) else {
+            let alert = NSAlert()
+            alert.messageText = "Cannot open folder"
+            alert.informativeText = "The folder may have been moved, deleted, or become unavailable. Add it again in Preferences.\n\n\(bundleUrl.path)"
+            NSApp.activate(ignoringOtherApps: true)
+            alert.runModal()
+            return
+        }
+    }
 
 	func openNewAppInstance() {
 		if #available(OSX 10.15, *) {
@@ -132,7 +154,7 @@ class OpenableApp {
 	}
 
 	private func openApp() {
-		if appOpeningMethod == .activate, runningApplication != nil {
+		if appOpeningMethod == .activate, isRunning {
 			activateApp()
 		} else {
 			launchApp()
@@ -151,7 +173,8 @@ class OpenableApp {
 		if #available(OSX 10.15, *) {
 			let config = NSWorkspace.OpenConfiguration()
 			config.activates = true
-			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { (_, _) in
+			NSWorkspace.shared.openApplication(at: bundleUrl, configuration: config) { [self] (_, error) in
+                if let error = error { reportLaunchError(error) }
 			}
 		} else if let bundleId = bundleId {
 			NSWorkspace.shared.launchApplication(withBundleIdentifier: bundleId, options: [], additionalEventParamDescriptor: nil, launchIdentifier: nil) // old way
@@ -160,9 +183,19 @@ class OpenableApp {
 
 	private func activateApp() {
 		print("Activating app: ", name)
-		guard let runningApp = runningApplication else { return }
+		guard let runningApp = runningApplication, !runningApp.isTerminated else { launchApp(); return }
 		runningApp.activate(options: [.activateIgnoringOtherApps]) // I removed .activateAllWindows, but if that proves to be a problem, add it back to the options array
 	}
+
+    private func reportLaunchError(_ error: Error) {
+        DispatchQueue.main.async { [self] in
+            let alert = NSAlert()
+            alert.messageText = "Cannot open \(name)"
+            alert.informativeText = "\(error.localizedDescription)\n\n\(bundleUrl.path)"
+            NSApp.activate(ignoringOtherApps: true)
+            alert.runModal()
+        }
+    }
 
 	private func showOpeningAppWarningIfNeeded() {
 		// allows us to fail gracefully and alert the developer

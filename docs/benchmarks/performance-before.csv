@@ -1,0 +1,4 @@
+scenario,iterations,median_total_ms
+pinned_refresh_12_folders,300,230.955
+dock_refresh_12_items,1000,1153.829
+override_lookup,1000,57.398

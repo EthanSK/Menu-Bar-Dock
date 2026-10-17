@@ -12,9 +12,38 @@ import ServiceManagement
 // are configured via Info.plist (SUFeedURL / SUPublicEDKey). See Info.plist
 // comments for the full release-pipeline rationale.
 // Added 2026-05-28 (Ethan voice 7174).
+#if !LOCAL_BUILD
 import Sparkle
+#endif
 
+enum AppRelaunch {
+    static func helper(appURL: URL, processID: pid_t,
+                       openerURL: URL = URL(fileURLWithPath: "/usr/bin/open")) -> Process {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/bin/sh")
+        // Pass the path as an argument, never interpolate it into shell code.
+        // Wait for the old process so single-instance forwarding cannot steal
+        // the new launch. Bound the wait if termination is unexpectedly denied.
+        let script = """
+        attempts=200
+        while /bin/kill -0 "$1" 2>/dev/null; do
+            [ "$attempts" -gt 0 ] || exit 1
+            /bin/sleep 0.05
+            attempts=$((attempts - 1))
+        done
+        exec "$3" -n "$2"
+        """
+        process.arguments = ["-c", script, "menubardock-relaunch", String(processID), appURL.path, openerURL.path]
+        process.standardInput = FileHandle.nullDevice
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        return process
+    }
+}
+
+#if !APP_TEST
 @NSApplicationMain
+#endif
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 	let popover = NSPopover()
@@ -29,6 +58,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var appTracker: AppTracker!
 	var runningApps: RunningApps!
 	var regularApps: RegularApps!
+    private var hasInitialized = false
+    private var refreshScheduled = false
+    var runningApplicationsProvider: () -> [NSRunningApplication] = { NSWorkspace.shared.runningApplications }
+    var applicationBundleURL: () -> URL = { Bundle.main.bundleURL }
+    var runRelaunchHelper: (Process) throws -> Void = { try $0.run() }
+    var terminateApplication: () -> Void = { NSApp.terminate(nil) }
+    var presentRestartError: (Error) -> Void = { NSApp.presentError($0) }
+    private var isRestarting = false
 
 	// Sparkle's standard updater controller — must be a long-lived property so
 	// Sparkle's background scheduler stays alive for the whole app session.
@@ -36,6 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	// launch (subject to SUScheduledCheckInterval). With `updaterDelegate: nil`
 	// we accept Sparkle's defaults; future customization (e.g. ignoring
 	// specific versions, gating beta channels) would add a delegate here.
+#if !LOCAL_BUILD
 	private lazy var sparkleUpdater: SPUStandardUpdaterController = {
 		return SPUStandardUpdaterController(
 			startingUpdater: true,
@@ -43,28 +81,60 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			userDriverDelegate: nil
 		)
 	}()
+#endif
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
+        guard !forwardToExistingInstance() else { return }
 		initApp()
+        hasInitialized = true
 		setupLaunchAtLogin()
 		// Touch the lazy var so Sparkle starts polling the appcast. Without
 		// this access the property never instantiates and no updates are
 		// checked. _ = is the canonical way to silence the unused-result
 		// warning while forcing evaluation.
+        #if !LOCAL_BUILD
 		_ = sparkleUpdater
+        #endif
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
-		userPrefs.save()
+        // A duplicate exits before loading preferences and must not overwrite
+        // the active instance's pinned list with defaults.
+        if hasInitialized { userPrefs.save() }
 	}
+
+    private func forwardToExistingInstance() -> Bool {
+        guard let bundleID = Bundle.main.bundleIdentifier else { return false }
+        let current = NSRunningApplication.current
+        let instances = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID)
+            .filter { !$0.isTerminated }
+            .sorted {
+                let lhs = $0.launchDate ?? .distantPast
+                let rhs = $1.launchDate ?? .distantPast
+                return lhs == rhs ? $0.processIdentifier < $1.processIdentifier : lhs < rhs
+            }
+        guard let existing = instances.first,
+              existing.processIdentifier != current.processIdentifier,
+              let url = existing.bundleURL else { return false }
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = true
+        NSWorkspace.shared.openApplication(at: url, configuration: configuration) { _, _ in
+            DispatchQueue.main.async { NSApp.terminate(nil) }
+        }
+        return true
+    }
 
     /// Opens the app's configuration when it is reopened from Finder or a launcher.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        guard hasInitialized else { return false }
         openPreferencesWindow() // A menu-bar app has no main window; reopening it should expose its per-app configuration.
         return false
     }
 
 	func initApp() {
+        #if LOCAL_BUILD
+        userPrefs.prepareLocalPreferences(original: UserDefaults.standard.persistentDomain(forName: "com.ethansk.MenuBarDock") ?? [:])
+        #endif
 		userPrefs.load()
 		storyboard = NSStoryboard(name: "Main", bundle: nil)
 		menuBarItems = MenuBarItems(
@@ -84,6 +154,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	func setupLaunchAtLogin() {
+        #if LOCAL_BUILD
+        // Local builds use their own main-app login item, never the upstream helper.
+        if #available(macOS 13.0, *) {
+            do {
+                if userPrefs.launchAtLogin { try SMAppService.mainApp.register() }
+                else if SMAppService.mainApp.status == .enabled { try SMAppService.mainApp.unregister() }
+            } catch { print("Login item: \(error)") }
+        }
+        return
+        #else
 		let launcherAppId = Constants.App.launcherBundleId
 		let runningApps = NSWorkspace.shared.runningApplications
 
@@ -107,6 +187,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		if isLauncherRunning {
 			DistributedNotificationCenter.default().post(name: Notification.Name("killLauncher"), object: Bundle.main.bundleIdentifier!)
 		}
+        #endif
 	}
 
 	private func updateMenuBarItems() {
@@ -145,11 +226,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		} else {
 			NSApp.activate(ignoringOtherApps: true)
 		}
+        #if LOCAL_BUILD
+        let alert = NSAlert()
+        alert.messageText = "Local grouped build"
+        alert.informativeText = "Automatic updates are disabled for this customized build, so an upstream release cannot replace your changes."
+        alert.runModal()
+        #else
 		sparkleUpdater.checkForUpdates(sender)
+        #endif
 	}
 }
 
 extension AppDelegate: MenuBarItemsDelegate {
+    func didChangeGroupSpacing(_ spacing: CGFloat) {
+        userPrefs.groupSpacing = spacing
+        appearanceWasUpdated()
+        (preferencesWindow.contentViewController as? PreferencesViewController)?.updateGroupSpacingUi()
+    }
 	func didSetAppOpeningMethod(_ method: AppOpeningMethod?, _ app: OpenableApp) {
 		userPrefs.appOpeningMethods[app.id] = method
 		userPrefsWasUpdated()
@@ -163,55 +256,95 @@ extension AppDelegate: MenuBarItemsDelegate {
 		checkForUpdates(nil)
 	}
 
-	func openPreferencesWindow() {
-		if let viewController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: Constants.Identifiers.ViewControllers.preferences) as? PreferencesViewController {
-			viewController.userPrefsDataSource = userPrefs
-			viewController.delegate = self
+    func openPreferencesWindow() {
+        regularApps.invalidateCache()
+        refreshApps() // Refresh folder availability and externally changed icons on demand.
+        if let viewController = preferencesWindow.contentViewController as? PreferencesViewController {
+            viewController.updateTable()
+            viewController.updateUi()
+        } else if let viewController = storyboard.instantiateController(withIdentifier: Constants.Identifiers.ViewControllers.preferences) as? PreferencesViewController {
+            viewController.userPrefsDataSource = userPrefs
+            viewController.delegate = self
+            preferencesWindow = NSWindow(contentViewController: viewController)
+            preferencesWindow.isReleasedWhenClosed = false
+            preferencesWindow.minSize = preferencesWindow.frame.size
+        }
+        preferencesWindow.makeKeyAndOrderFront(self)
+        NSApp.activate(ignoringOtherApps: true)
+    }
 
-			if !preferencesWindow.isVisible == true {
-				preferencesWindow = NSWindow(contentViewController: viewController)
-				preferencesWindow.makeKeyAndOrderFront(self)
-			}
-			preferencesWindow.makeKeyAndOrderFront(self)
-
-			preferencesWindow.minSize = preferencesWindow.frame.size
-			preferencesWindow.windowController?.showWindow(self)
-			NSApp.activate(ignoringOtherApps: true)// stops bugz n shiz i think
-		}
-	}
 }
 
 extension AppDelegate: AppTrackerDelegate {
+    func volumesDidChange() {
+        regularApps.invalidateCache()
+        scheduleAppRefresh()
+    }
 	/// Refreshes running entries and their instance badges without changing recency order.
-	func appWasLaunched(runningApp: NSRunningApplication) {
-		regularApps.update()
-		appActivationChange()
-	}
+    func appWasLaunched(runningApp: NSRunningApplication) {
+        runningApps.handleAppLaunch(runningApp: runningApp)
+        scheduleAppRefresh()
+    }
 
-	func appWasActivated(runningApp: NSRunningApplication) {
-		runningApps.handleAppActivation(runningApp: runningApp)
-		regularApps.handleAppActivation(runningApp: runningApp)
+    func appWasActivated(runningApp: NSRunningApplication) {
+        runningApps.handleAppActivation(runningApp: runningApp)
+        regularApps.handleAppActivation(runningApp: runningApp)
+        scheduleAppRefresh()
+    }
 
-		appActivationChange()
-	}
+    func appWasQuit(runningApp: NSRunningApplication) {
+        runningApps.handleAppQuit(runningApp: runningApp)
+        regularApps.handleAppQuit(runningApp: runningApp)
+        scheduleAppRefresh()
+    }
 
-	func appWasQuit(runningApp: NSRunningApplication) {
-		runningApps.handleAppQuit(runningApp: runningApp)
-		regularApps.handleAppQuit(runningApp: runningApp)
+    private func scheduleAppRefresh() {
+        guard !refreshScheduled else { return }
+        refreshScheduled = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.refreshScheduled = false
+            self.refreshApps()
+        }
+    }
 
-		appActivationChange()
-	}
+    private func refreshApps() {
+        let snapshot = runningApplicationsProvider()
+        runningApps.update(runningApplications: snapshot)
+        regularApps.update(runningApplications: snapshot)
+        openableApps.update(runningApps: runningApps, regularApps: regularApps, runningApplications: snapshot)
+        updateMenuBarItems()
+    }
 
-	private func appActivationChange() {
-		runningApps.update()
-		//		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
-		openableApps.update(runningApps: runningApps, regularApps: regularApps)
-
-		updateMenuBarItems()
-	}
 }
 
 extension AppDelegate: PreferencesViewControllerDelegate {
+    func hoverAnimationsDidChange(_ value: Bool) {
+        userPrefs.hoverAnimationsEnabled = value
+        appearanceWasUpdated()
+    }
+
+    func groupBackgroundDidChange(_ value: Bool) {
+        userPrefs.groupBackgroundEnabled = value
+        appearanceWasUpdated()
+    }
+
+    func restartAppWasPressed() {
+        guard !isRestarting else { return }
+        isRestarting = true
+        userPrefs.save()
+        do {
+            try runRelaunchHelper(AppRelaunch.helper(appURL: applicationBundleURL(), processID: getpid()))
+            terminateApplication()
+        } catch {
+            isRestarting = false
+            presentRestartError(error)
+        }
+    }
+
+    func groupSpacingSliderDidChange(_ value: Double) {
+        didChangeGroupSpacing(CGFloat(value))
+    }
 	func maxRunningAppsSliderDidChange(_ value: Int) {
 		userPrefs.maxRunningApps = value
 		userPrefsWasUpdated()
@@ -219,12 +352,12 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 
 	func itemSlotWidthSliderDidChange(_ value: Double) {
 		userPrefs.itemSlotWidth = CGFloat(value)
-		userPrefsWasUpdated()
+        appearanceWasUpdated()
 	}
 
 	func appIconSizeSliderDidChange(_ value: Double) {
 		userPrefs.appIconSize = CGFloat(value)
-		userPrefsWasUpdated()
+        appearanceWasUpdated()
 	}
 
 	func runningAppsSortingMethodDidChange(_ value: RunningAppsSortingMethod) {
@@ -248,22 +381,7 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 
 	func launchAtLoginDidChange(_ value: Bool) {
 		userPrefs.launchAtLogin = value
-		let launcherAppId = Constants.App.launcherBundleId
-        if #available(macOS 13.0, *) {
-            do {
-                let appService = SMAppService.loginItem(identifier: launcherAppId)
-                if value {
-                    try appService.register()
-                } else {
-                    try appService.unregister()
-                }
-            } catch {
-                print("Failed to register/unregister login item: \(error)")
-            }
-        } else {
-            SMLoginItemSetEnabled(launcherAppId as CFString, value)
-
-        }
+        setupLaunchAtLogin()
 		userPrefsWasUpdated()
 	}
 
@@ -301,7 +419,7 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 
 	func regularAppsUrlsWereAdded(_ value: [URL]) {
 		value.forEach { (url) in
-			if !userPrefs.regularAppsUrls.contains(url) {
+			if (RegularApp.isPinnableFolder(url) || (url.pathExtension.lowercased() == "app" && Bundle(url: url) != nil)) && !userPrefs.regularAppsUrls.contains(url) {
 				userPrefs.regularAppsUrls.append(url)
 			}
 		}
@@ -313,11 +431,12 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		userPrefsWasUpdated()
 	}
 
-	func regularAppUrlWasMoved(oldIndex: Int, newIndex: Int) {
-		let url = userPrefs.regularAppsUrls.remove(at: oldIndex)
-		userPrefs.regularAppsUrls.insert(url, at: newIndex)
-		userPrefsWasUpdated()
-	}
+    func regularAppsUrlsWereReordered(_ urls: [URL]) {
+        guard urls.count == userPrefs.regularAppsUrls.count,
+              Set(urls) == Set(userPrefs.regularAppsUrls) else { return }
+        userPrefs.regularAppsUrls = urls
+        userPrefsWasUpdated()
+    }
 
     /// Saves or removes a per-app icon and immediately refreshes the menu bar.
     func appIconOverrideDidChange(_ imageData: Data?, forAppAt url: URL) {
@@ -347,11 +466,13 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		}
 	}
 
-	private func userPrefsWasUpdated() {
-		userPrefs.save()
-		runningApps.update()
-		regularApps.update()
-		openableApps.update(runningApps: runningApps, regularApps: regularApps)
-		updateMenuBarItems()
-	}
+    private func userPrefsWasUpdated() {
+        userPrefs.save()
+        refreshApps()
+    }
+
+    private func appearanceWasUpdated() {
+        userPrefs.save()
+        menuBarItems.refreshLayout()
+    }
 }
