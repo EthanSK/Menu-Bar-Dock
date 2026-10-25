@@ -8,6 +8,14 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.2] — 2026-10-25
+
+### Added
+
+- Bounded diagnostics for menu-bar updates, clicks, menus and display/backing-scale
+  changes. Preserve the last unfinished session across relaunches so intermittent
+  layout crashes can be investigated alongside macOS's crash report.
+
 ## [4.8.1] — 2026-10-17
 
 ### Fixed

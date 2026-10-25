@@ -24,6 +24,15 @@ Each entry looks like:
 (newest first)
 
 ---
+**Date:** 2026-10-25T19:28:00Z
+**Trigger:** Ethan: add instrumentation so the next recurring Menu Bar Dock crash can be diagnosed.
+**Symptom:** The 4.8.1 crash reports contained AppKit layout/backing-scale frames, including a main-thread recursion overflow, but the activation log did not identify the corresponding status-item mutation.
+**Root cause:** The exact layout trigger remains unknown. Existing diagnostics described app ordering, not layout phases, display changes, or the last unfinished session.
+**Fix:** Extend the existing serial DebugLog writer with bounded layout breadcrumbs and atomic layout-state.json checkpoints. Keep one previous-session.json when the last run did not record a clean application termination; label it an unclean exit rather than proof of a crash. Record update reasons and begin/end stages, per-item mutations, click/menu entry and exit, and rate-limited display/backing notifications. Never force layout, capture user text, install a Swift fatal-signal handler, or claim that instrumentation fixes the original crash. Move ISO-8601 formatting onto the same queue as parsing and file IO.
+**Guard:** Mac Mini's canonical xcodebuild test action executed all four new diagnostic tests plus the existing dropdown guard: five named tests, zero failures. Recovery uses real files but models abrupt termination by omitting finishSession; it does not deliberately crash the live app. Recovery context holds at most 32 messages of 512 characters, with at most 256 pending diagnostic writes; debug.log retains its existing 4-MiB cap. Generated build.noindex sources must be excluded from SwiftLint, and test deployment targets must match the app's macOS 10.15 minimum to execute the tests with current Xcode.
+---
+
+---
 **Date:** 2026-10-17T12:04:00Z
 **Trigger:** Publish the physically accepted numbered-instance fix as 4.8.1.
 **Symptom:** Apple notarization returned HTTP 403, "A required agreement is missing or has expired," including the first retry after the account holder confirmed acceptance.

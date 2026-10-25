@@ -27,6 +27,7 @@ class MenuBarItems {
 	public weak var delegate: MenuBarItemsDelegate?
 
 	private(set) var items: [MenuBarItem] // ordered left to right
+    private var updateSerial: UInt64 = 0
 
 	init(
 		userPrefsDataSource: MenuBarItemsUserPrefsDataSource
@@ -45,15 +46,24 @@ class MenuBarItems {
 	to have running at any given time
 	*/
 	func update(
-		openableApps: OpenableApps
+		openableApps: OpenableApps,
+        reason: String = "model-change"
  	) {
+        updateSerial &+= 1
+        let updateID = updateSerial
+        // Breadcrumbs identify the last entered/completed mutation without
+        // forcing layout. The AppKit-only crash stacks did not name our caller.
+        DebugLog.shared.diagnostic("update=\(updateID) begin reason=\(reason) apps=\(openableApps.apps.count) slots=\(items.count) width=\(userPrefsDataSource.itemSlotWidth) icon=\(userPrefsDataSource.appIconSize) preserveOrder=\(userPrefsDataSource.preserveAppOrder)", checkpoint: true)
 		createEnoughStatusItems(openableApps: openableApps)
+		DebugLog.shared.diagnostic("update=\(updateID) created slots=\(items.count); sorting")
 		sortItems() // sort after adding them all for efficiency. not all of them will be sorted due to layout not updating instantly, but that's fine since we have an extra item at all times.
+        DebugLog.shared.diagnostic("update=\(updateID) sorted")
 
 		// try and populate the rightmost items since new ones are added to the left of the menu bar
 		for (index, app) in openableApps.apps.enumerated() {
 			let offset = items.count - openableApps.apps.count
 			let item = items[index + offset]
+            DebugLog.shared.diagnostic("update=\(updateID) slot=\(index + offset) show app=\(app.bundleId ?? "unknown")")
 			showItem(item: item)
 			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.itemSlotWidth)
 		}
@@ -61,9 +71,11 @@ class MenuBarItems {
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)
 		for index in 0...items.count - openableApps.apps.count - 1 {
 			let item = items[index]
+            DebugLog.shared.diagnostic("update=\(updateID) slot=\(index) reset/hide")
 			item.reset()
 			hideItem(item: item)
 		}
+        DebugLog.shared.diagnostic("update=\(updateID) completed slots=\(items.count)", checkpoint: true)
 	}
 
 	private func createEnoughStatusItems(openableApps: OpenableApps) {

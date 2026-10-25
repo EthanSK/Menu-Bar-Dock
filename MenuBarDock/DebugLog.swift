@@ -2,7 +2,7 @@
 //  DebugLog.swift
 //  Menu Bar Dock
 //
-//  Lightweight, crash-safe debug logging for diagnosing the hard-to-reproduce
+//  Bounded, asynchronous debug logging for diagnosing the hard-to-reproduce
 //  activation / recency-ordering issues (see LEARNINGS.md + the v4.7.5
 //  post-mortem). The whole point of this file is so that when Ethan hits a
 //  "the order looks wrong / app X isn't showing" situation that's hard to
@@ -52,6 +52,24 @@ import Foundation
 // Global singleton accessor. `DebugLog.shared.log(...)` from anywhere.
 final class DebugLog {
 
+    /// A normal quit closes the session. An unfinished marker is evidence of an
+    /// abnormal exit, not proof of a crash (force-quit/power loss can also do it).
+    /// Never install Swift signal handlers for the AppKit stack-overflow case:
+    /// allocating or doing Foundation IO on an exhausted stack is unsafe.
+    struct DiagnosticSession: Codable {
+        let sessionID: String
+        let processID: Int32
+        let version: String
+        var cleanShutdown = false
+        var breadcrumbs: [String] = []
+
+        init() {
+            sessionID = UUID().uuidString
+            processID = ProcessInfo.processInfo.processIdentifier
+            version = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") ?? "unknown").\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") ?? "unknown")"
+        }
+    }
+
 	// MARK: - Singleton
 
 	static let shared = DebugLog()
@@ -83,6 +101,15 @@ final class DebugLog {
 	// can't resolve the user's Library/Logs dir (then logging is a no-op).
 	private let logFileURL: URL?
 
+    // Only the IO queue owns this bounded state. Atomic checkpoints preserve
+    // context across launches without polling, a crash handler, or UI work.
+    private var diagnosticSession = DiagnosticSession()
+    private let maxBreadcrumbs = 32
+    private let maxBreadcrumbLength = 512
+    private let diagnosticAdmissionLock = NSLock()
+    private var pendingDiagnostics = 0
+    private var droppedDiagnostics: UInt64 = 0
+
 	// ISO-8601 formatter with fractional seconds, used both to WRITE the leading
 	// timestamp and to PARSE it back during the time-based prune.
 	private let isoFormatter: ISO8601DateFormatter = {
@@ -93,10 +120,10 @@ final class DebugLog {
 
 	// MARK: - Init
 
-	private init() {
+	init(logDirectory: URL? = nil, enabled: Bool? = nil) {
 		// Resolve ~/Library/Logs/Menu Bar Dock/debug.log
 		let fm = FileManager.default
-		if let logsDir = fm.urls(for: .libraryDirectory, in: .userDomainMask).first?
+		if let logsDir = logDirectory ?? fm.urls(for: .libraryDirectory, in: .userDomainMask).first?
 			.appendingPathComponent("Logs", isDirectory: true)
 			.appendingPathComponent(Constants.App.name, isDirectory: true) {
 			self.logFileURL = logsDir.appendingPathComponent("debug.log", isDirectory: false)
@@ -106,7 +133,9 @@ final class DebugLog {
 
 		// Read the enable flag. Key absent => enabled (default ON). Only an
 		// explicit `false` disables logging.
-		if UserDefaults.standard.object(forKey: DebugLog.enabledDefaultsKey) == nil {
+        if let enabled = enabled {
+            self.isEnabled = enabled
+        } else if UserDefaults.standard.object(forKey: DebugLog.enabledDefaultsKey) == nil {
 			self.isEnabled = true
 		} else {
 			self.isEnabled = UserDefaults.standard.bool(forKey: DebugLog.enabledDefaultsKey)
@@ -121,6 +150,7 @@ final class DebugLog {
 			// Mark a session boundary so it's obvious in the log where each
 			// launch starts (helps when reading a multi-launch trace).
 			self?.appendRawLocked("==== Menu Bar Dock launched (logging on) ====", url: url)
+            self?.beginDiagnosticSessionLocked(url: url)
 		}
 	}
 
@@ -130,15 +160,96 @@ final class DebugLog {
 	// `message` should be a single human-readable line; we prepend a timestamp.
 	func log(_ message: String) {
 		guard isEnabled, let url = logFileURL else { return }
-		let ts = isoFormatter.string(from: Date())
-		// Build the full line on the calling thread (cheap), append on ioQueue.
-		let line = "\(ts) \(message)"
+        let time = Date()
 		ioQueue.async { [weak self] in
 			guard let self = self else { return }
+			// The formatter is mutable Foundation state; keep both formatting and
+            // parsing on its owning queue when callers log concurrently.
+            let line = "\(self.isoFormatter.string(from: time)) \(message)"
 			self.appendRawLocked(line, url: url)
 			self.enforceSizeCapLocked(url: url)
 		}
 	}
+
+    /// Record primitive values supplied by their UI owner. This method never
+    /// traverses views, asks AppKit to lay out/display, or captures user content.
+    /// Checkpoints are asynchronous best effort: a fatal exit can still beat
+    /// queued IO. debug.log plus macOS's .ips report remain complementary evidence.
+    func diagnostic(_ message: String, checkpoint: Bool = false) {
+        guard isEnabled, let url = logFileURL else { return }
+        // If AppKit starts producing a pathological burst, discard diagnostic
+        // detail instead of allowing logging closures to grow without bound.
+        diagnosticAdmissionLock.lock()
+        guard pendingDiagnostics < 256 else {
+            droppedDiagnostics &+= 1
+            diagnosticAdmissionLock.unlock()
+            return
+        }
+        pendingDiagnostics += 1
+        let dropped = droppedDiagnostics
+        droppedDiagnostics = 0
+        diagnosticAdmissionLock.unlock()
+        let time = Date()
+        let mainThread = Thread.isMainThread
+        let bounded = String(message.prefix(maxBreadcrumbLength))
+            .replacingOccurrences(of: "\n", with: " ")
+        ioQueue.async { [weak self] in
+            guard let self = self else { return }
+            defer {
+                self.diagnosticAdmissionLock.lock()
+                self.pendingDiagnostics -= 1
+                self.diagnosticAdmissionLock.unlock()
+            }
+            if dropped > 0 {
+                self.appendRawLocked("\(self.isoFormatter.string(from: time)) [layout] diagnostic-overload dropped=\(dropped)", url: url)
+            }
+            let line = "\(self.isoFormatter.string(from: time)) [layout] main=\(mainThread) \(bounded)"
+            self.appendRawLocked(line, url: url)
+            self.diagnosticSession.breadcrumbs.append(line)
+            if self.diagnosticSession.breadcrumbs.count > self.maxBreadcrumbs {
+                self.diagnosticSession.breadcrumbs.removeFirst(self.diagnosticSession.breadcrumbs.count - self.maxBreadcrumbs)
+            }
+            if checkpoint { self.writeDiagnosticSessionLocked(url: url) }
+            self.enforceSizeCapLocked(url: url)
+        }
+    }
+
+    /// Used at normal application termination, never from a fatal-signal handler.
+    func finishSession() {
+        guard isEnabled, let url = logFileURL else { return }
+        ioQueue.sync {
+            diagnosticSession.cleanShutdown = true
+            appendRawLocked("\(isoFormatter.string(from: Date())) [session] clean-shutdown", url: url)
+            writeDiagnosticSessionLocked(url: url)
+        }
+    }
+
+    /// Bounded queue barrier for diagnostics/tests; ordinary UI logging is async.
+    func flush() { ioQueue.sync {} }
+
+    private func beginDiagnosticSessionLocked(url: URL) {
+        let directory = url.deletingLastPathComponent()
+        let stateURL = directory.appendingPathComponent("layout-state.json")
+        if let attributes = try? FileManager.default.attributesOfItem(atPath: stateURL.path),
+           let size = attributes[.size] as? UInt64,
+           size <= 128 * 1024,
+           let data = try? Data(contentsOf: stateURL),
+           let previous = try? JSONDecoder().decode(DiagnosticSession.self, from: data),
+           !previous.cleanShutdown {
+            // Preserve exactly one prior unfinished run before replacing the live
+            // state. It survives later clean launches until another abnormal exit.
+            let previousURL = directory.appendingPathComponent("previous-session.json")
+            try? data.write(to: previousURL, options: .atomic)
+            appendRawLocked("\(isoFormatter.string(from: Date())) [session] previous-exit=unclean session=\(previous.sessionID) last=\(previous.breadcrumbs.last ?? "no checkpoint")", url: url)
+        }
+        appendRawLocked("\(isoFormatter.string(from: Date())) [session] id=\(diagnosticSession.sessionID) pid=\(diagnosticSession.processID) version=\(diagnosticSession.version) os=\(ProcessInfo.processInfo.operatingSystemVersionString)", url: url)
+        writeDiagnosticSessionLocked(url: url)
+    }
+
+    private func writeDiagnosticSessionLocked(url: URL) {
+        guard let data = try? JSONEncoder().encode(diagnosticSession) else { return }
+        try? data.write(to: url.deletingLastPathComponent().appendingPathComponent("layout-state.json"), options: .atomic)
+    }
 
 	// MARK: - Private file helpers (all run on ioQueue — "Locked" suffix means
 	//         "only call from ioQueue", giving us serial-access safety).

@@ -66,6 +66,23 @@ Support this project:
 
 <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
+### Diagnostic logs
+
+Local diagnostics live in `~/Library/Logs/Menu Bar Dock/`:
+
+- `debug.log` records app ordering, status-item updates, menu actions and display
+  changes. It retains the existing 24-hour pruning and 4-MiB size limit.
+- `layout-state.json` holds the current session and its last 32 diagnostic
+  breadcrumbs. Normal Quit marks that session clean.
+- `previous-session.json` preserves one previous unfinished session after a
+  relaunch. An unclean exit can also mean force-quit or power loss; correlate it
+  with the macOS `.ips` crash report before diagnosing a crash.
+
+Diagnostic writes run off the UI thread and are bounded. Checkpoints are best
+effort: a fatal exit can beat queued writes. They do not intercept crashes or
+guarantee prevention, and they do not capture typed text, window titles or images.
+The existing `MenuBarDockDebugLogging` preference disables these diagnostics too.
+
 ### Notes
 
 - Do not upload the binary directly to github releases. Upload a compressed version, otherwise the app won't open after

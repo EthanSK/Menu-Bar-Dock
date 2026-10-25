@@ -1,5 +1,8 @@
 line_length: 420
 
+excluded:
+  - build.noindex
+
 disabled_rules:
   - redundant_string_enum_value
   - identifier_name

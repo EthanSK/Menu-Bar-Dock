@@ -42,6 +42,7 @@ class MenuBarItem {
 	}
 
 	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
+        DebugLog.shared.diagnostic("item begin app=\(app.bundleId ?? "unknown") length=\(statusItem.length) subviews=\(statusItem.button?.subviews.count ?? 0) scale=\(statusItem.button?.window?.backingScaleFactor ?? 0)")
 		self.app = app
  		let imageSize = appIconSize
         let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
@@ -85,6 +86,7 @@ class MenuBarItem {
 		}
 
 		statusItem.length = slotWidth
+        DebugLog.shared.diagnostic("item completed app=\(app.bundleId ?? "unknown") length=\(statusItem.length) subviews=\(statusItem.button?.subviews.count ?? 0)")
 	}
 
 	func reset() {
@@ -105,6 +107,7 @@ class MenuBarItem {
  	}
 
 	@objc private func handleClick() {
+        DebugLog.shared.diagnostic("click app=\(app?.bundleId ?? "none") event=\(NSApp.currentEvent?.type.rawValue ?? 0) menuDefault=\(userPrefsDataSource.rightClickByDefault)", checkpoint: true)
         if userPrefsDataSource.rightClickByDefault == true {
             showDropdownMenu()
             return
@@ -122,6 +125,8 @@ class MenuBarItem {
 	}
 
 	func showDropdownMenu() {
+        DebugLog.shared.diagnostic("menu begin app=\(app?.bundleId ?? "none")", checkpoint: true)
+        defer { DebugLog.shared.diagnostic("menu completed", checkpoint: true) }
 		statusItem.button?.appearance = NSAppearance(named: NSAppearance.current.name)
 
 		guard let menu = makeDropdownMenu() else { return }

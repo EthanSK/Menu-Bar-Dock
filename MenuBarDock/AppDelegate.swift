@@ -29,6 +29,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	var appTracker: AppTracker!
 	var runningApps: RunningApps!
 	var regularApps: RegularApps!
+    private var diagnosticObservers: [NSObjectProtocol] = []
+    private var lastDisplayDiagnosticUptime: TimeInterval = -1
+    private var displayDiagnosticCount: UInt64 = 0
 
 	// Sparkle's standard updater controller — must be a long-lived property so
 	// Sparkle's background scheduler stays alive for the whole app session.
@@ -45,6 +48,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}()
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
+        installDisplayDiagnostics()
 		initApp()
 		setupLaunchAtLogin()
 		// Touch the lazy var so Sparkle starts polling the appcast. Without
@@ -56,7 +60,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationWillTerminate(_ aNotification: Notification) {
 		userPrefs.save()
+        DebugLog.shared.finishSession()
 	}
+
+    private func installDisplayDiagnostics() {
+        // Observe only our process's screen/backing notifications, never global
+        // input or Accessibility. Reads below do not force AppKit layout. Limit
+        // bursts so a display/layout loop cannot enqueue unbounded diagnostic IO.
+        for name in [NSApplication.didChangeScreenParametersNotification,
+                     NSWindow.didChangeBackingPropertiesNotification,
+                     NSWindow.didChangeScreenNotification] {
+            diagnosticObservers.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
+                self?.recordDisplayDiagnostics(reason: note.name.rawValue, window: note.object as? NSWindow)
+            })
+        }
+        recordDisplayDiagnostics(reason: "startup", window: nil)
+    }
+
+    private func recordDisplayDiagnostics(reason: String, window: NSWindow?) {
+        displayDiagnosticCount &+= 1
+        let now = ProcessInfo.processInfo.systemUptime
+        guard lastDisplayDiagnosticUptime < 0 || now - lastDisplayDiagnosticUptime >= 0.25 else { return }
+        lastDisplayDiagnosticUptime = now
+        let displays = NSScreen.screens.map { screen in
+            "id=\(screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] ?? "unknown") frame=\(screen.frame) scale=\(screen.backingScaleFactor)"
+        }.joined(separator: "; ")
+        DebugLog.shared.diagnostic("display event=\(reason) total=\(displayDiagnosticCount) window=\(window?.windowNumber ?? 0) scale=\(window?.backingScaleFactor ?? 0) screens=\(NSScreen.screens.count) \(displays)", checkpoint: true)
+    }
 
     /// Opens the app's configuration when it is reopened from Finder or a launcher.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -80,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		openableApps = OpenableApps(userPrefsDataSource: userPrefs, runningApps: runningApps, regularApps: regularApps)
 
-		updateMenuBarItems()
+		updateMenuBarItems(reason: "startup")
 	}
 
 	func setupLaunchAtLogin() {
@@ -109,8 +139,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		}
 	}
 
-	private func updateMenuBarItems() {
-		menuBarItems.update(openableApps: openableApps)
+	private func updateMenuBarItems(reason: String = "model-change") {
+		menuBarItems.update(openableApps: openableApps, reason: reason)
 	}
 
 	// Exposed so a future "Check for Updates…" menu item / preferences button
@@ -185,29 +215,29 @@ extension AppDelegate: AppTrackerDelegate {
 	/// Refreshes running entries and their instance badges without changing recency order.
 	func appWasLaunched(runningApp: NSRunningApplication) {
 		regularApps.update()
-		appActivationChange()
+		appActivationChange(reason: "application-launched")
 	}
 
 	func appWasActivated(runningApp: NSRunningApplication) {
 		runningApps.handleAppActivation(runningApp: runningApp)
 		regularApps.handleAppActivation(runningApp: runningApp)
 
-		appActivationChange()
+		appActivationChange(reason: "application-activated")
 	}
 
 	func appWasQuit(runningApp: NSRunningApplication) {
 		runningApps.handleAppQuit(runningApp: runningApp)
 		regularApps.handleAppQuit(runningApp: runningApp)
 
-		appActivationChange()
+		appActivationChange(reason: "application-terminated")
 	}
 
-	private func appActivationChange() {
+	private func appActivationChange(reason: String) {
 		runningApps.update()
 		//		regularApps.update() //doesn't make sense to update regular apps based on app activations. we could if we wanted to due to the hot reactive code structure, but best not to.
 		openableApps.update(runningApps: runningApps, regularApps: regularApps)
 
-		updateMenuBarItems()
+		updateMenuBarItems(reason: reason)
 	}
 }
 
@@ -352,6 +382,6 @@ extension AppDelegate: PreferencesViewControllerDelegate {
 		runningApps.update()
 		regularApps.update()
 		openableApps.update(runningApps: runningApps, regularApps: regularApps)
-		updateMenuBarItems()
+		updateMenuBarItems(reason: "preferences")
 	}
 }

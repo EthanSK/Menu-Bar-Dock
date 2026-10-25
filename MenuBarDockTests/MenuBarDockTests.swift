@@ -11,6 +11,86 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
+    private func diagnosticDirectory() throws -> URL {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("MenuBarDockDiagnostics-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        addTeardownBlock { try? FileManager.default.removeItem(at: directory) }
+        return directory
+    }
+
+    private func diagnosticState(_ filename: String, in directory: URL) throws -> DebugLog.DiagnosticSession {
+        try JSONDecoder().decode(DebugLog.DiagnosticSession.self, from: Data(contentsOf: directory.appendingPathComponent(filename)))
+    }
+
+    func testDiagnostics_preserveUnfinishedSessionAcrossRelaunch() throws {
+        let directory = try diagnosticDirectory()
+        let previous = DebugLog(logDirectory: directory, enabled: true)
+        previous.diagnostic("update=7 begin reason=application-activated", checkpoint: true)
+        previous.flush()
+        let before = try diagnosticState("layout-state.json", in: directory)
+
+        // Do not call finishSession: model abrupt termination without crashing
+        // the test host or adding a signal handler to the live app.
+        let next = DebugLog(logDirectory: directory, enabled: true)
+        next.flush()
+        let recovered = try diagnosticState("previous-session.json", in: directory)
+        let current = try diagnosticState("layout-state.json", in: directory)
+        XCTAssertEqual(recovered.sessionID, before.sessionID)
+        XCTAssertFalse(recovered.cleanShutdown)
+        XCTAssertTrue(recovered.breadcrumbs.last?.contains("update=7 begin") == true)
+        XCTAssertNotEqual(current.sessionID, recovered.sessionID)
+        XCTAssertTrue(try String(contentsOf: directory.appendingPathComponent("debug.log")).contains("previous-exit=unclean"))
+    }
+
+    func testDiagnostics_cleanQuitDoesNotReportAnAbnormalExit() throws {
+        let directory = try diagnosticDirectory()
+        let previous = DebugLog(logDirectory: directory, enabled: true)
+        previous.diagnostic("update completed", checkpoint: true)
+        previous.finishSession()
+        XCTAssertTrue(try diagnosticState("layout-state.json", in: directory).cleanShutdown)
+
+        let next = DebugLog(logDirectory: directory, enabled: true)
+        next.flush()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: directory.appendingPathComponent("previous-session.json").path))
+        XCTAssertFalse(try String(contentsOf: directory.appendingPathComponent("debug.log")).contains("previous-exit=unclean"))
+    }
+
+    func testDiagnostics_boundRecoveryContextAndRespectDisabledLogging() throws {
+        let directory = try diagnosticDirectory()
+        let logger = DebugLog(logDirectory: directory, enabled: true)
+        for index in 0..<80 {
+            logger.diagnostic("event=\(index) " + String(repeating: "x", count: 800) + "\nsecond line", checkpoint: true)
+        }
+        logger.flush()
+        let state = try diagnosticState("layout-state.json", in: directory)
+        XCTAssertEqual(state.breadcrumbs.count, 32)
+        XCTAssertTrue(state.breadcrumbs.allSatisfy { !$0.contains("\n") && $0.count < 600 })
+        XCTAssertLessThan(try Data(contentsOf: directory.appendingPathComponent("layout-state.json")).count, 32 * 1024)
+
+        let disabledDirectory = directory.appendingPathComponent("disabled")
+        let disabled = DebugLog(logDirectory: disabledDirectory, enabled: false)
+        disabled.diagnostic("must not persist", checkpoint: true)
+        disabled.log("must not persist")
+        disabled.finishSession()
+        disabled.flush()
+        XCTAssertFalse(FileManager.default.fileExists(atPath: disabledDirectory.path))
+    }
+
+    func testDiagnostics_concurrentLoggingKeepsCompleteTimestampedLines() throws {
+        let directory = try diagnosticDirectory()
+        let logger = DebugLog(logDirectory: directory, enabled: true)
+        DispatchQueue.concurrentPerform(iterations: 100) { index in logger.log("producer=\(index)") }
+        logger.flush()
+        let lines = try String(contentsOf: directory.appendingPathComponent("debug.log")).split(separator: "\n").filter { $0.contains("producer=") }
+        XCTAssertEqual(lines.count, 100)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        XCTAssertTrue(lines.allSatisfy { line in
+            guard let timestamp = line.split(separator: " ").first else { return false }
+            return formatter.date(from: String(timestamp)) != nil
+        })
+    }
+
     private class RecordingRunningApplication: NSRunningApplication, @unchecked Sendable {
         var activationCount = 0
 
