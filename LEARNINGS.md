@@ -23,6 +23,17 @@ Each entry looks like:
 
 (newest first)
 
+## Preserve original crash evidence before bounded logs rotate (2026-10-26)
+
+macOS moved both October 25 Menu Bar Dock `.ips` files into the user's
+`DiagnosticReports/Retired/` folder. Search that folder before treating a missing
+top-level report as lost. Preserve incident-specific originals in ignored local
+verification storage: the app's bounded debug log can rotate out pre-crash lines
+before its 24-hour age threshold. The reports remained readable and identified
+layout recursion/abort; neither was an out-of-memory termination. A current
+memory snapshot or stable icon/view counts cannot rule out all leaks or prove the
+historical trigger. Avoid interpreting virtual-address totals as physical use.
+
 ---
 **Date:** 2026-10-25T19:28:00Z
 **Trigger:** Ethan: add instrumentation so the next recurring Menu Bar Dock crash can be diagnosed.
