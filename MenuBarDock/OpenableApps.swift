@@ -39,13 +39,13 @@ class OpenableApps {
 		populateApps()
 	}
 
-	func update(runningApps: RunningApps, regularApps: RegularApps) {
+	func update(runningApps: RunningApps, regularApps: RegularApps, runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
 		self.runningApps = runningApps
 		self.regularApps = regularApps
-		populateApps()
+		populateApps(runningApplications: runningApplications)
 	}
 
-	private func populateApps() {
+	private func populateApps(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
 		apps = []
 
 		// running and regular apps are already ordered internally
@@ -57,7 +57,9 @@ class OpenableApps {
 			populateAppsWithRegularApps()
 			populateAppsWithRunningApps()
 		}
-		let runningApplications = NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }
+		// During a quit notification macOS can still list the exited process.
+		// Counting it leaves an "instance 1" badge until another app event refreshes us.
+		let runningApplications = runningApplications.filter { !$0.isTerminated && $0.activationPolicy == .regular }
 		for app in apps { // Apply overrides after combining both sections so duplicate priority cannot bring back the original icon.
 			if let icon = userPrefsDataSource.iconOverride(forAppAt: app.bundleUrl) {
 				app.icon = icon

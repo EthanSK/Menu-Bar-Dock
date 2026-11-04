@@ -54,8 +54,8 @@ class RunningApps {
 		// the reason it's not ordered straight away: https://trello.com/c/ZFs3C32g
   	}
 
-	func update() {
-		populateApps()
+	func update(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
+		populateApps(runningApplications: runningApplications)
 	}
 
 	func handleAppActivation(runningApp: NSRunningApplication) {
@@ -80,7 +80,7 @@ class RunningApps {
 		update()
 	}
 
-	private func populateApps() {
+	private func populateApps(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
 		if limit == 0 {
 			apps = [] // for efficiency
 			return
@@ -95,7 +95,7 @@ class RunningApps {
 		//   - .mostRecentOnLeft uses prefix(limit) (keeps the FRONT), and
 		//     correctedOrdering() is reversed to most->least recent, so oldest
 		//     == array END.
-		let newApps = NSWorkspace.shared.runningApplications
+		let newApps = runningApplications
 			.map { RunningApp(app: $0) }
 			.filter {canShowRunningApp(app: $0)}
 			.reorder(by: correctedOrdering(), unorderedGoTo: unorderedPlacement())
@@ -115,6 +115,9 @@ class RunningApps {
 	}
 
 	private func canShowRunningApp(app: RunningApp) -> Bool {
+		// The terminating process can remain in the workspace snapshot during its
+		// quit callback; it must not keep an icon or consume a running-app slot.
+		if app.app.isTerminated { return false }
 		// Each early-return logs WHY an app was excluded so a "missing app X"
 		// report is answerable from the log. Cheap: only the excluded path logs.
 		if app.app.activationPolicy != .regular {

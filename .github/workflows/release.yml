@@ -109,7 +109,9 @@ jobs:
     name: Build, notarize, publish
     needs: check-tag-race
     if: needs.check-tag-race.outputs.should_skip != 'true'
-    runs-on: macos-latest
+    # Keep the release toolchain capable of targeting the supported older Macs.
+    # Xcode 27's SDK requires macOS 12+, while this app supports macOS 10.15.
+    runs-on: macos-15
     outputs:
       release_channel: ${{ steps.meta.outputs.RELEASE_CHANNEL }}
       release_version: ${{ steps.meta.outputs.RELEASE_VERSION }}
@@ -139,7 +141,7 @@ jobs:
         run: python3 scripts/validate_release_metadata.py --check-repo --check-version
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Show toolchain versions
         run: |

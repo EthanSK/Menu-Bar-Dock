@@ -24,8 +24,8 @@ class RegularApps { // regular apps are just apps that use user added manually
 		populateApps()
 	}
 
-	func update() {
-		populateApps()
+	func update(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
+		populateApps(runningApplications: runningApplications)
 	}
 
 	func handleAppActivation(runningApp: NSRunningApplication) {
@@ -43,14 +43,14 @@ class RegularApps { // regular apps are just apps that use user added manually
 		return apps.first { $0.id == RunningApp(app: runningApp).id} // we just use RunningApp() just to get the id...kinda hacky
 	}
 
-	private func populateApps() {
+	private func populateApps(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
 		apps = []
 		for url in userPrefsDataSource.regularAppsUrls {
 			if let app = regularApp(for: url) {
 				apps.append(app)
 			}
 		}
-		addRunningApps()
+		addRunningApps(runningApplications: runningApplications)
 	}
 
 	private func regularApp(for url: URL) -> RegularApp? {
@@ -67,8 +67,8 @@ class RegularApps { // regular apps are just apps that use user added manually
 		return app
 	}
 
-	private func addRunningApps() {
-		let runningApps = NSWorkspace.shared.runningApplications
+	private func addRunningApps(runningApplications: [NSRunningApplication]) {
+		let runningApps = runningApplications.filter { !$0.isTerminated } // Match the quit-rebinding guard: pinned entries must target a live process.
 		for app in apps {
 			app.runningApp = runningApps.first {RunningApp(app: $0).id == app.id} // we instantiate RunningApp just to get id. kinda hacky, but oh well.
 		}

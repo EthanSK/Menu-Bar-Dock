@@ -11,6 +11,121 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
+    // Recreate the real quit-notification snapshot: the exited process remains
+    // in the array with isTerminated=true beside a surviving live process.
+    private final class SnapshotRunningApplication: NSRunningApplication, @unchecked Sendable {
+        var testPID: pid_t = 101
+        var testTerminated = false
+        var policy: NSApplication.ActivationPolicy = .regular
+        var launched = Date(timeIntervalSince1970: 100)
+
+        override var processIdentifier: pid_t { testPID }
+        override var isTerminated: Bool { testTerminated }
+        override var activationPolicy: NSApplication.ActivationPolicy { policy }
+        override var launchDate: Date? { launched }
+        override var bundleURL: URL? { Bundle.main.bundleURL }
+        override var bundleIdentifier: String? { Bundle.main.bundleIdentifier ?? "com.ethansk.InstanceSnapshotTest" }
+        override var localizedName: String? { "Instance Snapshot Test" }
+        override var icon: NSImage? { NSImage(size: NSSize(width: 16, height: 16)) }
+    }
+
+    private final class SnapshotPreferences: RunningAppsUserPrefsDataSource, RegularAppsUserPrefsDataSource, OpenableAppsUserPrefsDataSource {
+        var hideFinderFromRunningApps = false
+        var hideActiveAppFromRunningApps = false
+        var maxRunningApps = 10
+        var regularAppsUrls: [URL] = []
+        var runningAppsSortingMethod: RunningAppsSortingMethod = .mostRecentOnRight
+        var appOpeningMethods: [String: AppOpeningMethod] = [:]
+        var defaultAppOpeningMethod: AppOpeningMethod = .launch
+        var sideToShowRunningApps: SideToShowRunningApps = .right
+        var hideDuplicateApps = true
+        var duplicateAppsPriority: DuplicateAppsPriority = .regularApps
+
+        func iconOverride(forAppAt url: URL) -> NSImage? { nil }
+    }
+
+    func testInstanceBadge_ignoresTerminatedProcessInQuitSnapshot() {
+        let preferences = SnapshotPreferences()
+        preferences.regularAppsUrls = [Bundle.main.bundleURL]
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let pinned = RegularApps(userPrefsDataSource: preferences)
+        let combined = OpenableApps(userPrefsDataSource: preferences, runningApps: running, regularApps: pinned)
+        let live = SnapshotRunningApplication()
+        let exited = SnapshotRunningApplication()
+        exited.testPID = 102
+        exited.testTerminated = true
+
+        // The exited entry comes first to cover pinned rebinding as well as
+        // the badge count. All consumers receive the same captured state.
+        let snapshot = [exited, live]
+        running.update(runningApplications: snapshot)
+        pinned.update(runningApplications: snapshot)
+        combined.update(runningApps: running, regularApps: pinned, runningApplications: snapshot)
+
+        XCTAssertEqual(pinned.apps.first?.runningApp?.processIdentifier, live.testPID)
+        XCTAssertEqual(combined.apps.count, 1)
+        XCTAssertNil(combined.apps.first?.instanceNumber)
+        XCTAssertFalse(running.apps.contains { $0.app.isTerminated })
+    }
+
+    func testInstanceBadge_preservesLiveLaunchOrderForBothDuplicatePriorities() {
+        let preferences = SnapshotPreferences()
+        preferences.regularAppsUrls = [Bundle.main.bundleURL]
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let pinned = RegularApps(userPrefsDataSource: preferences)
+        let combined = OpenableApps(userPrefsDataSource: preferences, runningApps: running, regularApps: pinned)
+        let oldest = SnapshotRunningApplication()
+        oldest.testPID = 500 // A lower PID can belong to the newer instance after PID wraparound.
+        let newest = SnapshotRunningApplication()
+        newest.testPID = 100
+        newest.launched = Date(timeIntervalSince1970: 200)
+        let exited = SnapshotRunningApplication()
+        exited.testPID = 50
+        exited.testTerminated = true
+        exited.launched = Date(timeIntervalSince1970: 50)
+        let snapshot = [exited, newest, oldest]
+
+        for priority in [DuplicateAppsPriority.regularApps, .runningApps] {
+            preferences.duplicateAppsPriority = priority
+            running.update(runningApplications: snapshot)
+            pinned.update(runningApplications: snapshot)
+            combined.update(runningApps: running, regularApps: pinned, runningApplications: snapshot)
+
+            XCTAssertEqual(combined.apps.count, 2)
+            XCTAssertEqual(combined.apps.first { $0.runningApplication?.processIdentifier == oldest.testPID }?.instanceNumber, 1)
+            XCTAssertEqual(combined.apps.first { $0.runningApplication?.processIdentifier == newest.testPID }?.instanceNumber, 2)
+        }
+    }
+
+    func testRunningApps_terminatedProcessCannotConsumeLimitedSlot() {
+        let preferences = SnapshotPreferences()
+        preferences.maxRunningApps = 1
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let live = SnapshotRunningApplication()
+        let exited = SnapshotRunningApplication()
+        exited.testPID = 102
+        exited.testTerminated = true
+
+        running.update(runningApplications: [live, exited])
+
+        XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, [live.testPID])
+    }
+
+    func testPinnedApps_keepLiveAccessoryAppsButRejectTerminatedMatches() {
+        let preferences = SnapshotPreferences()
+        preferences.regularAppsUrls = [Bundle.main.bundleURL]
+        let pinned = RegularApps(userPrefsDataSource: preferences)
+        let live = SnapshotRunningApplication()
+        live.policy = .accessory // Pinned menu-bar apps remain supported.
+        let exited = SnapshotRunningApplication()
+        exited.testPID = 102
+        exited.testTerminated = true
+
+        pinned.update(runningApplications: [exited, live])
+
+        XCTAssertEqual(pinned.apps.first?.runningApp?.processIdentifier, live.testPID)
+    }
+
     private func diagnosticDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent("MenuBarDockDiagnostics-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)

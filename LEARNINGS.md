@@ -23,6 +23,38 @@ Each entry looks like:
 
 (newest first)
 
+
+## Exclude terminated processes from instance snapshots (2026-11-04)
+
+A real VS Code `code --status` invocation briefly creates another regular Code
+process without another editor window. At its quit notification, macOS can still
+return that exited process in `NSWorkspace.runningApplications`, with
+`isTerminated == true`. Counting only `.regular` entries leaves badge 1 on the
+survivor until another app event refreshes the models. The source-model probe
+reproduced this in two of six runs; observing the later array change alone did
+not refresh the existing model.
+
+Exclude terminated entries from the badge count, the running-app list before
+its limit, and pinned-app binding. Keep live accessory apps eligible for pins,
+launch-date numbering, real separate processes and process-specific activation.
+The update methods accept a supplied snapshot for deterministic tests and still
+default to the live workspace in production. Four new snapshot regression tests
+fail with the former filters; all 18 tests pass with the repair. No sleep or
+new polling loop was introduced.
+
+Xcode 27's SDK no longer builds the existing macOS 10.15 deployment target.
+Release builds pin macos-15/Xcode 16.4 so older-system support is preserved;
+the locally tested Xcode 27 candidate uses a command-line macOS 12 minimum only.
+The public artifact must be checked independently before claiming its minimum OS.
+
+Before replacing this app, save and compare its app-setting fields: the old
+running instance saves its cached preferences on quit and can overwrite a newer
+external edit. During this install that changed the voice-app pin from the
+existing HelloChat.app to a missing Hey Chat.app. After the process exited, only
+that list value was restored from the pre-install snapshot; all 16 app-setting
+fields then matched. Do not overwrite unrelated or newer preferences wholesale.
+
+
 ## Preserve original crash evidence before bounded logs rotate (2026-10-26)
 
 macOS moved both October 25 Menu Bar Dock `.ips` files into the user's

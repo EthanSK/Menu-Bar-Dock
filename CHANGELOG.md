@@ -8,7 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
-## [4.8.2] — 2026-10-25
+## [4.8.2] — 2026-11-04
+
+### Fixed
+
+- Clear instance-number badges when only one app process remains, including
+  after short-lived VS Code processes exit. Exited processes no longer keep
+  running-app icons or get rebound to pinned entries.
 
 ### Added
 
