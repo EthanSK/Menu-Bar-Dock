@@ -34,7 +34,12 @@ class UserPrefs {
         appIconOverrides[url.absoluteString].flatMap { NSImage(data: $0) }
     }
 
-    var appIconSize: CGFloat = UserPrefsDefaultValues.appIconSize
+    // Keep the displayed whole-number setting and AppKit geometry in agreement.
+    // Fractional dimensions were present in the recurring mixed-scale layout crash;
+    // rounding removes that input without claiming it proves crash prevention.
+    var appIconSize: CGFloat = UserPrefsDefaultValues.appIconSize {
+        didSet { appIconSize = appIconSize.rounded() }
+    }
     var appOpeningMethods = UserPrefsDefaultValues.appOpeningMethods
     var defaultAppOpeningMethod = UserPrefsDefaultValues.defaultAppOpeningMethod
     var duplicateAppsPriority = UserPrefsDefaultValues.duplicateAppsPriority
@@ -48,7 +53,9 @@ class UserPrefs {
     var rightClickByDefault = UserPrefsDefaultValues.rightClickByDefault
     var runningAppsSortingMethod: RunningAppsSortingMethod = UserPrefsDefaultValues.runningAppsSortingMethod
     var sideToShowRunningApps = UserPrefsDefaultValues.sideToShowRunningApps
-    var itemSlotWidth = UserPrefsDefaultValues.statusItemWidth
+    var itemSlotWidth = UserPrefsDefaultValues.statusItemWidth {
+        didSet { itemSlotWidth = itemSlotWidth.rounded() }
+    }
 
 	func resetToDefaults() { // cba about this shitty code tbh not worth my time
         appIconSize = UserPrefsDefaultValues.appIconSize

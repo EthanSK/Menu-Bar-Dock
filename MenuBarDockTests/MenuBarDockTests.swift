@@ -11,6 +11,46 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
+    func testSizing_normalizesRecordedCrashWidthAndSliderValues() {
+        let preferences = UserPrefs()
+        // This exact width was captured immediately before the November 7 crash.
+        preferences.itemSlotWidth = 30.3840206185567
+        preferences.appIconSize = 40.37
+        XCTAssertEqual(preferences.itemSlotWidth, 30)
+        XCTAssertEqual(preferences.appIconSize, 40)
+
+        preferences.itemSlotWidth = 30.8
+        preferences.appIconSize = 39.8
+        XCTAssertEqual(preferences.itemSlotWidth, 31)
+        XCTAssertEqual(preferences.appIconSize, 40)
+        preferences.itemSlotWidth = 30
+        preferences.appIconSize = 40
+        XCTAssertEqual(preferences.itemSlotWidth, 30)
+        XCTAssertEqual(preferences.appIconSize, 40)
+    }
+
+    func testSizing_alignsOddSizedArtworkAndBadgeWithoutGrowingImage() {
+        let statusItem = NSStatusBar.system.statusItem(withLength: 31)
+        defer { NSStatusBar.system.removeStatusItem(statusItem) }
+        let dataSource = MenuBarItemDataSourceStub()
+        let menuBarItem = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
+        let app = numberedApp(12, process: RecordingRunningApplication(), method: nil)
+        menuBarItem.update(for: app, appIconSize: 39, slotWidth: 31)
+
+        let imageView = statusItem.button?.subviews.first as? NSImageView
+        XCTAssertEqual(statusItem.length, 31)
+        XCTAssertEqual(imageView?.frame.size, NSSize(width: 39, height: 39))
+        XCTAssertEqual(imageView?.frame.origin.y, -9)
+        let badgeView = imageView?.subviews.first
+        XCTAssertNotNil(badgeView)
+        for frame in [imageView?.frame, badgeView?.frame].compactMap({ $0 }) {
+            for value in [frame.origin.x, frame.origin.y, frame.width, frame.height] {
+                XCTAssertEqual(value, value.rounded())
+            }
+        }
+        XCTAssertEqual(menuBarItem.app?.instanceNumber, 12)
+    }
+
     // Recreate the real quit-notification snapshot: the exited process remains
     // in the array with isTerminated=true beside a surviving live process.
     private final class SnapshotRunningApplication: NSRunningApplication, @unchecked Sendable {

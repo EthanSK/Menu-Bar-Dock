@@ -23,6 +23,21 @@ Each entry looks like:
 
 (newest first)
 
+## Keep status-item geometry on whole points (2026-11-07)
+
+The recurring mixed-scale layout failure was captured again on 4.8.2/build 40
+with a saved slot width of 30.3840206185567. Preferences already presented that
+width as 30. Normalize both size preferences when assigned, including assignments
+from saved values, so status-item creation, showing and updates share whole-point
+dimensions. Round artwork and badge origins too: odd integer sizes otherwise
+still produce half-point origins. Preserve artwork dimensions rather than using
+an integral rectangle that can grow them by a point.
+
+The two sizing regression tests passed for the recorded width, slider values,
+and real NSStatusItem artwork/badge frames. Ordering, click bindings, hidden-item
+handling and badge counting were not changed. This removes a suspected input to
+the layout loop; the initial cause and long-term crash prevention remain unproven.
+
 
 ## Exclude terminated processes from instance snapshots (2026-11-04)
 

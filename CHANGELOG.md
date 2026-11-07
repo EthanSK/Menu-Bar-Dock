@@ -8,6 +8,15 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.3] — 2026-11-07
+
+### Changed
+
+- Round icon-size and menu-bar-width settings to the whole numbers shown in
+  Preferences, and align artwork and badges to whole points on 1× and 2× screens.
+  This removes fractional geometry seen before repeated display-layout crashes;
+  preventing every recurrence has not yet been established.
+
 ## [4.8.2] — 2026-11-04
 
 ### Fixed

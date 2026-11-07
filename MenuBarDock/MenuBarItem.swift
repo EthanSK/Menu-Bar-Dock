@@ -48,8 +48,10 @@ class MenuBarItem {
         let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
 		let newView = NSImageView(
 			frame: NSRect(
-				x: (slotWidth - imageSize) / 2,
-				y: -(imageSize - menuBarHeight) / 2,
+                // Odd whole-number sizes can still produce half-point origins.
+                // Whole points align on both 1x and 2x displays without growing the image.
+				x: ((slotWidth - imageSize) / 2).rounded(),
+				y: (-(imageSize - menuBarHeight) / 2).rounded(),
 				width: imageSize, height: imageSize)
 		)
 
@@ -62,14 +64,14 @@ class MenuBarItem {
             let text = String(instanceNumber)
             let attributes: [NSAttributedString.Key: Any] = [.font: NSFont.boldSystemFont(ofSize: 10), .foregroundColor: NSColor.white]
             let textSize = text.size(withAttributes: attributes)
-            let badgeSize = NSSize(width: max(14, textSize.width + 6), height: 14)
+            let badgeSize = NSSize(width: max(14, textSize.width + 6).rounded(.up), height: 14)
             let badgeImage = NSImage(size: badgeSize, flipped: false) { rect in
                 NSColor.systemRed.setFill()
                 NSBezierPath(roundedRect: rect, xRadius: 7, yRadius: 7).fill()
                 text.draw(at: NSPoint(x: (rect.width - textSize.width) / 2, y: (rect.height - textSize.height) / 2), withAttributes: attributes)
                 return true
             }
-            let badgeView = NSImageView(frame: NSRect(x: (slotWidth + imageSize) / 2 - badgeSize.width - 1, y: (imageSize - menuBarHeight) / 2 + 1, width: badgeSize.width, height: badgeSize.height)) // Anchor to the visible menu-bar slot, since oversized app artwork extends above and below it.
+            let badgeView = NSImageView(frame: NSRect(x: ((slotWidth + imageSize) / 2 - badgeSize.width - 1).rounded(), y: ((imageSize - menuBarHeight) / 2 + 1).rounded(), width: badgeSize.width, height: badgeSize.height)) // Anchor to the visible menu-bar slot, since oversized app artwork extends above and below it.
             badgeView.image = badgeImage
             newView.addSubview(badgeView)
             statusItem.button?.setAccessibilityLabel("\(app.name), instance \(instanceNumber)")
