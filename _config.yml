@@ -1,4 +1,13 @@
 theme: jekyll-theme-cayman
 show_downloads: false #if true it shows the download links to the actual project not the app which is confusing.
 favicon: /favicon.ico
-image: /favicon.ico
+# Jekyll SEO reads page.image, so use front matter defaults for social cards.
+defaults:
+  - scope:
+      path: ""
+    values:
+      image:
+        path: /assets/menu-bar-dock-prefs.png
+        width: 1620
+        height: 1628
+        alt: Menu Bar Dock Preferences
