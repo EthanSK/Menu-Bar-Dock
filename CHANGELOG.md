@@ -8,6 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.4] — 2026-11-15
+
+### Added
+
+- Optional per-app icon fitting, preserving the global icon zoom for other apps.
+  Fitted icons use the app's current artwork and stay inside the menu-bar slot.
+
 ## [4.8.3] — 2026-11-07
 
 ### Changed

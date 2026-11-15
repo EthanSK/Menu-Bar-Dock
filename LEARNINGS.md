@@ -23,6 +23,31 @@ Each entry looks like:
 
 (newest first)
 
+## Whole artwork versus the global icon zoom (2026-11-15)
+
+Agent Flow's bundled ICNS, fresh NSWorkspace and NSRunningApplication images,
+and Preferences preview all contained the new surfer at small and large sizes.
+The menu-bar rendering instead cropped the 40-point global icon inside its
+22-point-high, 30-point-wide slot. Compare the artwork and actual renderer before
+diagnosing stale process icons or replacing an app's asset.
+
+`appIconsFitInMenuBar` is an optional app-URL-to-Bool preference. An opted-in
+entry fits within the existing size, slot width and 22-point strip; other entries
+retain the global zoom. The renderer wraps the source image's drawing instead
+of mutating a potentially shared NSImage, following the existing badge's native
+backing-scale drawing approach. No app identity or replacement artwork is
+hard-coded. Reset Preferences preserves these per-app choices like icon overrides.
+
+Guard: all 22 Darwin XCTest cases passed, including whole-icon/badge containment,
+returning to the existing zoom, source-image preservation, narrow slots and small
+global sizes. Native MenuBarAgent screenshots before/after the installed signed
+4.8.4/build 42 showed the cropped and whole surfer. Agent Flow stayed on its
+original PID and its installed ICNS hash was unchanged. All 16 prior saved app
+fields were preserved; only Agent Flow fitting was enabled locally.
+
+Investigation and retained image comparison: task
+`01a1a726-c831-7413-904b-5b3f4f0a9fed`, `outputs/agentflow-menu-bar-icon.md`.
+
 ## Keep status-item geometry on whole points (2026-11-07)
 
 The recurring mixed-scale layout failure was captured again on 4.8.2/build 40

@@ -242,12 +242,13 @@ jobs:
         run: |
           set -euo pipefail
           TEAM_ID="${APPLE_TEAM_ID:-${DEVELOPMENT_TEAM:-$DEVELOPMENT_TEAM_FALLBACK}}"
-          mkdir -p build
+          mkdir -p build.noindex
           xcodebuild archive \
             -workspace "Menu Bar Dock.xcworkspace" \
             -scheme "Menu Bar Dock" \
             -configuration Release \
-            -archivePath build/MenuBarDock.xcarchive \
+            -archivePath build.noindex/MenuBarDock.xcarchive \
+            -derivedDataPath build.noindex/DerivedData \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGNING_REQUIRED=NO \
@@ -258,10 +259,10 @@ jobs:
         # Walk the archived .app inside-out and re-sign every nested bundle
         # with the imported Developer ID Application identity. See script
         # header for the full rationale.
-        run: ./scripts/sign-release.sh build/MenuBarDock.xcarchive
+        run: ./scripts/sign-release.sh build.noindex/MenuBarDock.xcarchive
 
       - name: Copy + verify .app for distribution
-        # Copy the deep-signed .app out of the archive into build/Export/.
+        # Copy the deep-signed .app out of the archive into build.noindex/Export/.
         # We deliberately do NOT use xcodebuild -exportArchive — it would
         # redo signing with an ExportOptions.plist, and any mismatch between
         # our post-archive deep-sign and xcodebuild's re-sign attempt
@@ -269,12 +270,12 @@ jobs:
         # already a complete, properly-signed product.
         run: |
           set -euo pipefail
-          mkdir -p build/Export
-          SOURCE="build/MenuBarDock.xcarchive/Products/Applications/$EXPORTED_APP_FILENAME"
-          DEST="build/Export/$APP_NAME.app"
+          mkdir -p build.noindex/Export
+          SOURCE="build.noindex/MenuBarDock.xcarchive/Products/Applications/$EXPORTED_APP_FILENAME"
+          DEST="build.noindex/Export/$APP_NAME.app"
           if [ ! -d "$SOURCE" ]; then
             echo "::error::Expected signed .app at $SOURCE; archive step did not produce it."
-            ls -la build/MenuBarDock.xcarchive/Products/Applications/ || true
+            ls -la build.noindex/MenuBarDock.xcarchive/Products/Applications/ || true
             exit 1
           fi
           # ditto preserves extended attributes + signatures across the copy.
@@ -292,11 +293,11 @@ jobs:
         # Downloading the tarball gives a reliable bin/sign_update.
         run: |
           set -euxo pipefail
-          mkdir -p build/sparkle
-          curl -fLsS -o "build/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" \
+          mkdir -p build.noindex/sparkle
+          curl -fLsS -o "build.noindex/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" \
             "https://github.com/sparkle-project/Sparkle/releases/download/$SPARKLE_VERSION/Sparkle-$SPARKLE_VERSION.tar.xz"
-          tar -xf "build/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" -C build/sparkle
-          test -x "build/sparkle/bin/sign_update"
+          tar -xf "build.noindex/sparkle/Sparkle-$SPARKLE_VERSION.tar.xz" -C build.noindex/sparkle
+          test -x "build.noindex/sparkle/bin/sign_update"
 
       - name: Notarize exported app
         env:
@@ -327,9 +328,9 @@ jobs:
             echo "::error::Resolved TEAM_ID is not exactly 10 chars (${#TEAM_ID}). Check APPLE_TEAM_ID secret."
             exit 1
           fi
-          ditto -c -k --keepParent "build/Export/$APP_NAME.app" "build/$APP_NAME-notary.zip"
+          ditto -c -k --keepParent "build.noindex/Export/$APP_NAME.app" "build.noindex/$APP_NAME-notary.zip"
           NOTARY_RESULT="$RUNNER_TEMP/notary-submit.json"
-          xcrun notarytool submit "build/$APP_NAME-notary.zip" \
+          xcrun notarytool submit "build.noindex/$APP_NAME-notary.zip" \
             --apple-id "$APPLE_ID" \
             --team-id "$TEAM_ID" \
             --password "$APPLE_APP_SPECIFIC_PASSWORD" \
@@ -373,7 +374,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in {1..10}; do
-            if xcrun stapler staple "build/Export/$APP_NAME.app"; then
+            if xcrun stapler staple "build.noindex/Export/$APP_NAME.app"; then
               break
             fi
             if [ "$attempt" -eq 10 ]; then
@@ -384,7 +385,7 @@ jobs:
             echo "Stapling ticket not visible yet; retrying in ${sleep_seconds}s (attempt ${attempt}/10)."
             sleep "$sleep_seconds"
           done
-          xcrun stapler validate "build/Export/$APP_NAME.app"
+          xcrun stapler validate "build.noindex/Export/$APP_NAME.app"
 
       - name: Create release ZIPs
         id: package
@@ -397,9 +398,9 @@ jobs:
         #     redirect rewrites to whichever release is currently latest.
         run: |
           set -euo pipefail
-          ZIP_PATH="build/$ASSET_ZIP_FILENAME"
-          LATEST_ZIP_PATH="build/$LATEST_ZIP_FILENAME"
-          ditto -c -k --keepParent "build/Export/$APP_NAME.app" "$ZIP_PATH"
+          ZIP_PATH="build.noindex/$ASSET_ZIP_FILENAME"
+          LATEST_ZIP_PATH="build.noindex/$LATEST_ZIP_FILENAME"
+          ditto -c -k --keepParent "build.noindex/Export/$APP_NAME.app" "$ZIP_PATH"
           cp "$ZIP_PATH" "$LATEST_ZIP_PATH"
           echo "zip_path=$ZIP_PATH" >> "$GITHUB_OUTPUT"
           echo "zip_filename=$(basename "$ZIP_PATH")" >> "$GITHUB_OUTPUT"
@@ -442,7 +443,7 @@ jobs:
             echo "Workflow run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
             echo ""
             echo "Release channel: \`$RELEASE_CHANNEL\`"
-          } > build/release-notes.md
+          } > build.noindex/release-notes.md
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -450,7 +451,7 @@ jobs:
           tag_name: ${{ steps.meta.outputs.RELEASE_TAG }}
           target_commitish: ${{ github.sha }}
           name: ${{ steps.meta.outputs.RELEASE_TITLE }}
-          body_path: build/release-notes.md
+          body_path: build.noindex/release-notes.md
           files: |
             ${{ steps.package.outputs.zip_path }}
             ${{ steps.package.outputs.latest_zip_path }}

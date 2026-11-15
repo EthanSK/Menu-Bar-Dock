@@ -10,8 +10,8 @@
 #
 # Resolution order for the Sparkle sign_update binary:
 #   1. $SPARKLE_SIGN_UPDATE_PATH (explicit override)
-#   2. build/sparkle/bin/sign_update — when CI downloads the Sparkle tarball
-#      to build/sparkle/ before this script runs.
+#   2. build.noindex/sparkle/bin/sign_update — when CI downloads the Sparkle tarball
+#      to build.noindex/sparkle/ before this script runs.
 #   3. Pods/Sparkle/bin/sign_update — when CocoaPods has installed Sparkle
 #      locally (the typical developer-machine path).
 #   4. Homebrew Cask install paths — convenience for developers who installed
@@ -50,9 +50,9 @@ fi
 find_sign_update() {
   local candidates=(
     "${SPARKLE_SIGN_UPDATE_PATH:-}"
-    "$ROOT/build/sparkle/bin/sign_update"
-    "$ROOT/build/sparkle/Sparkle-$SPARKLE_VERSION/bin/sign_update"
-    "$ROOT"/build/sparkle/Sparkle-*/bin/sign_update
+    "$ROOT/build.noindex/sparkle/bin/sign_update"
+    "$ROOT/build.noindex/sparkle/Sparkle-$SPARKLE_VERSION/bin/sign_update"
+    "$ROOT"/build.noindex/sparkle/Sparkle-*/bin/sign_update
     "$ROOT/Pods/Sparkle/bin/sign_update"
     /opt/homebrew/Caskroom/sparkle/*/bin/sign_update
     /Applications/Sparkle*/bin/sign_update
@@ -72,7 +72,7 @@ find_sign_update() {
 SIGN_UPDATE="$(find_sign_update || true)"
 if [ -z "$SIGN_UPDATE" ]; then
   echo "sign_update: Sparkle sign_update binary was not found." >&2
-  echo "Set SPARKLE_SIGN_UPDATE_PATH or download Sparkle tools into build/sparkle/." >&2
+  echo "Set SPARKLE_SIGN_UPDATE_PATH or download Sparkle tools into build.noindex/sparkle/." >&2
   exit 69
 fi
 

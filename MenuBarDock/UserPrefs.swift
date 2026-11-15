@@ -28,6 +28,7 @@ enum UserPrefsDefaultValues {
 
 class UserPrefs {
     var appIconOverrides: [String: Data] = [:] // Store image copies by app URL, matching existing per-app identity; moving the source image must not break an override.
+    var appIconsFitInMenuBar: [String: Bool] = [:] // Optional per-app fit keeps native artwork current without changing other apps' zoom or storing another image copy.
 
     /// Returns the saved icon for both the app list and menu-bar entries.
     func iconOverride(forAppAt url: URL) -> NSImage? {
@@ -80,6 +81,7 @@ class UserPrefs {
 
 	func save() {
         UserDefaults.standard.set(appIconOverrides, forKey: Constants.UserPrefs.appIconOverrides)
+        UserDefaults.standard.set(appIconsFitInMenuBar, forKey: Constants.UserPrefs.appIconsFitInMenuBar)
         UserDefaults.standard.set(appIconSize, forKey: Constants.UserPrefs.appIconSize)
         UserDefaults.standard.set(
             Dictionary(uniqueKeysWithValues:
@@ -101,6 +103,7 @@ class UserPrefs {
 	}
 
 	func load() {
+        appIconsFitInMenuBar = UserDefaults.standard.dictionary(forKey: Constants.UserPrefs.appIconsFitInMenuBar) as? [String: Bool] ?? [:]
         if let appIconOverrides = UserDefaults.standard.dictionary(forKey: Constants.UserPrefs.appIconOverrides) as? [String: Data] {
             self.appIconOverrides = appIconOverrides
         }

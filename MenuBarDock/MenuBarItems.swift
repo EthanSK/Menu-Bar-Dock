@@ -12,6 +12,7 @@ protocol MenuBarItemsUserPrefsDataSource: AnyObject {
 	var appOpeningMethods: [String: AppOpeningMethod] { get }
 	var itemSlotWidth: CGFloat { get }
 	var appIconSize: CGFloat { get }
+    var appIconsFitInMenuBar: [String: Bool] { get }
     var preserveAppOrder: Bool { get }
     var rightClickByDefault: Bool { get }
 }
@@ -65,7 +66,7 @@ class MenuBarItems {
 			let item = items[index + offset]
             DebugLog.shared.diagnostic("update=\(updateID) slot=\(index + offset) show app=\(app.bundleId ?? "unknown")")
 			showItem(item: item)
-			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.itemSlotWidth)
+			item.update(for: app, appIconSize: userPrefsDataSource.appIconSize, slotWidth: userPrefsDataSource.itemSlotWidth, fitIcon: userPrefsDataSource.appIconsFitInMenuBar[app.bundleUrl.absoluteString] == true)
 		}
 
 		// hide the leftmost items not being used (so the weird gap glitch is as left as possible)

@@ -41,11 +41,14 @@ class MenuBarItem {
 
 	}
 
-	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
+	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat, fitIcon: Bool = false) {
         DebugLog.shared.diagnostic("item begin app=\(app.bundleId ?? "unknown") length=\(statusItem.length) subviews=\(statusItem.button?.subviews.count ?? 0) scale=\(statusItem.button?.window?.backingScaleFactor ?? 0)")
 		self.app = app
- 		let imageSize = appIconSize
         let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
+        // Ethan's "new app icon" mismatch was Agent Flow's surfer cropped by the
+        // 40-point zoom in this 22-point strip. Fit only the chosen app, using its
+        // current native icon; the existing global zoom remains the default.
+        let imageSize = fitIcon ? min(appIconSize, slotWidth, menuBarHeight) : appIconSize
 		let newView = NSImageView(
 			frame: NSRect(
                 // Odd whole-number sizes can still produce half-point origins.
@@ -55,9 +58,16 @@ class MenuBarItem {
 				width: imageSize, height: imageSize)
 		)
 
-		app.icon.size = NSSize(width: imageSize, height: imageSize)
-
-		newView.image = app.icon
+        // Different entries can share an NSImage from macOS. Wrap its drawing
+        // so fitting one entry cannot resize a neighbor's source image. Like
+        // the badge below, AppKit draws this at the actual backing scale.
+        let sourceIcon = app.icon
+        let displayedIcon = NSImage(size: NSSize(width: imageSize, height: imageSize), flipped: false) { rect in
+            sourceIcon.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1)
+            return true
+        }
+        displayedIcon.isTemplate = sourceIcon.isTemplate
+		newView.image = displayedIcon
 		newView.wantsLayer = true
 
         if let instanceNumber = app.instanceNumber {

@@ -173,7 +173,7 @@ python3 scripts/validate_release_metadata.py --check-repo --check-version
 ## Troubleshooting
 
 **"resource fork, Finder information, or similar detritus not allowed" during codesign**
-Run `xattr -cr build/Export/Menu\ Bar\ Dock.app` then retry. The xattrs are
+Run `xattr -cr build.noindex/Export/Menu\ Bar\ Dock.app` then retry. The xattrs are
 usually a result of running on a development machine; CI runners are clean.
 
 **Sparkle "update appears to be improperly signed" on the client**
