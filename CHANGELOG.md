@@ -8,6 +8,12 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.5] — 2026-11-15
+
+### Fixed
+
+- Remove per-app icon fitting so every app uses the shared App Icon Size setting.
+
 ## [4.8.4] — 2026-11-15
 
 ### Added

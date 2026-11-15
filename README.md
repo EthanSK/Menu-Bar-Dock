@@ -66,17 +66,6 @@ Support this project:
 
 <link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/ETGgames"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"><span style="margin-left:15px;font-size:28px !important;"> Buy me a coffee</span></a>
 
-### Fit a whole app icon
-
-The global App Icon Size setting can intentionally zoom artwork beyond the menu
-bar's height. For an individual app that needs its whole picture visible, the
-advanced `appIconsFitInMenuBar` preference maps its app URL (the same identity
-used by icon overrides) to `true`. For example, `file:///Applications/Example.app/`.
-Quit Menu Bar Dock before editing this preference, then reopen it. Fitting uses
-the app's current icon, including future artwork updates, and does not change
-other apps' zoom, image overrides or the slot width. Removing the entry restores
-the global size. Reset Preferences preserves per-app choices like icon overrides.
-
 ### Diagnostic logs
 
 Local diagnostics live in `~/Library/Logs/Menu Bar Dock/`:

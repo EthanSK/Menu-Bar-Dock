@@ -41,14 +41,11 @@ class MenuBarItem {
 
 	}
 
-	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat, fitIcon: Bool = false) {
+	func update(for app: OpenableApp, appIconSize: CGFloat, slotWidth: CGFloat) {
         DebugLog.shared.diagnostic("item begin app=\(app.bundleId ?? "unknown") length=\(statusItem.length) subviews=\(statusItem.button?.subviews.count ?? 0) scale=\(statusItem.button?.window?.backingScaleFactor ?? 0)")
 		self.app = app
         let menuBarHeight: CGFloat = 22 // do not use NSApplication.shared.mainMenu?.menuBarHeight, it doesn't work on MBP 16 inch with notch, because the menu bar reports as bigger than the actual height it uses. 22 is a good fixed height.
-        // Ethan's "new app icon" mismatch was Agent Flow's surfer cropped by the
-        // 40-point zoom in this 22-point strip. Fit only the chosen app, using its
-        // current native icon; the existing global zoom remains the default.
-        let imageSize = fitIcon ? min(appIconSize, slotWidth, menuBarHeight) : appIconSize
+        let imageSize = appIconSize // All apps use the shared size. Ethan rejected per-app fitting because it made one icon smaller; do not reintroduce app-specific sizing (task 01a1df78-3f6d-7231-854c-4a4206992d2e).
 		let newView = NSImageView(
 			frame: NSRect(
                 // Odd whole-number sizes can still produce half-point origins.
@@ -59,7 +56,7 @@ class MenuBarItem {
 		)
 
         // Different entries can share an NSImage from macOS. Wrap its drawing
-        // so fitting one entry cannot resize a neighbor's source image. Like
+        // so drawing one entry cannot resize a neighbor's source image. Like
         // the badge below, AppKit draws this at the actual backing scale.
         let sourceIcon = app.icon
         let displayedIcon = NSImage(size: NSSize(width: imageSize, height: imageSize), flipped: false) { rect in

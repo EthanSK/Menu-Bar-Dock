@@ -25,6 +25,15 @@ Each entry looks like:
 
 ## Whole artwork versus the global icon zoom (2026-11-15)
 
+Superseded by Ethan's correction in task `01a1df78-3f6d-7231-854c-4a4206992d2e`:
+"we should not have any app specific fixes". Per-app fitting made Agent Flow
+visibly smaller than its neighbors. Remove that preference and keep the shared
+global size for every app; do not reintroduce per-app sizing to hide cropping.
+The following records the earlier rejected implementation, not current guidance.
+The correction passed all 22 Darwin XCTest cases and a native menu-bar check
+on installed 4.8.5 (43). The 40-point size, 30-point slot, pins, image overrides
+and other saved app settings were preserved; Agent Flow kept its original PID.
+
 Agent Flow's bundled ICNS, fresh NSWorkspace and NSRunningApplication images,
 and Preferences preview all contained the new surfer at small and large sizes.
 The menu-bar rendering instead cropped the 40-point global icon inside its

@@ -11,38 +11,37 @@ import XCTest
 
 class MenuBarDockTests: XCTestCase {
 
-    func testSizing_fitKeepsWholeArtworkAndBadgeInsideTheMenuBar() throws {
+    func testSizing_usesTheSharedSizeForDifferentAppsWithoutResizingTheirSourceImages() throws {
         let statusItem = NSStatusBar.system.statusItem(withLength: 30)
         defer { NSStatusBar.system.removeStatusItem(statusItem) }
         let dataSource = MenuBarItemDataSourceStub()
         let item = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
-        let app = numberedApp(2, process: RecordingRunningApplication(), method: nil)
-        let sourceSize = app.icon.size
-        item.update(for: app, appIconSize: 40, slotWidth: 30, fitIcon: true)
-        let imageView = try XCTUnwrap(statusItem.button!.subviews.first as? NSImageView)
-        let visibleSlot = NSRect(x: 0, y: 0, width: 30, height: 22)
-        XCTAssertTrue(visibleSlot.contains(imageView.frame))
-        XCTAssertTrue(visibleSlot.contains(statusItem.button!.convert(imageView.subviews.first!.bounds, from: imageView.subviews.first!)))
-        XCTAssertEqual(imageView.frame.size, NSSize(width: 22, height: 22))
-        XCTAssertEqual(app.icon.size, sourceSize)
+        let firstApp = numberedApp(2, process: RecordingRunningApplication(), method: nil)
+        let secondApp = numberedApp(3, process: RecordingRunningApplication(), method: nil)
+        firstApp.bundleUrl = URL(fileURLWithPath: "/Applications/First.app")
+        secondApp.bundleUrl = URL(fileURLWithPath: "/Applications/Second.app")
+        firstApp.icon = NSImage(size: NSSize(width: 16, height: 16))
+        secondApp.icon = NSImage(size: NSSize(width: 128, height: 128))
 
-        // Leaving fit must restore the existing zoom, using the same live icon.
-        item.update(for: app, appIconSize: 40, slotWidth: 30)
-        let zoomedView = try XCTUnwrap(statusItem.button!.subviews.first as? NSImageView)
-        XCTAssertEqual(zoomedView.frame.size, NSSize(width: 40, height: 40))
-        XCTAssertEqual(zoomedView.frame.minY, -9)
-        XCTAssertEqual(app.icon.size, sourceSize)
+        for app in [firstApp, secondApp] {
+            let sourceSize = app.icon.size
+            item.update(for: app, appIconSize: 40, slotWidth: 30)
+            let imageView = try XCTUnwrap(statusItem.button!.subviews.first as? NSImageView)
+            XCTAssertEqual(imageView.frame.size, NSSize(width: 40, height: 40))
+            XCTAssertEqual(imageView.frame.minY, -9)
+            XCTAssertEqual(app.icon.size, sourceSize)
+        }
     }
 
-    func testSizing_fitRespectsNarrowSlotsAndSmallerGlobalIcons() {
+    func testSizing_appliesSmallerGlobalSizesWithoutFittingToTheSlot() {
         let statusItem = NSStatusBar.system.statusItem(withLength: 18)
         defer { NSStatusBar.system.removeStatusItem(statusItem) }
         let dataSource = MenuBarItemDataSourceStub()
         let item = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
         let app = numberedApp(2, process: RecordingRunningApplication(), method: nil)
-        item.update(for: app, appIconSize: 40, slotWidth: 18, fitIcon: true)
-        XCTAssertEqual(statusItem.button!.subviews.first!.frame.size, NSSize(width: 18, height: 18))
-        item.update(for: app, appIconSize: 16, slotWidth: 30, fitIcon: true)
+        item.update(for: app, appIconSize: 40, slotWidth: 18)
+        XCTAssertEqual(statusItem.button!.subviews.first!.frame.size, NSSize(width: 40, height: 40))
+        item.update(for: app, appIconSize: 16, slotWidth: 30)
         XCTAssertEqual(statusItem.button!.subviews.first!.frame.size, NSSize(width: 16, height: 16))
     }
 
