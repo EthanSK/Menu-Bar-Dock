@@ -1,5 +1,25 @@
 # Learnings
 
+## Keep new status items in native insertion order (2026-11-17)
+
+Cold-start probes on the Fleet Mac mini and older MacBook Pro showed a correct
+running-app model but scrambled native icon positions until another activation.
+Sorting new NSStatusItem windows immediately after creation read placeholder
+positions. macOS inserts new items to the left; sort existing slots first and
+prepend new slots so that the model can be painted in that same order immediately.
+Keep the existing spare slot and reuse all native items to retain user placement.
+
+A normally launched windowless probe is necessary: return from
+applicationDidFinishLaunching and let NSApplication.run process native events.
+An early test host stopped at the first distinct positions, which was too early
+to establish the final order. Explicit updateWindows calls also masked a failed
+notification-based candidate. Observer and queued-pass candidates were discarded;
+waiting for all positions to differ also fails when macOS hides overflow icons.
+Do not reintroduce those callbacks, timers or forced layout in place of native
+insertion order without new evidence. The final regression waits for the expected
+order during initial layout, growth and shrinkage; a separate probe covers an
+overflowing list. Retain red/green traces and final receipts with the task evidence.
+
 ## Ingest accessory activation and validate table double-actions (2026-11-17)
 
 The accessory-app activation limitation recorded in the v4.7.5 post-mortem below

@@ -501,6 +501,35 @@ class MenuBarDockTests: XCTestCase {
 }
 
 extension MenuBarDockTests {
+    func testMenuBarItems_initialLayoutAndGrowingTheListKeepNativeLeftToRightOrder() {
+        let previousPolicy = NSApp.activationPolicy()
+        NSApp.setActivationPolicy(.accessory)
+        defer { NSApp.setActivationPolicy(previousPolicy) }
+        let preferences = UserPrefs()
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let pinned = RegularApps(userPrefsDataSource: preferences)
+        let combined = OpenableApps(userPrefsDataSource: preferences, runningApps: running, regularApps: pinned)
+        let bar = MenuBarItems(userPrefsDataSource: preferences)
+        defer { for item in bar.items { NSStatusBar.system.removeStatusItem(item.statusItem) } }
+        let applications = (0..<4).map { index in
+            OpenableApp(bundleId: "com.ethansk.NativeOrderTest\(index)", icon: NSImage(size: NSSize(width: 16, height: 16)), bundleUrl: Bundle.main.bundleURL.appendingPathComponent("NativeOrder\(index).app"), name: "NativeOrder\(index)", id: "NativeOrder\(index)", appOpeningMethod: nil, runningApplication: nil)
+        }
+        for count in [3, 4, 2] {
+            combined.apps = Array(applications.prefix(count))
+            bar.update(openableApps: combined)
+            let deadline = Date(timeIntervalSinceNow: 3)
+            while Date() < deadline { // Wait for actual AppKit window placement, without adding a production timer or forcing layout.
+                NSApp.updateWindows() // The isolated XCTest host supplies the window-update cycle normally driven by NSApplication.run.
+                let shown = bar.items.filter { $0.app != nil }.sorted { $0.position < $1.position }
+                if Set(shown.map { $0.position }).count == count && shown.compactMap({ $0.app?.id }) == combined.apps.map({ $0.id }) { break }
+                RunLoop.main.run(mode: .default, before: deadline) // Service queued native work; a nonblocking nextEvent call does not run queued RunLoop.perform blocks.
+            }
+            let shown = bar.items.filter { $0.app != nil }.sorted { $0.position < $1.position }
+            XCTAssertEqual(Set(shown.map { $0.position }).count, count)
+            XCTAssertEqual(shown.compactMap { $0.app?.id }, combined.apps.map { $0.id })
+        }
+    }
+
     private final class ActivationDelegate: AppTrackerDelegate {
         let runningApps: RunningApps
         let snapshot: [NSRunningApplication]

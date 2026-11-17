@@ -54,10 +54,11 @@ class MenuBarItems {
         // Breadcrumbs identify the last entered/completed mutation without
         // forcing layout. The AppKit-only crash stacks did not name our caller.
         DebugLog.shared.diagnostic("update=\(updateID) begin reason=\(reason) apps=\(openableApps.apps.count) slots=\(items.count) width=\(userPrefsDataSource.itemSlotWidth) icon=\(userPrefsDataSource.appIconSize) preserveOrder=\(userPrefsDataSource.preserveAppOrder)", checkpoint: true)
-		createEnoughStatusItems(openableApps: openableApps)
-		DebugLog.shared.diagnostic("update=\(updateID) created slots=\(items.count); sorting")
-		sortItems() // sort after adding them all for efficiency. not all of them will be sorted due to layout not updating instantly, but that's fine since we have an extra item at all times.
+		DebugLog.shared.diagnostic("update=\(updateID) sorting existing slots=\(items.count)")
+		sortItems() // Sort existing windows once for efficiency. New native items have placeholder positions, so preserve their left-hand insertion order below until later updates.
         DebugLog.shared.diagnostic("update=\(updateID) sorted")
+		createEnoughStatusItems(openableApps: openableApps)
+		DebugLog.shared.diagnostic("update=\(updateID) created slots=\(items.count)")
 
 		// try and populate the rightmost items since new ones are added to the left of the menu bar
 		for (index, app) in openableApps.apps.enumerated() {
@@ -87,7 +88,7 @@ class MenuBarItems {
                 userPrefsDataSource: self
  			)
 			item.delegate = self
-			items.append(item)// it's important we never remove items, or the position in the menu bar will be reset. only add if needed, and reuse.
+			items.insert(item, at: 0) // New native status items appear to the left. Never remove existing items, which would reset user-defined placement; only add and reuse slots.
 		}
 	}
 

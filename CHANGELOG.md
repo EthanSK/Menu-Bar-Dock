@@ -8,6 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.8] — 2026-11-17
+
+### Fixed
+
+- Keep app icons in the correct order from the first display and when new icons
+  are added, without waiting for another app switch.
+
 ## [4.8.7] — 2026-11-17
 
 ### Fixed
