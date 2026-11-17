@@ -8,6 +8,19 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.9] — 2026-11-17
+
+### Fixed
+
+- Keep menu commands attached to the app that was clicked, even if the icon
+  changes while its menu is open.
+- Keep a pinned app on the selected running instance across preference changes
+  and background launches.
+- Keep the initial recent-app order on the left and include background apps
+  in the fixed sort order before applying the app limit.
+- Accept pinned-app row moves only within their own list and handle keyboard
+  and accessibility actions on the preference sliders.
+
 ## [4.8.8] — 2026-11-17
 
 ### Fixed
