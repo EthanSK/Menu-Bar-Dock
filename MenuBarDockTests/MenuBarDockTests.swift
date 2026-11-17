@@ -499,3 +499,89 @@ class MenuBarDockTests: XCTestCase {
         XCTAssertEqual(result, ["z", "y", "x"])
     }
 }
+
+extension MenuBarDockTests {
+    private final class ActivationDelegate: AppTrackerDelegate {
+        let runningApps: RunningApps
+        let snapshot: [NSRunningApplication]
+        var activatedProcessIDs: [pid_t] = []
+
+        init(runningApps: RunningApps, snapshot: [NSRunningApplication]) {
+            self.runningApps = runningApps
+            self.snapshot = snapshot
+        }
+
+        func appWasActivated(runningApp: NSRunningApplication) {
+            activatedProcessIDs.append(runningApp.processIdentifier)
+            runningApps.handleAppActivation(runningApp: runningApp)
+            runningApps.update(runningApplications: snapshot)
+        }
+
+        func appWasLaunched(runningApp: NSRunningApplication) {}
+        func appWasQuit(runningApp: NSRunningApplication) {}
+    }
+
+    func testActivation_menuBarOnlyAppsReleaseThePreviouslyHiddenAppWithoutChangingRecency() {
+        let tracker = AppTracker()
+        let center = NSWorkspace.shared.notificationCenter
+        for direction in [RunningAppsSortingMethod.mostRecentOnRight, .mostRecentOnLeft] {
+            for hideActive in [false, true] {
+                let preferences = SnapshotPreferences()
+                preferences.runningAppsSortingMethod = direction
+                preferences.hideActiveAppFromRunningApps = hideActive
+                preferences.maxRunningApps = 2
+                let applications = (0..<3).map { index in
+                    let application = SnapshotRunningApplication()
+                    application.testPID = pid_t(301 + index)
+                    application.testBundleURL = Bundle.main.bundleURL.appendingPathComponent("Activation\(index).app")
+                    return application
+                }
+                let running = RunningApps(userPrefsDataSource: preferences)
+                let delegate = ActivationDelegate(runningApps: running, snapshot: applications)
+                tracker.delegate = delegate
+                for application in applications {
+                    center.post(name: NSWorkspace.didActivateApplicationNotification, object: nil, userInfo: [NSWorkspace.applicationUserInfoKey: application])
+                }
+                let expectedBefore = (hideActive ? applications.prefix(2) : applications.suffix(2)).map { $0.testPID }
+                XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, direction == .mostRecentOnRight ? expectedBefore : Array(expectedBefore.reversed()))
+
+                for (index, policy) in [NSApplication.ActivationPolicy.accessory, .prohibited].enumerated() {
+                    let menuBarApplication = SnapshotRunningApplication()
+                    menuBarApplication.testPID = pid_t(401 + index)
+                    menuBarApplication.testBundleURL = Bundle.main.bundleURL.appendingPathComponent("MenuBarOnly\(index).app")
+                    menuBarApplication.policy = policy
+                    center.post(name: NSWorkspace.didActivateApplicationNotification, object: nil, userInfo: [NSWorkspace.applicationUserInfoKey: menuBarApplication])
+                    let expected = applications.suffix(2).map { $0.testPID }
+                    XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, direction == .mostRecentOnRight ? expected : Array(expected.reversed()))
+                }
+
+                center.post(name: NSWorkspace.didActivateApplicationNotification, object: nil, userInfo: [NSWorkspace.applicationUserInfoKey: applications[0]])
+                let expectedAfter = (hideActive ? [applications[1], applications[2]] : [applications[2], applications[0]]).map { $0.testPID }
+                XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, direction == .mostRecentOnRight ? expectedAfter : Array(expectedAfter.reversed()))
+                XCTAssertEqual(delegate.activatedProcessIDs, [301, 302, 303, 401, 402, 301])
+            }
+        }
+    }
+
+    private final class ClickedRowTable: NSTableView {
+        var testClickedRow = -1
+        override var clickedRow: Int { testClickedRow }
+    }
+
+    func testPreferences_doubleClickOutsideAnAppRowReturnsWithoutCrashing() {
+        let controller = PreferencesViewController(nibName: nil, bundle: nil)
+        let table = ClickedRowTable()
+        let preferences = UserPrefs()
+        controller.regularAppsTable = table
+        controller.userPrefsDataSource = preferences
+
+        for appURLs in [[], [Bundle.main.bundleURL]] {
+            preferences.regularAppsUrls = appURLs
+            for row in [-1, appURLs.count, appURLs.count + 1] {
+                table.testClickedRow = row
+                controller.perform(NSSelectorFromString("tableRowDoubleClicked")) // Exercise the actual private Objective-C action without opening Finder for a valid row.
+                XCTAssertEqual(preferences.regularAppsUrls, appURLs)
+            }
+        }
+    }
+}

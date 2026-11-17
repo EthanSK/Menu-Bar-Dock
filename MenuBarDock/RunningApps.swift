@@ -64,9 +64,11 @@ class RunningApps {
 		// "wrong order" report). `shortIds` keeps the line readable (app names only).
 		let before = shortIds(ordering)
 		self.lastActivatedApp = runningApp // authoritative "currently active app" from the activation notification — used by the hide-active-app filter to avoid a racy frontmostApplication read
-		let runningApp = RunningApp(app: runningApp) // to get id
-		self.ordering.removeAll(where: { $0 == runningApp.id })
-		self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
+		if runningApp.activationPolicy == .regular { // Menu-bar-only apps update active-app truth but must not add invisible entries to recency history.
+			let runningApp = RunningApp(app: runningApp) // to get id
+			self.ordering.removeAll(where: { $0 == runningApp.id })
+			self.ordering.append(runningApp.id) // needs this order for it to populate from the most helpful side correctly
+		}
 		DebugLog.shared.log("[ordering] handleAppActivation lastActivated=\(lastActivatedApp?.localizedName ?? "?")  before=\(before)  after=\(shortIds(ordering))")
 		update()
 	}
@@ -147,9 +149,9 @@ class RunningApps {
 		if !shown {
 			// This app is the one we consider "active" so it's hidden. Logging the
 			// SOURCE of the active-app truth (notification payload vs the
-			// frontmostApplication fallback) is key for diagnosing the residual
-			// accessory-staleness edge: if activeApp came from a stale
-			// lastActivatedApp, the WRONG app gets hidden here.
+			// frontmostApplication fallback) helps diagnose the former accessory-
+			// staleness bug: dropping accessory activations left lastActivatedApp
+			// stale and hid the WRONG app here.
 			let src = lastActivatedApp != nil ? "lastActivatedApp" : "frontmostApplication(fallback)"
 			DebugLog.shared.log("[exclude] \(app.app.localizedName ?? "?") (rule: hide-active-app; active=\(activeApp?.localizedName ?? "?") via \(src))")
 		}

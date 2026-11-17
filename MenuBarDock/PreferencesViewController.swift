@@ -380,7 +380,9 @@ class PreferencesViewController: NSViewController { // this should do nothing
 	}
 
 	@objc private func tableRowDoubleClicked() {
-		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[regularAppsTable.clickedRow]]) // reveal in finder
+		let clickedRow = regularAppsTable.clickedRow
+		guard userPrefsDataSource.regularAppsUrls.indices.contains(clickedRow) else { return } // Empty table space has no app to reveal; AppKit reports row -1 there.
+		NSWorkspace.shared.activateFileViewerSelecting([userPrefsDataSource.regularAppsUrls[clickedRow]]) // reveal in finder
 	}
 
 	private func showResetConfirmationAlert(title: String, message: String, completion: (Bool) -> Void) {

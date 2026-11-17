@@ -39,13 +39,11 @@ class AppTracker {
 				DebugLog.shared.log("[activate] notification with NO app payload (ignored)")
 				return
 			}
-			// Log EVERY activation BEFORE the .regular gate so the debug trace
-			// captures accessory/LSUIElement activations too. This is exactly the
-			// residual edge from the v4.7.5 post-mortem: when a non-.regular app
-			// activates we drop it here and never update lastActivatedApp/ordering,
-			// so the hide-active-app filter can go stale. Having these lines in the
-			// log lets us confirm-from-data whether that edge is what Ethan is
-			// hitting before changing core ingestion logic.
+			// Log EVERY activation, including accessory/LSUIElement apps. The
+			// v4.7.5 post-mortem identified that dropping their notifications left
+			// lastActivatedApp stale, so the hide-active-app filter hid the wrong
+			// app. Forward every activation below; RunningApps keeps display and
+			// recency eligibility separate from the current active-app truth.
 			let policyStr: String
 			switch app.activationPolicy {
 			case .regular: policyStr = "regular"
@@ -53,7 +51,7 @@ class AppTracker {
 			case .prohibited: policyStr = "prohibited"
 			@unknown default: policyStr = "unknown"
 			}
-			DebugLog.shared.log("[activate] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?") policy=\(policyStr) \(app.activationPolicy == .regular ? "-> INGESTED" : "-> SKIPPED (not .regular: ordering + lastActivatedApp NOT updated)")")
+			DebugLog.shared.log("[activate] \(app.localizedName ?? "?") bundle=\(app.bundleIdentifier ?? "?") policy=\(policyStr) -> INGESTED")
 			// The notification payload (NSWorkspace.applicationUserInfoKey) IS the app
 			// that just activated — it's authoritative and carries no race. We must
 			// TRUST it directly.
@@ -71,13 +69,12 @@ class AppTracker {
 			// `activationPolicy == .regular` is NOT a foreground test. activationPolicy
 			// is a STATIC per-app capability (.regular / .accessory / .prohibited) —
 			// many apps are .regular simultaneously, so it cannot tell us which app is
-			// in front. We keep it ONLY as a cheap skip: apps that aren't .regular will
-			// never be displayed in the dock anyway (RunningApps.canShowRunningApp
-			// filters .regular again), so there's no point churning the recency
-			// ordering for them. Applied uniformly — no macOS-version split.
-			if app.activationPolicy == .regular {
-				self.delegate?.appWasActivated(runningApp: app)
-			}
+			// in front. RunningApps.canShowRunningApp still filters the visible list
+			// to .regular apps, and its activation handler only reorders those apps.
+			// Every activation must reach lastActivatedApp so a menu-bar app taking
+			// focus makes the previously active app visible again. Applied uniformly
+			// — no macOS-version split.
+			self.delegate?.appWasActivated(runningApp: app)
 		}
 	}
 

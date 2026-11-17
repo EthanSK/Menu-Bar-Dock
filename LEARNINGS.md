@@ -1,5 +1,20 @@
 # Learnings
 
+## Ingest accessory activation and validate table double-actions (2026-11-17)
+
+The accessory-app activation limitation recorded in the v4.7.5 post-mortem below
+is fixed in v4.8.7. AppTracker forwards every activation payload; RunningApps
+updates the active-app identity for every policy but only changes recency for
+regular apps. Keep visible-app filtering in RunningApps rather than dropping
+notifications before state ingestion. The real observer regression covers both
+sort directions, Hide active app on/off, accessory/prohibited activation and
+returning to a normal app, preserving the existing running-entry limit.
+
+NSTableView.clickedRow is -1 for empty table space. The Preferences reveal action
+must check the configured app array's indices before indexing it. Regression
+coverage invokes the real Objective-C action for negative and past-the-end rows
+with empty and populated preferences, without opening Finder.
+
 Per-repo institutional memory for fixes. Every entry below is a real bug we hit + how we solved it. Check this file BEFORE attempting a same-looking fix.
 
 Maintained by the `learnings` skill — see `~/.claude/skills/learnings/skill.md`.

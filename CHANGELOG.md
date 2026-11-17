@@ -8,6 +8,14 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.7] — 2026-11-17
+
+### Fixed
+
+- Show the previously active app again when a menu-bar-only app takes focus,
+  while keeping those menu-bar-only apps out of the running-app list.
+- Ignore double-clicks outside an app row in Preferences instead of crashing.
+
 ## [4.8.6] — 2026-11-17
 
 ### Fixed
