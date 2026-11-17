@@ -8,7 +8,7 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
-## [4.8.9] — 2026-11-17
+## [4.8.10] — 2026-11-17
 
 ### Fixed
 
