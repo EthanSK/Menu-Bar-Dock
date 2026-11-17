@@ -23,6 +23,19 @@ Each entry looks like:
 
 (newest first)
 
+## Preserve recency while another process of the app remains (2026-11-17)
+
+`RunningApp.id` is the shared bundle URL. Removing it on every process quit
+erased the still-open editor's last-used position when a temporary Code process
+exited. Live activation/quit logs and isolated probes against 4.8.2 and 4.8.5
+reproduced the surviving app becoming oldest or falling outside the running limit.
+
+`RunningApps.handleAppQuit` now retains that URL while a different, non-terminated
+process with the same URL survives, following the existing pinned-app quit logic.
+It refreshes from the same snapshot used for that decision. Regression tests cover
+both sort directions and Hide active app states, plus final-process removal when
+the exiting process and an already-terminated sibling remain in the snapshot.
+
 ## Whole artwork versus the global icon zoom (2026-11-15)
 
 Superseded by Ethan's correction in task `01a1df78-3f6d-7231-854c-4a4206992d2e`:

@@ -71,13 +71,16 @@ class RunningApps {
 		update()
 	}
 
-	func handleAppQuit(runningApp: NSRunningApplication) {
-		// DEBUG: snapshot ordering before/after the removal.
+	func handleAppQuit(runningApp: NSRunningApplication, runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
+		// DEBUG: snapshot ordering before/after handling the quit.
 		let before = shortIds(ordering)
 		let runningApp = RunningApp(app: runningApp) // to get id
-		self.ordering.removeAll(where: { $0 == runningApp.id })
-		DebugLog.shared.log("[ordering] handleAppQuit removed id-tail=\(shortId(runningApp.id))  before=\(before)  after=\(shortIds(ordering))")
-		update()
+		let hasSurvivingProcess = runningApplications.contains { !$0.isTerminated && $0.processIdentifier != runningApp.app.processIdentifier && RunningApp(app: $0).id == runningApp.id }
+		if !hasSurvivingProcess { // A temporary process can quit while the same app stays open; keep its last-used position until the final process exits.
+			self.ordering.removeAll(where: { $0 == runningApp.id })
+		}
+		DebugLog.shared.log("[ordering] handleAppQuit \(hasSurvivingProcess ? "retained" : "removed") id-tail=\(shortId(runningApp.id))  before=\(before)  after=\(shortIds(ordering))")
+		update(runningApplications: runningApplications)
 	}
 
 	private func populateApps(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {

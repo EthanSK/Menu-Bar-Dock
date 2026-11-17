@@ -8,6 +8,13 @@ to be manually re-downloaded.
 
 ## [Unreleased]
 
+## [4.8.6] — 2026-11-17
+
+### Fixed
+
+- Keep an app's last-used position when another process of the same app closes,
+  including temporary VS Code processes.
+
 ## [4.8.5] — 2026-11-15
 
 ### Fixed

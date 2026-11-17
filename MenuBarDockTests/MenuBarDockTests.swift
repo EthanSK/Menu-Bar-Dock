@@ -92,15 +92,22 @@ class MenuBarDockTests: XCTestCase {
         var testTerminated = false
         var policy: NSApplication.ActivationPolicy = .regular
         var launched = Date(timeIntervalSince1970: 100)
+        var testBundleURL = Bundle.main.bundleURL
 
         override var processIdentifier: pid_t { testPID }
         override var isTerminated: Bool { testTerminated }
         override var activationPolicy: NSApplication.ActivationPolicy { policy }
         override var launchDate: Date? { launched }
-        override var bundleURL: URL? { Bundle.main.bundleURL }
+        override var bundleURL: URL? { testBundleURL }
         override var bundleIdentifier: String? { Bundle.main.bundleIdentifier ?? "com.ethansk.InstanceSnapshotTest" }
         override var localizedName: String? { "Instance Snapshot Test" }
         override var icon: NSImage? { NSImage(size: NSSize(width: 16, height: 16)) }
+        override var hash: Int { Int(testPID) }
+
+        override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? NSRunningApplication else { return false }
+            return testPID == other.processIdentifier // Test instances have no native process identity; preserve the real app's process-based equality for Hide active app.
+        }
     }
 
     private final class SnapshotPreferences: RunningAppsUserPrefsDataSource, RegularAppsUserPrefsDataSource, OpenableAppsUserPrefsDataSource {
@@ -183,6 +190,58 @@ class MenuBarDockTests: XCTestCase {
         running.update(runningApplications: [live, exited])
 
         XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, [live.testPID])
+    }
+
+    func testRunningApps_quittingAnotherProcessPreservesTheSurvivingAppsRecency() {
+        for direction in [RunningAppsSortingMethod.mostRecentOnRight, .mostRecentOnLeft] {
+            for hideActive in [false, true] {
+                let preferences = SnapshotPreferences()
+                preferences.runningAppsSortingMethod = direction
+                preferences.hideActiveAppFromRunningApps = hideActive
+                preferences.maxRunningApps = 2
+                let running = RunningApps(userPrefsDataSource: preferences)
+                let applications = (0..<4).map { index in
+                    let application = SnapshotRunningApplication()
+                    application.testPID = pid_t(200 + index)
+                    application.testBundleURL = Bundle.main.bundleURL.appendingPathComponent("App\(index).app")
+                    return application
+                }
+                for application in applications { running.handleAppActivation(runningApp: application) }
+                running.update(runningApplications: applications)
+                let expectedRight = hideActive ? [applications[1].testPID, applications[2].testPID] : [applications[2].testPID, applications[3].testPID]
+                let expected = direction == .mostRecentOnRight ? expectedRight : Array(expectedRight.reversed())
+                XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, expected)
+
+                let exited = SnapshotRunningApplication()
+                exited.testPID = 300
+                exited.testTerminated = true
+                exited.testBundleURL = applications[2].testBundleURL
+                running.handleAppQuit(runningApp: exited, runningApplications: [exited] + applications)
+
+                XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, expected, "direction=\(direction), hideActive=\(hideActive)")
+            }
+        }
+    }
+
+    func testRunningApps_quittingTheFinalProcessClearsItsRecency() {
+        let preferences = SnapshotPreferences()
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let first = SnapshotRunningApplication()
+        let second = SnapshotRunningApplication()
+        second.testPID = 102
+        second.testBundleURL = Bundle.main.bundleURL.appendingPathComponent("Second.app")
+        running.handleAppActivation(runningApp: second)
+        running.handleAppActivation(runningApp: first)
+
+        let alreadyExited = SnapshotRunningApplication()
+        alreadyExited.testPID = 104
+        alreadyExited.testTerminated = true
+        running.handleAppQuit(runningApp: first, runningApplications: [first, alreadyExited, second]) // The exiting process may still be in the snapshot without isTerminated being set; a previously exited sibling must not retain recency either.
+        let restarted = SnapshotRunningApplication()
+        restarted.testPID = 103
+        running.update(runningApplications: [second, restarted])
+
+        XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, [restarted.testPID, second.testPID])
     }
 
     func testPinnedApps_keepLiveAccessoryAppsButRejectTerminatedMatches() {
