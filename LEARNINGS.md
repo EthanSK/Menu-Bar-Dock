@@ -1,5 +1,9 @@
 # Learnings
 
+## Keep app menu actions attached to the clicked process (2026-11-17)
+
+Menu Bar Dock reuses status items when the running-app list changes. A menu can still name the previous app after the slot has been reassigned or cleared. Bind app-specific commands to the app represented by the menu item, including the opening-method submenu. The regression dispatches Quit, Hide and Activate through a native NSMenu after reassigning the slot, using processes that record those actions.
+
 ## Keep new status items in native insertion order (2026-11-17)
 
 Cold-start probes on the Fleet Mac mini and older MacBook Pro showed a correct

@@ -155,10 +155,11 @@ class MenuBarItem {
             )
 
             // only makes sense to hide and show, and activate a running app, not just any app
+            let isHidden = runningApplication.isHidden
             _ = addMenuItem(
                 menu: menu,
-                title: "\(runningApplication.isHidden ? "Unhide" : "Hide") \(appName)",
-                action: #selector(toggleAppHidden),
+                title: "\(isHidden ? "Unhide" : "Hide") \(appName)",
+                action: isHidden ? #selector(unhideApp) : #selector(hideApp),
                 keyEquivalent: "h"
             )
 
@@ -256,46 +257,45 @@ class MenuBarItem {
 			action: action,
 			keyEquivalent: keyEquivalent
 		)
+		item.representedObject = app // A workspace refresh can reuse this status item while its menu is open. Keep the app and process named in the menu.
 		item.target = self
 		menu.addItem(item)
 		return item
 	}
 
-	@objc private func quitApp() {
-		app?.quit()
+	@objc private func quitApp(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.quit()
 	}
 
-	@objc private func revealAppInFinder() {
-		app?.revealInFinder()
+	@objc private func revealAppInFinder(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.revealInFinder()
 	}
 
-	@objc private func toggleAppHidden() {
-		if let runningApplication = app?.runningApplication {
-			app?.setIsHidden(isHidden: !runningApplication.isHidden)
-		}
+	@objc private func hideApp(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.setIsHidden(isHidden: true)
 	}
 
-	@objc private func activateApp() {
-		app?.activate()
+	@objc private func unhideApp(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.setIsHidden(isHidden: false)
 	}
 
-	@objc private func launchApp() {
-		app?.launch()
+	@objc private func activateApp(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.activate()
 	}
 
-	@objc private func openNewAppInstance() {
-		app?.openNewAppInstance()
+	@objc private func launchApp(_ sender: NSMenuItem) {
+		(sender.representedObject as? OpenableApp)?.launch()
 	}
 
-	@objc private func setAppOpeningMethodLaunch() {
-		guard let app = app else { return }
+	@objc private func setAppOpeningMethodLaunch(_ sender: NSMenuItem) {
+		guard let app = sender.representedObject as? OpenableApp else { return }
 		delegate?.didSetAppOpeningMethod(userPrefsDataSource.appOpeningMethod(for: app) == .launch ? nil : .launch, app) // toggle the current state
- 	}
+	}
 
-	@objc private func setAppOpeningMethodActivate() {
-		guard let app = app else { return }
+	@objc private func setAppOpeningMethodActivate(_ sender: NSMenuItem) {
+		guard let app = sender.representedObject as? OpenableApp else { return }
 		delegate?.didSetAppOpeningMethod(userPrefsDataSource.appOpeningMethod(for: app) == .activate ? nil : .activate, app)
- 	}
+	}
 
 	@objc private func openPreferencesWindow() {
 		delegate?.didOpenPreferencesWindow()

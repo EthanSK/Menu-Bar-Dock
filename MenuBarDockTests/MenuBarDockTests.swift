@@ -244,6 +244,65 @@ class MenuBarDockTests: XCTestCase {
         XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, [restarted.testPID, second.testPID])
     }
 
+    func testPinnedApp_keepsItsActivatedInstanceAcrossRefreshesUntilItExits() {
+        let preferences = SnapshotPreferences()
+        preferences.regularAppsUrls = [Bundle.main.bundleURL]
+        let pinned = RegularApps(userPrefsDataSource: preferences)
+        let first = SnapshotRunningApplication()
+        let second = SnapshotRunningApplication()
+        second.testPID = 102
+        pinned.update(runningApplications: [first, second])
+        pinned.handleAppActivation(runningApp: second)
+        pinned.update(runningApplications: [first, second])
+        XCTAssertEqual(pinned.apps.first?.runningApp?.processIdentifier, second.testPID)
+
+        second.testTerminated = true
+        pinned.update(runningApplications: [second, first])
+        XCTAssertEqual(pinned.apps.first?.runningApp?.processIdentifier, first.testPID)
+        pinned.update(runningApplications: [])
+        XCTAssertNil(pinned.apps.first?.runningApp)
+    }
+
+    func testFirstRefresh_keepsStartupOrderOnBothSidesWithALimit() {
+        let snapshot = (1...4).map { index in
+            let app = SnapshotRunningApplication()
+            app.testPID = pid_t(500 + index)
+            app.testBundleURL = URL(fileURLWithPath: "/Applications/App\(index).app")
+            return app
+        }
+        let preferences = SnapshotPreferences()
+        preferences.maxRunningApps = 3
+        for direction in [RunningAppsSortingMethod.mostRecentOnLeft, .mostRecentOnRight] {
+            preferences.runningAppsSortingMethod = direction
+            let running = RunningApps(userPrefsDataSource: preferences, runningApplications: snapshot)
+            let initial = running.apps.map { $0.app.processIdentifier }
+            XCTAssertEqual(initial.count, 3)
+            running.update(runningApplications: snapshot)
+            XCTAssertEqual(running.apps.map { $0.app.processIdentifier }, initial)
+        }
+    }
+
+    func testConsistentOrder_usesAllEligibleAppsRegardlessOfActivationHistoryOrLimit() {
+        let preferences = SnapshotPreferences()
+        preferences.runningAppsSortingMethod = .consistent
+        let running = RunningApps(userPrefsDataSource: preferences)
+        let apps = ["Charlie", "Alpha", "Bravo"].enumerated().map { index, name in
+            let app = SnapshotRunningApplication()
+            app.testPID = pid_t(201 + index)
+            app.testBundleURL = URL(fileURLWithPath: "/Applications/\(name).app")
+            return app
+        }
+        for limit in [3, 2] {
+            preferences.maxRunningApps = limit
+            for active in apps {
+                running.handleAppActivation(runningApp: active)
+                running.update(runningApplications: apps)
+                XCTAssertEqual(running.apps.map { $0.app.processIdentifier },
+                               Array([apps[1], apps[2], apps[0]].suffix(limit)).map { $0.testPID })
+            }
+        }
+    }
+
     func testPinnedApps_keepLiveAccessoryAppsButRejectTerminatedMatches() {
         let preferences = SnapshotPreferences()
         preferences.regularAppsUrls = [Bundle.main.bundleURL]
@@ -341,6 +400,26 @@ class MenuBarDockTests: XCTestCase {
 
     private class RecordingRunningApplication: NSRunningApplication, @unchecked Sendable {
         var activationCount = 0
+        var quitCount = 0
+        var hideCount = 0
+        var testHidden = false
+        override var isHidden: Bool { testHidden }
+
+        override func hide() -> Bool {
+            hideCount += 1
+            testHidden = true
+            return true
+        }
+
+        override func unhide() -> Bool {
+            testHidden = false
+            return true
+        }
+
+        override func terminate() -> Bool {
+            quitCount += 1
+            return true
+        }
 
         override var isTerminated: Bool { false }
 
@@ -406,6 +485,34 @@ class MenuBarDockTests: XCTestCase {
         self.measure {
             // Put the code you want to measure the time of here.
         }
+    }
+
+    func testOpenMenu_keepsItsProcessWhenTheStatusItemIsReusedOrCleared() throws {
+        let statusItem = NSStatusBar.system.statusItem(withLength: 20)
+        defer { NSStatusBar.system.removeStatusItem(statusItem) }
+        let dataSource = MenuBarItemDataSourceStub()
+        let item = MenuBarItem(statusItem: statusItem, userPrefsDataSource: dataSource)
+        let originalProcess = RecordingRunningApplication()
+        let replacementProcess = RecordingRunningApplication()
+        item.update(for: numberedApp(1, process: originalProcess, method: nil), appIconSize: 16, slotWidth: 20)
+        let menu = try XCTUnwrap(item.makeDropdownMenu())
+        item.update(for: numberedApp(2, process: replacementProcess, method: nil), appIconSize: 16, slotWidth: 20)
+        menu.performActionForItem(at: 0) // The first command is Quit for the process that was clicked.
+        XCTAssertEqual(originalProcess.quitCount, 1)
+        XCTAssertEqual(replacementProcess.quitCount, 0)
+
+        originalProcess.testHidden = true // Another action hid the original app while the open menu still says Hide.
+        let hide = try XCTUnwrap(menu.items.firstIndex { $0.keyEquivalent == "h" })
+        menu.performActionForItem(at: hide)
+        XCTAssertTrue(originalProcess.testHidden)
+        XCTAssertEqual(originalProcess.hideCount, 1)
+        XCTAssertEqual(replacementProcess.hideCount, 0)
+
+        item.reset()
+        let activate = try XCTUnwrap(menu.items.firstIndex { $0.keyEquivalent == "a" })
+        menu.performActionForItem(at: activate)
+        XCTAssertEqual(originalProcess.activationCount, 1)
+        XCTAssertEqual(replacementProcess.activationCount, 0)
     }
 
     func testRunningAppDropdown_putsQuitActionFirst() {
@@ -595,6 +702,62 @@ extension MenuBarDockTests {
     private final class ClickedRowTable: NSTableView {
         var testClickedRow = -1
         override var clickedRow: Int { testClickedRow }
+    }
+
+    private final class RowDrag: NSObject, NSDraggingInfo {
+        var draggingSource: Any?
+        let draggingPasteboard = NSPasteboard.withUniqueName()
+        let draggingDestinationWindow: NSWindow? = nil
+        let draggingSourceOperationMask: NSDragOperation = .move
+        let draggingLocation = NSPoint.zero
+        let draggedImageLocation = NSPoint.zero
+        let draggedImage: NSImage? = nil
+        let draggingSequenceNumber = 1
+        var draggingFormation = NSDraggingFormation.none
+        var animatesToDestination = false
+        var numberOfValidItemsForDrop = 1
+        let springLoadingHighlight = NSSpringLoadingHighlight.none
+
+        func slideDraggedImage(to screenPoint: NSPoint) {}
+        func resetSpringLoading() {}
+        func enumerateDraggingItems(options enumOpts: NSDraggingItemEnumerationOptions = [], for view: NSView?, classes classArray: [AnyClass], searchOptions: [NSPasteboard.ReadingOptionKey: Any] = [:], using block: (NSDraggingItem, Int, UnsafeMutablePointer<ObjCBool>) -> Void) {}
+    }
+
+    func testPreferences_onlyAcceptsRowMovesFromItsOwnTable() {
+        let prefs = UserPrefs()
+        prefs.regularAppsUrls = [Bundle.main.bundleURL]
+        let controller = PreferencesViewController(nibName: nil, bundle: nil)
+        controller.userPrefsDataSource = prefs
+        let table = NSTableView()
+        table.dataSource = controller
+        table.reloadData()
+        let drag = RowDrag()
+        defer { drag.draggingPasteboard.releaseGlobally() }
+        let writer = controller.tableView(table, pasteboardWriterForRow: 0)!
+        drag.draggingPasteboard.writeObjects([writer])
+        XCTAssertEqual(controller.tableView(table, validateDrop: drag, proposedRow: 0, proposedDropOperation: .above), [])
+        XCTAssertFalse(controller.tableView(table, acceptDrop: drag, row: 0, dropOperation: .above))
+
+        drag.draggingSource = table
+        XCTAssertEqual(controller.tableView(table, validateDrop: drag, proposedRow: 1, proposedDropOperation: .above), .move)
+        XCTAssertTrue(controller.tableView(table, acceptDrop: drag, row: 1, dropOperation: .above))
+        XCTAssertFalse(controller.tableView(table, acceptDrop: drag, row: 2, dropOperation: .above))
+        prefs.regularAppsUrls = []
+        XCTAssertFalse(controller.tableView(table, acceptDrop: drag, row: 0, dropOperation: .above))
+    }
+
+    func testPreferences_sliderActionsUpdateTheirLabelsWithoutAMouseEvent() {
+        let controller = PreferencesViewController(nibName: nil, bundle: nil)
+        let slider = NSSlider(value: 7, minValue: 0, maxValue: 10, target: nil, action: nil)
+        let label = NSTextField()
+        controller.itemSlotWidthCounterLabel = label
+        controller.appIconSizeCounterLabel = label
+        controller.maxRunningAppsCounterLabel = label
+        for action in [controller.statusItemWidthSliderChanged, controller.appIconSizeSliderChange, controller.numberOfAppsSliderChanged] {
+            label.stringValue = ""
+            action(slider)
+            XCTAssertEqual(label.stringValue, "7")
+        }
     }
 
     func testPreferences_doubleClickOutsideAnAppRowReturnsWithoutCrashing() {

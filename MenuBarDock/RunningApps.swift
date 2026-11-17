@@ -46,11 +46,15 @@ class RunningApps {
 	}
 
 	init(
-		userPrefsDataSource: RunningAppsUserPrefsDataSource
+		userPrefsDataSource: RunningAppsUserPrefsDataSource,
+		runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications
 	) {
 		self.userPrefsDataSource = userPrefsDataSource
-		populateApps()
-		ordering = apps.map { $0.id } // populate the ordering array so the openable apps can start displaying correct order from the start.
+		populateApps(runningApplications: runningApplications)
+		ordering = apps.map { $0.id } // Seed history from the icons shown at startup.
+		if userPrefsDataSource.runningAppsSortingMethod == .mostRecentOnLeft {
+			ordering.reverse() // History is always oldest first, even when the displayed list is newest first.
+		}
 		// the reason it's not ordered straight away: https://trello.com/c/ZFs3C32g
   	}
 
@@ -91,25 +95,20 @@ class RunningApps {
 			return
 		}
 
-		// Apps with no known ordering info must land on the OLDEST / least-recent
-		// side so they (a) never steal the newest-app slot and (b) are the first
-		// to be dropped by the limit (bug fix, voice 4442). Which physical array
-		// end that is depends on the truncation direction used in limitNumApps():
-		//   - .mostRecentOnRight uses suffix(limit) (keeps the END), and the
-		//     array is least->most recent, so oldest == array START.
-		//   - .mostRecentOnLeft uses prefix(limit) (keeps the FRONT), and
-		//     correctedOrdering() is reversed to most->least recent, so oldest
-		//     == array END.
-		let newApps = runningApplications
-			.map { RunningApp(app: $0) }
-			.filter {canShowRunningApp(app: $0)}
-			.reorder(by: correctedOrdering(), unorderedGoTo: unorderedPlacement())
-		apps = Array(limitNumApps(apps: newApps))
+		// Apps with no activation history belong on the oldest side of each recent-app layout so they cannot displace the newest app when the limit is applied (voice 4442).
+		let eligibleApps = runningApplications.map { RunningApp(app: $0) }.filter { canShowRunningApp(app: $0) }
+		switch userPrefsDataSource.runningAppsSortingMethod {
+		case .mostRecentOnRight:
+			apps = Array(eligibleApps.reorder(by: ordering, unorderedGoTo: .start).suffix(limit))
+		case .mostRecentOnLeft:
+			apps = Array(eligibleApps.reorder(by: ordering.reversed(), unorderedGoTo: .end).prefix(limit))
+		case .consistent:
+			apps = Array(eligibleApps.sorted { $0.id < $1.id }.suffix(limit)) // Background apps have no activation history. Include them in the same fixed ordering before applying the existing limit.
+		}
 
 		// DEBUG: log the FINAL shown apps (in left->right display order), the
 		// limit, and the sorting method, so "why is the order / set wrong" is
-		// answerable straight from the log. Note `apps` here is least->most
-		// recent internally; OpenableApps lays it out left->right per side pref.
+		// answerable straight from the log.
 		let methodStr: String
 		switch userPrefsDataSource.runningAppsSortingMethod {
 		case .mostRecentOnRight: methodStr = "mostRecentOnRight"
@@ -172,41 +171,6 @@ class RunningApps {
 		"[" + ids.map { shortId($0) }.joined(separator: ", ") + "]"
 	}
 
-	private func correctedOrdering() -> [String] {
-		switch userPrefsDataSource.runningAppsSortingMethod {
-		case .mostRecentOnRight:
-			return ordering
-		case .mostRecentOnLeft:
-			return ordering.reversed()
-		case .consistent:
-			return ordering.sorted {$0 < $1} // fixed alphabetical ordering
-		}
-	}
-
-	// Mirrors the truncation direction in limitNumApps() so un-ordered apps are
-	// pushed to whichever array end is BOTH the least-recent side and the side
-	// that gets truncated first. See the comment block in populateApps().
-	private func unorderedPlacement() -> UnorderedPlacement {
-		switch userPrefsDataSource.runningAppsSortingMethod {
-		case .mostRecentOnRight:
-			return .start // suffix(limit) keeps the end; oldest is the start
-		case .mostRecentOnLeft:
-			return .end   // prefix(limit) keeps the front; oldest is the end
-		case .consistent:
-			return .start // alphabetical; truncates with suffix, so match .mostRecentOnRight
-		}
-	}
-
-	private func limitNumApps(apps: [RunningApp]) -> ArraySlice<RunningApp> {
-		switch userPrefsDataSource.runningAppsSortingMethod {
-		case .mostRecentOnRight:
-			return apps.suffix(limit)
-		case .mostRecentOnLeft:
-			return apps.prefix(limit)
-		default:
-			return apps.suffix(limit) // doesn't matter for this, because it doesn't really make sense anyway
-		}
-	}
 }
 
 enum RunningAppsSortingMethod: Int {

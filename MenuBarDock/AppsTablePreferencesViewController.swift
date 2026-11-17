@@ -68,20 +68,24 @@ extension PreferencesViewController: NSTableViewDelegate {
 	}
 
 	func tableView(_ tableView: NSTableView, validateDrop info: NSDraggingInfo, proposedRow row: Int, proposedDropOperation dropOperation: NSTableView.DropOperation) -> NSDragOperation {
+		guard info.draggingSource as? NSTableView === tableView,
+		      (0...userPrefsDataSource.regularAppsUrls.count).contains(row) else { return [] }
+		tableView.setDropRow(row, dropOperation: .above) // Pinned apps are inserted between rows.
 		return .move
 	}
 
 	func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
 
-		var oldIndexes = [Int]()
-		 info.enumerateDraggingItems(options: [], for: tableView, classes: [NSPasteboardItem.self], searchOptions: [:]) { dragItem, _, _ in
-			if let str = (dragItem.item as? NSPasteboardItem)?.string(forType: .string), let index = Int(str) {
-				 oldIndexes.append(index)
-			 }
-		 }
+		let appCount = userPrefsDataSource.regularAppsUrls.count
+		guard info.draggingSource as? NSTableView === tableView, dropOperation == .above,
+		      (0...appCount).contains(row), let items = info.draggingPasteboard.pasteboardItems, !items.isEmpty else { return false }
+		let rows = items.compactMap { $0.string(forType: .string).flatMap(Int.init) }
+		guard rows.count == items.count, rows.allSatisfy({ (0..<appCount).contains($0) }) else { return false }
+		let oldIndexes = IndexSet(rows)
+		guard oldIndexes.count == rows.count else { return false }
 
-		 var oldIndexOffset = 0
-		 var newIndexOffset = 0
+		var oldIndexOffset = 0
+		var newIndexOffset = 0
 
 		tableView.beginUpdates()
  		for oldIndex in oldIndexes {

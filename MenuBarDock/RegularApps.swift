@@ -44,13 +44,15 @@ class RegularApps { // regular apps are just apps that use user added manually
 	}
 
 	private func populateApps(runningApplications: [NSRunningApplication] = NSWorkspace.shared.runningApplications) {
-		apps = []
-		for url in userPrefsDataSource.regularAppsUrls {
-			if let app = regularApp(for: url) {
-				apps.append(app)
-			}
+		let previousApps = apps
+		let liveProcesses = runningApplications.filter { !$0.isTerminated }
+		apps = userPrefsDataSource.regularAppsUrls.compactMap { url in
+			guard let app = regularApp(for: url) else { return nil }
+			let matches = liveProcesses.filter { RunningApp(app: $0).id == app.id }
+			let previousPID = previousApps.first { $0.id == app.id }?.runningApp?.processIdentifier
+			app.runningApp = matches.first { $0.processIdentifier == previousPID } ?? matches.first // A background launch or preferences refresh must preserve the pinned app's selected instance while it is still running.
+			return app
 		}
-		addRunningApps(runningApplications: runningApplications)
 	}
 
 	private func regularApp(for url: URL) -> RegularApp? {
@@ -65,12 +67,5 @@ class RegularApps { // regular apps are just apps that use user added manually
 		)
 
 		return app
-	}
-
-	private func addRunningApps(runningApplications: [NSRunningApplication]) {
-		let runningApps = runningApplications.filter { !$0.isTerminated } // Match the quit-rebinding guard: pinned entries must target a live process.
-		for app in apps {
-			app.runningApp = runningApps.first {RunningApp(app: $0).id == app.id} // we instantiate RunningApp just to get id. kinda hacky, but oh well.
-		}
 	}
 }

@@ -327,18 +327,14 @@ class PreferencesViewController: NSViewController { // this should do nothing
 		sliderChanged: ((_ value: Double) -> Void)? = nil,
 		sliderEndedChanging: ((_ value: Double) -> Void)? = nil
 	) {
-		let event = NSApplication.shared.currentEvent
-		let startingDrag = event?.type == .leftMouseDown
-		let endingDrag = event?.type == .leftMouseUp
-		let dragging = event?.type == .leftMouseDragged
-
-		if !(startingDrag || endingDrag || dragging) { return }
+		let eventType = NSApp.currentEvent?.type
+		let mouseIsTracking = eventType == .leftMouseDown || eventType == .leftMouseDragged
 
 		sliderChanged?(slider.doubleValue)
 
 		sliderLabel.stringValue = "\(slider.integerValue)"
 
-		if endingDrag {
+		if !mouseIsTracking { // Keyboard and accessibility actions commit immediately. Mouse drags still commit the app count on release.
 			sliderEndedChanging?(slider.doubleValue)
 		}
 	}
