@@ -7,6 +7,15 @@
     <language>en</language>
     <atom:link href="https://www.menubardock.com/appcast.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Menu Bar Dock v4.8.10</title>
+      <pubDate>Tue, 17 Nov 2026 23:21:32 +0000</pubDate>
+      <sparkle:version>48</sparkle:version>
+      <sparkle:shortVersionString>4.8.10</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+      <sparkle:releaseNotesLink>https://github.com/EthanSK/Menu-Bar-Dock/releases/tag/v4.8.10</sparkle:releaseNotesLink>
+      <enclosure url="https://github.com/EthanSK/Menu-Bar-Dock/releases/download/v4.8.10/Menu-Bar-Dock-v4.8.10.zip" length="8305771" type="application/octet-stream" sparkle:version="48" sparkle:shortVersionString="4.8.10" sparkle:edSignature="cqzxy2YQkgxLB//AVHvgiv5ist7DsMbaDSlTajVsiUyJtP21bRzqPHHOiVYdXedWrzAL2QaTUHKQxGgBwuMdBg==" />
+    </item>
+    <item>
       <title>Menu Bar Dock v4.8.8</title>
       <pubDate>Tue, 17 Nov 2026 19:18:42 +0000</pubDate>
       <sparkle:version>46</sparkle:version>
